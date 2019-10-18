@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mRecyclerView = findViewById(R.id.browse);
+        mRecyclerView = findViewById(R.id.recipe_list_recycler);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setHasFixedSize(true);
