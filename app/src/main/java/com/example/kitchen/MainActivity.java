@@ -25,8 +25,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
+
+        // Display Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
+        //TextView toolbarText = (TextView) findViewById(R.id.toolbar_text);
         setSupportActionBar(toolbar);
+        //toolbarText.setText(getTitle());
+
         mRecyclerView = findViewById(R.id.recipe_list_recycler);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -94,11 +99,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.item1:
+            case R.id.advanced_search_item:
                 return true;
 
-            case R.id.item2:
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
