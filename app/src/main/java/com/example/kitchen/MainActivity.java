@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < 100; i++)
         {
             Recipe recipe = new Recipe();
-            recipe.setRecipe("Recipe" + i);
+            recipe.createRecipe("Recipe" + i);
             recipes.add(recipe);
         }
         mRecyclerView.setAdapter(new RecipeAdapter(recipes));
@@ -76,50 +77,13 @@ public class MainActivity extends AppCompatActivity {
             //prep_time = (TextView) itemView.findViewById(R.id.total_rooms_text);
         }
         public void bind(Recipe recipe){
-            this.recipe.setText(recipe.getRecipe());
+            this.recipe.setText(recipe.getTitle());
             //prep_time.setText(Integer.toString(recipe.getRooms()));
             //servings.setText(Integer.toString(recipe.getRoomsAvail()) );
         }
     }
 
-class Recipe {
-    private String recipe;
-    private String servings;
-    private String prep_time;
-    private String total_time;
 
-    public String getRecipe() {
-        return recipe;
-    }
-
-    public void setRecipe(String recipe) {
-        this.recipe = recipe;
-    }
-
-    public String getServings() {
-        return servings;
-    }
-
-    public void setServings(String servings) {
-        this.servings = servings;
-    }
-
-    public String getPrep_time() {
-        return prep_time;
-    }
-
-    public void setPrep_time(String prep_time) {
-        this.prep_time = prep_time;
-    }
-
-    public String getTotal_time() {
-        return total_time;
-    }
-
-    public void setTotal_time(String total_time) {
-        this.total_time = total_time;
-    }
-}
     // Toolbar functions
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
