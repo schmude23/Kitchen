@@ -3,22 +3,37 @@ package com.example.kitchen;
 import java.sql.Time;
 
 class Recipe {
-    private String title = null;
-    private CategoryList category = null;
-    private IngredientList ingredients = null;
-    private DirectionList directions = null;
-    private Double servings = null;
-    private Time prep_time = null;
-    private Time total_time = null;
-    private Boolean favorited = false;
-    private int imageId = -1;
+    private String title;
+    private CategoryList category;
+    private IngredientList ingredients;
+    private DirectionList directions;
+    private double servings;
+    private Time prep_time;
+    private Time total_time;
+    private boolean favorited;
+    private int imageId;
 
     public Recipe() {
+        favorited = false;
+        imageId = -1;
+    }
+
+    public Recipe(String title, CategoryList category, IngredientList ingredients, DirectionList directions, double servings, Time prep_time, Time total_time, boolean favorited, int imageId) {
+        this.title = title;
+        this.category = category;
+        this.ingredients = ingredients;
+        this.directions = directions;
+        this.servings = servings;
+        this.prep_time = prep_time;
+        this.total_time = total_time;
+        this.favorited = favorited;
+        this.imageId = imageId;
     }
 
     public void createRecipe(String name){
         this.title = name;
     }
+
     public String getTitle() {
         return title;
     }
