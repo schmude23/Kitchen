@@ -3,22 +3,28 @@ package com.example.kitchen;
 import java.sql.Time;
 
 class Recipe {
-    private String title;
-    private CategoryList category;
-    private IngredientList ingredients;
-    private DirectionList directions;
-    private double servings;
-    private Time prep_time;
-    private Time total_time;
-    private boolean favorited;
-    private int imageId;
+    private int keyID = -1;
+    private String title = null;
+    private CategoryList category = null;
+    private IngredientList ingredients = null;
+    private DirectionList directions = null;
+    private double servings = -1;
+    private int prep_time = -1;
+    private int total_time = -1;
+    private boolean favorited = false;
+    private int imageId = -1;
 
-    public Recipe() {
-        favorited = false;
-        imageId = -1;
+    public Recipe() {    }
+
+    public int getKeyID() {
+        return keyID;
     }
 
-    public Recipe(String title, CategoryList category, IngredientList ingredients, DirectionList directions, double servings, Time prep_time, Time total_time, boolean favorited, int imageId) {
+    public void setKeyID(int keyID) {
+        this.keyID = keyID;
+    }
+
+    public Recipe(String title, CategoryList category, IngredientList ingredients, DirectionList directions, double servings, int prep_time, int total_time, boolean favorited, int imageId) {
         this.title = title;
         this.category = category;
         this.ingredients = ingredients;
@@ -74,19 +80,19 @@ class Recipe {
         this.servings = servings;
     }
 
-    public Time getPrep_time() {
+    public int getPrep_time() {
         return prep_time;
     }
 
-    public void setPrep_time(Time prep_time) {
+    public void setPrep_time(int prep_time) {
         this.prep_time = prep_time;
     }
 
-    public Time getTotal_time() {
+    public int getTotal_time() {
         return total_time;
     }
 
-    public void setTotal_time(Time total_time) {
+    public void setTotal_time(int total_time) {
         this.total_time = total_time;
     }
 
