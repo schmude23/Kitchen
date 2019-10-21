@@ -62,6 +62,7 @@
         android:layout_marginTop="16dp"
         android:text="Total Time"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_yields"
         app:layout_constraintTop_toBottomOf="@+id/text_recipe_name" />
 
     <TextView
@@ -93,6 +94,7 @@
         android:layout_marginTop="16dp"
         android:text="x H x M"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/recipe_servings"
         app:layout_constraintTop_toBottomOf="@+id/text_total_time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
