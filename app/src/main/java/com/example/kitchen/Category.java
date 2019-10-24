@@ -1,6 +1,7 @@
 package com.example.kitchen;
 
-public class Ingredient {
+public class Category {
+
     private int keyID = -1;
     private String name = null;
 
@@ -16,5 +17,6 @@ public class Ingredient {
     public void setName(String name) {
         this.name = name;
     }
+
 
 }
