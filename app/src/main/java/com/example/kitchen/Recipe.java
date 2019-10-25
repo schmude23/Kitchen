@@ -1,6 +1,7 @@
 package com.example.kitchen;
 
 import java.sql.Time;
+import java.util.List;
 
 class Recipe {
     private int keyID = -1;
@@ -9,7 +10,8 @@ class Recipe {
     private int prep_time = -1;
     private int total_time = -1;
     private boolean favorited = false;
-    private int imageId = -1;
+    private List<RecipeIngredient> ingredientList;
+    private List<RecipeDirections> directionsList;
 
     public Recipe() {    }
 
@@ -27,6 +29,16 @@ class Recipe {
         this.prep_time = prep_time;
         this.total_time = total_time;
         this.favorited = favorited;
+    }
+
+    public Recipe(String title, double servings, int prep_time, int total_time, boolean favorited, List<RecipeIngredient> ingredients, List<RecipeDirections> directions) {
+        this.title = title;
+        this.servings = servings;
+        this.prep_time = prep_time;
+        this.total_time = total_time;
+        this.favorited = favorited;
+        this.ingredientList = ingredients;
+        this.directionsList = directions;
     }
 
     public void createRecipe(String name){
@@ -73,11 +85,21 @@ class Recipe {
         this.favorited = favorited;
     }
 
-    public int getImageId() {
-        return imageId;
+    public List<RecipeIngredient> getIngredientList() {
+        return ingredientList;
     }
 
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public void setIngredientList(List<RecipeIngredient> ingredientList) {
+        this.ingredientList = ingredientList;
     }
+
+    public List<RecipeDirections> getDirectionsList() {
+        return directionsList;
+    }
+
+    public void setDirectionsList(List<RecipeDirections> directionsList) {
+        this.directionsList = directionsList;
+    }
+
+    //TODO: Add method to retrive image
 }
