@@ -1,6 +1,6 @@
 package com.example.kitchen;
 
-public class RecipeDirections {
+public class RecipeDirection {
     private int keyID = -1;
     private int recipeID = -1;
     private String directionText = null;

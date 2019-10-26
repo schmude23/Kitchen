@@ -191,7 +191,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param recipe the provided recipe
      * @return true if the operation was successful, false otherwise.
      */
-    public boolean editRecipe(Recipe recipe, List<RecipeIngredient> recipeIngredient, List<RecipeCategory> recipeCategoryList, List<RecipeDirections> recipeDirectionsList) {
+    public boolean editRecipe(Recipe recipe, List<RecipeIngredient> recipeIngredient, List<RecipeCategory> recipeCategoryList, List<RecipeDirection> recipeDirectionList) {
 
         //TODO: Test
         //I want to save a version of recipe incase something goes wrong.
@@ -253,9 +253,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //delete recipeDirections and add new recipeDirections
         try {
             sqLiteDatabase.delete(TABLE_Recipe_Directions_List, recipeID + " = ?", new String[]{String.valueOf(recipeId)});
-            int size = recipeDirectionsList.size();
+            int size = recipeDirectionList.size();
             for(int i = 0; i < size; i++){
-                if(addRecipeDirections(recipeDirectionsList.get(i))){
+                if(addRecipeDirections(recipeDirectionList.get(i))){
                     allpassed = false;
                     System.out.println("addRecipeDirection failed");
                 }
@@ -559,7 +559,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return allpassed;
     }
 
-    boolean addRecipeDirections(RecipeDirections recipeDirections) {
+    boolean addRecipeDirections(RecipeDirection recipeDirection) {
         //TODO: TEST
         //Get the Data Repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
@@ -571,9 +571,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         try {
             //contentValues.put(KEY_ID, Ingredient.getKey());  //not sure if this line is needed or if database will auto increment
-            contentValues.put(recipeID, recipeDirections.getRecipeID());
-            contentValues.put(directionText, recipeDirections.getDirectionText());
-            contentValues.put(directionNumber, recipeDirections.getDirectionNumber());
+            contentValues.put(recipeID, recipeDirection.getRecipeID());
+            contentValues.put(directionText, recipeDirection.getDirectionText());
+            contentValues.put(directionNumber, recipeDirection.getDirectionNumber());
 
             // Insert the new row, returning the primary key value of the new row
             long newRowId = db.insert(TABLE_Recipe_Directions_List, null, contentValues);

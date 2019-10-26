@@ -5,6 +5,8 @@ public class RecipeIngredient {
     private int recipeID = -1;
     private int ingredientID = -1;
     private double quantity = -1;
+    private String name = null;
+    private String unit = null;
     private String details = null;
 
     public int getRecipeID() { return recipeID; }
@@ -26,6 +28,14 @@ public class RecipeIngredient {
     public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
+
+    public String getName() { return name; }
+
+    public void setName(String name) { this.name = name; }
+
+    public String getUnit() { return unit; }
+
+    public void setUnit(String unit) { this.unit = unit; }
 
     public String getDetails() {
         return details;

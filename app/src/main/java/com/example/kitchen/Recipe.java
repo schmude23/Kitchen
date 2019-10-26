@@ -1,6 +1,5 @@
 package com.example.kitchen;
 
-import java.sql.Time;
 import java.util.List;
 
 class Recipe {
@@ -11,7 +10,8 @@ class Recipe {
     private int total_time = -1;
     private boolean favorited = false;
     private List<RecipeIngredient> ingredientList;
-    private List<RecipeDirections> directionsList;
+    private List<RecipeDirection> directionsList;
+    private List<RecipeCategory> categoryList;
 
     public Recipe() {    }
 
@@ -31,7 +31,7 @@ class Recipe {
         this.favorited = favorited;
     }
 
-    public Recipe(String title, double servings, int prep_time, int total_time, boolean favorited, List<RecipeIngredient> ingredients, List<RecipeDirections> directions) {
+    public Recipe(String title, double servings, int prep_time, int total_time, boolean favorited, List<RecipeIngredient> ingredients, List<RecipeDirection> directions, List<RecipeCategory> categories) {
         this.title = title;
         this.servings = servings;
         this.prep_time = prep_time;
@@ -39,6 +39,7 @@ class Recipe {
         this.favorited = favorited;
         this.ingredientList = ingredients;
         this.directionsList = directions;
+        this.categoryList = categories;
     }
 
     public void createRecipe(String name){
@@ -93,12 +94,18 @@ class Recipe {
         this.ingredientList = ingredientList;
     }
 
-    public List<RecipeDirections> getDirectionsList() {
+    public List<RecipeDirection> getDirectionsList() {
         return directionsList;
     }
 
-    public void setDirectionsList(List<RecipeDirections> directionsList) {
+    public void setDirectionsList(List<RecipeDirection> directionsList) {
         this.directionsList = directionsList;
+    }
+
+    public List<RecipeCategory> getCategoryList() { return categoryList; }
+
+    public void setCategoryList(List<RecipeCategory> categoryList){
+        this.categoryList = categoryList;
     }
 
     //TODO: Add method to retrive image
