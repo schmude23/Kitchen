@@ -9,9 +9,11 @@ class Recipe {
     private int prep_time = -1;
     private int total_time = -1;
     private boolean favorited = false;
+    private int favoritedInt = -1;
     private List<RecipeIngredient> ingredientList;
     private List<RecipeDirection> directionsList;
     private List<RecipeCategory> categoryList;
+
 
     public Recipe() {    }
 
@@ -40,6 +42,7 @@ class Recipe {
         this.ingredientList = ingredients;
         this.directionsList = directions;
         this.categoryList = categories;
+        setFavoritedInt();
     }
 
     public void createRecipe(String name){
@@ -82,8 +85,22 @@ class Recipe {
         return favorited;
     }
 
+    //also updates favorite int for TABLE_Recipe
     public void setFavorited(Boolean favorited) {
         this.favorited = favorited;
+        setFavoritedInt();
+    }
+
+    public int getFavoritedInt() { return favoritedInt; }
+
+    //updates favorite int for TABLE_Recipe
+    public void setFavoritedInt() {
+        if(favorited){
+            favoritedInt = 1;
+        }
+        else{
+            favoritedInt=0;
+        }
     }
 
     public List<RecipeIngredient> getIngredientList() {
@@ -106,6 +123,22 @@ class Recipe {
 
     public void setCategoryList(List<RecipeCategory> categoryList){
         this.categoryList = categoryList;
+    }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "keyID=" + keyID +
+                ", title='" + title + '\'' + "\n" +
+                ", servings=" + servings + "\n" +
+                ", prep_time=" + prep_time + "\n" +
+                ", total_time=" + total_time + "\n" +
+                ", favorited=" + favorited + "\n" +
+                ", favoritedInt=" + favoritedInt + "\n" +
+                ingredientList.toString() + "\n" +
+                directionsList.toString() + "\n" +
+                categoryList.toString()+
+                '}';
     }
 
     //TODO: Add method to retrive image

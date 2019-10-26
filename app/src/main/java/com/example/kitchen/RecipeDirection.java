@@ -37,4 +37,14 @@ public class RecipeDirection {
     public void setDirectionNumber(int directionNumber) {
         this.directionNumber = directionNumber;
     }
+
+    @Override
+    public String toString() {
+        return "RecipeDirection{" +
+                "keyID=" + keyID +
+                ", recipeID=" + recipeID + + '\'' +
+                ", directionText='" + directionText  + "\n" +
+                ", directionNumber=" + directionNumber +
+                '}';
+    }
 }

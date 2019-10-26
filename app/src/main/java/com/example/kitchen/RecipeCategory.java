@@ -4,9 +4,10 @@ import java.util.List;
 
 public class RecipeCategory {
     private int keyID = -1;
+    private String name = null;
     private int recipeID = -1;
     private int categoryID = -1;
-    private String name = null;
+
 
     public int getKeyID() {
         return keyID;
@@ -38,5 +39,15 @@ public class RecipeCategory {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "RecipeCategory{" +
+                "keyID=" + keyID +
+                ", name='" + name + '\'' +
+                ", recipeID=" + recipeID + "\n" +
+                ", categoryID=" + categoryID +
+                '}';
     }
 }

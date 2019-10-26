@@ -17,4 +17,11 @@ public class Ingredient {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "keyID=" + keyID +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

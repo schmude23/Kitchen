@@ -44,4 +44,17 @@ public class RecipeIngredient {
     public void setDetails(String details) {
         this.details = details;
     }
+
+    @Override
+    public String toString() {
+        return "RecipeIngredient{" +
+                "keyID=" + keyID +
+                ", name='" + name + '\'' +
+                ", recipeID=" + recipeID + "\n" +
+                ", ingredientID=" + ingredientID + "\n" +
+                ", quantity=" + quantity + "\n" +
+                ", unit='" + unit + "\n" +
+                ", details='" + details +
+                '}';
+    }
 }

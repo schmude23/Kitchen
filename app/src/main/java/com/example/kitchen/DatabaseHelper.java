@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 //create read update delete
 public class DatabaseHelper extends SQLiteOpenHelper {
+    //set to true for printouts.
+    private static boolean isTesting = true;
 
     public static final int VERSION_NUMBER = 1;
     public static final String DATABASE_NAME = "RECIPE_DATABASE";
@@ -77,7 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + tTime + " INTEGER,"
                 + pTime + " INTEGER,"
                 + servings + " INTEGER,"
-                + favorited + " BOOLEAN " + ")";
+                + favorited + " INTEGER " + ")";
         sqLiteDatabase.execSQL(CREATE_RECIPE_TABLE);
 
          //Ingredients Table
@@ -167,14 +169,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cVals.put(pTime, recipe.getPrep_time());
             cVals.put(tTime, recipe.getTotal_time());
             cVals.put(servings, recipe.getServings());
-            cVals.put(favorited, recipe.getFavorited());
+            cVals.put(favorited, recipe.getFavoritedInt());
             sqLiteDatabase.update(TABLE_Ingredient_List, cVals, KEY_ID + " = ?", new String[]{String.valueOf(recipeId)});
         }
         catch( Exception e){
-            System.out.println("updating recipe table failed");
+            if(isTesting) {
+                System.out.println("updating recipe table failed");
+            }
             allpassed = false;
         }
-
 
         //add new ingredients from ingredientList
         try {
@@ -182,12 +185,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             for(int i = 0; i < size; i++){
                 if(addRecipeIngredient(recipeIngredientList.get(i))){
                     allpassed = false;
-                    System.out.println("addRecipeIngredient failed");
+                    if(isTesting) {
+                        System.out.println("addRecipeIngredient failed");
+                    }
                 }
             }
         }
         catch( Exception e){
-            System.out.println("add new ingredients failed");
+            if(isTesting) {
+                System.out.println("add new ingredients failed");
+            }
             allpassed = false;
         }
 
@@ -197,12 +204,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             for(int i = 0; i < size; i++){
                 if(addRecipeCategory(recipeCategoryList.get(i))){
                     allpassed = false;
-                    System.out.println("addRecipeCategory failed");
+                    if(isTesting) {
+                        System.out.println("addRecipeCategory failed");
+                    }
                 }
             }
         }
         catch( Exception e){
-            System.out.println("add new Category failed");
+            if(isTesting) {
+                System.out.println("add new Category failed");
+            }
             allpassed = false;
         }
 
@@ -212,12 +223,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             for(int i = 0; i < size; i++){
                 if(addRecipeDirection(recipeDirectionList.get(i))){
                     allpassed = false;
-                    System.out.println("addRecipeDirection failed");
+                    if(isTesting) {
+                        System.out.println("addRecipeDirection failed");
+                    }
                 }
             }
         }
         catch( Exception e){
-            System.out.println("delete and add new direction failed");
+            if(isTesting) {
+                System.out.println("delete and add new direction failed");
+            }
             allpassed = false;
         }
 
@@ -230,6 +245,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //TODO: Add methods to get recipes by ingredients, category, both, etc. (Iteration 1 task 5.5)
+
     /**
      * This method retrieves the recipe for the given recipeId
      *
@@ -252,8 +268,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception ex) {
-            System.out.println("failed to retrieve from TABLE_Recipe-List on ID");
-            // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            if(isTesting) {
+                System.out.println("failed to retrieve from TABLE_Recipe-List on ID");
+                // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            }
             return null;
         }
 
@@ -295,8 +313,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception ex) {
-            System.out.println("failed to retrieve from TABLE_Recipe_List on Title");
-            // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            if(isTesting) {
+                System.out.println("failed to retrieve from TABLE_Recipe_List on Title");
+                // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            }
             return null;
         }
 
@@ -321,8 +341,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * This method returns a list of all recipes
      *
-     * @return If successful in fetching the recipes it will return an Array list of recipes, if not
-     *  it will return null.
+     * @return If successful in fetching the recipes this method will return an Array list of
+     * recipes, if not this method will return null.
      */
     public ArrayList<Recipe> getAllRecipes() {
         //TODO: IS GET ALL WORKiNG_____________only creates recipe with no ingredients____________________________
@@ -345,8 +365,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             // Log.w("getAllRecipeIngredients()", ex.getMessage());
             return null;
         }
-
-
         return recipeList;
     }
 
@@ -377,11 +395,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cVals.put(pTime, recipe.getPrep_time());
             cVals.put(tTime, recipe.getTotal_time());
             cVals.put(servings, recipe.getServings());
-            cVals.put(favorited, recipe.getFavorited());
+            cVals.put(favorited, recipe.getFavoritedInt());
             sqLiteDatabase.update(TABLE_Ingredient_List, cVals, KEY_ID + " = ?", new String[]{String.valueOf(recipeId)});
         }
         catch( Exception e){
-            System.out.println("updating recipe table failed");
+            if(isTesting) {
+                System.out.println("updating recipe table failed");
+            }
             allpassed = false;
         }
 
@@ -393,12 +413,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             for(int i = 0; i < size; i++){
                 if(addRecipeIngredient(recipeIngredientList.get(i))){
                     allpassed = false;
-                    System.out.println("addRecipeIngredient failed");
+                    if(isTesting) {
+                        System.out.println("addRecipeIngredient failed");
+                    }
                 }
             }
         }
         catch( Exception e){
-            System.out.println("delete and add new ingredients failed");
+            if(isTesting) {
+                System.out.println("delete and add new ingredients failed");
+            }
             allpassed = false;
         }
 
@@ -409,12 +433,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             for(int i = 0; i < size; i++){
                 if(addRecipeCategory(recipeCategoryList.get(i))){
                     allpassed = false;
-                    System.out.println("addRecipeCategory failed");
+                    if(isTesting) {
+                        System.out.println("addRecipeCategory failed");
+                    }
                 }
             }
         }
         catch( Exception e){
-            System.out.println("delete and add new Category failed");
+            if(isTesting) {
+                System.out.println("delete and add new Category failed");
+            }
             allpassed = false;
         }
 
@@ -425,12 +453,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             for(int i = 0; i < size; i++){
                 if(addRecipeDirection(recipeDirectionList.get(i))){
                     allpassed = false;
-                    System.out.println("addRecipeDirection failed");
+                    if(isTesting) {
+                        System.out.println("addRecipeDirection failed");
+                    }
                 }
             }
         }
         catch( Exception e){
-            System.out.println("delete and add new direction failed");
+            if(isTesting) {
+                System.out.println("delete and add new direction failed");
+            }
             allpassed = false;
         }
 
@@ -438,7 +470,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(!allpassed){
             //editRecipe(temp);
         }
-
         return allpassed;
     }
 
@@ -478,10 +509,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method returns a list of all recipes
+     * This method creates a new row in the Recipe Ingredient table using the provided recipeIngredient
      *
-     * @return If successful in fetching the recipes it will return an Array list of recipes, if not
-     *  it will return null.
+     * @param recipeIngredient
+     * @return true if the operation was successful, false otherwise
      */
     boolean addRecipeIngredient(RecipeIngredient recipeIngredient) {
         //TODO: TEST
@@ -506,16 +537,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(TABLE_Recipe_Ingredient_List, null, contentValues);
         }catch (Exception e){
             allpassed = false;
+            if(isTesting) {
+                System.out.println("add Recipe Ingredient Failed");
+            }
         }
         db.close();
         return allpassed;
     }
 
     /**
-     * This method returns a list of all recipes
+     * This method returns a list of all recipe Inredients using the specified recipeId
      *
-     * @return If successful in fetching the recipes it will return an Array list of recipes, if not
-     *  it will return null.
+     * @param recipeId
+     * @return If successful in fetching the recipes this method will return an Array list of recipe
+     * Ingredients, if not, this method will return null.
      */
     public ArrayList<RecipeIngredient> getAllRecipeIngredients(int recipeId) {
         //TODO: TEST
@@ -535,11 +570,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception ex) {
-           // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            if(isTesting) {
+                System.out.println("getAllRecipeIngredients Failed");
+                // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            }
             return null;
         }
-
-
         return recipeIngredientList;
     }
 
@@ -551,7 +587,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public boolean editIngredient(Ingredient ingredient) {
         //TODO: TEST
-        //Ingredient temp = recipe.getKeyID());
+        //Ingredient temp = ingredient;
         boolean allpassed = true;
         try {
             int id = ingredient.getKeyID();
@@ -560,10 +596,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cVals.put(name, ingredient.getName());
             sqLiteDatabase.update(TABLE_Ingredient_List, cVals, KEY_ID + " = ?", new String[]{String.valueOf(id)});
         }
-        catch( Exception e){
+        catch( Exception ex){
             allpassed = false;
+            if(isTesting) {
+                System.out.println("editIngredients Failed");
+                // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            }
         }
-
         return allpassed;
     }
 
@@ -580,10 +619,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             sqLiteDatabase.delete(TABLE_Recipe_Ingredient_List, recipeID + " = ?", new String[]{String.valueOf(recipeId)});
         }
-        catch( Exception e){
+        catch( Exception ex){
             allpassed = false;
+            if(isTesting) {
+                System.out.println("deleteRecipeIngredients Failed");
+                // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            }
         }
-
         return allpassed;
     }
 
@@ -602,16 +644,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         catch( Exception e){
             allpassed = false;
+            if(isTesting) {
+                System.out.println("deleteIngredients Failed");
+                // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            }
         }
-
         return allpassed;
     }
 
     /**
-     * This method returns a built Recipe object
+     * This method creates a new row in the Recipe Direction table using the provided recipeDirection
      *
-     * @return If successful in fetching the cursor and building the recipe, it will
-     * return an Recipe Object, if not the method will return null.
+     * @param recipeDirection
+     * @return true if the operation was successful, false otherwise
      */
     boolean addRecipeDirection(RecipeDirection recipeDirection) {
         //TODO: TEST
@@ -633,16 +678,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(TABLE_Recipe_Directions_List, null, contentValues);
         }catch (Exception e){
             allpassed = false;
+            if(isTesting) {
+                System.out.println("addRecipeDirections Failed");
+                // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            }
         }
         db.close();
         return allpassed;
     }
 
     /**
-     * This method returns a list of all recipes
+     * This method returns a list of all recipe Directions using the specified recipe id
      *
-     * @return If successful in fetching the recipes it will return an Array list of recipes, if not
-     *  it will return null.
+     * @param recipeId
+     * @return If successful in fetching the recipes this method will return an Array list of recipe
+     * Directions, if not, this method will return null.
      */
     public ArrayList<RecipeDirection> getAllRecipeDirections(int recipeId) {
         //TODO: TEST
@@ -662,10 +712,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception ex) {
-            // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            if(isTesting) {
+                System.out.println("getAllRecipeDirections Failed");
+                // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            }
             return null;
         }
-
         return recipeIngredientList;
     }
 
@@ -682,18 +734,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             sqLiteDatabase.delete(TABLE_Recipe_Directions_List, recipeID + " = ?", new String[]{String.valueOf(recipeId)});
         }
-        catch( Exception e){
+        catch( Exception ex){
             allpassed = false;
+            if(isTesting) {
+                System.out.println("deleteRecipeDirections Failed");
+                // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            }
         }
-
         return allpassed;
     }
 
     /**
-     * This method returns a list of all recipes
+     * This method returns a list of all recipe Categorys using the specified recipe id
      *
-     * @return If successful in fetching the recipes it will return an Array list of recipes, if not
-     *  it will return null.
+     * @param recipeId
+     * @return If successful in fetching the recipes this method will return an Array list of recipe
+     * Categories, if not, this method will return null.
      */
     public ArrayList<RecipeCategory> getAllRecipeCategorys(int recipeId) {
         //TODO: TEST
@@ -713,18 +769,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception ex) {
-            // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            if(isTesting) {
+                System.out.println("getAllRecipeCategories Failed");
+                // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            }
             return null;
         }
-
         return recipeCategoryList;
     }
 
     /**
-     * This method returns a built Recipe object
+     * This method creates a new row in the Recipe Category table using the provided recipeCategory
      *
-     * @return If successful in fetching the cursor and building the recipe, it will
-     * return an Recipe Object, if not the method will return null.
+     * @param recipeCategory
+     * @return true if the operation was successful, false otherwise
      */
     boolean addRecipeCategory(RecipeCategory recipeCategory) {
         //TODO: TEST
@@ -745,16 +803,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(TABLE_Recipe_Category_List, null, contentValues);
         }catch (Exception e){
             allpassed = false;
+            if(isTesting) {
+                System.out.println("addRecipeCategorie Failed");
+                // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            }
         }
         db.close();
         return allpassed;
     }
 
     /**
-     * This method returns a built Recipe object
+     * This method creates a new row in the Category table using the provided category
      *
-     * @return If successful in fetching the cursor and building the recipe, it will
-     * return an Recipe Object, if not the method will return null.
+     * @param category
+     * @return true if the operation was successful, false otherwise
      */
     boolean addCategory(Category category) {
         //TODO: TEST
@@ -772,13 +834,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             // Insert the new row
             db.insert(TABLE_Recipe_Category_List, null, contentValues);
-        }catch (Exception e){
+        }catch (Exception ex){
             allpassed = false;
+            if(isTesting) {
+                System.out.println("addCategoriy Failed");
+                // Log.w("addCategoriy()", ex.getMessage());
+            }
         }
         db.close();
         return allpassed;
     }
 
+    /**
+     * This method returns a Category using the specified category ID
+     *
+     * @param categoryID
+     * @return If successful in fetching the categorie return, if not, this method will return null.
+     */
     public Category getCategory(int categoryID) {
 
         //TODO: Implement
@@ -795,8 +867,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception ex) {
-            System.out.println("failed to retrieve from TABLE_Category_List");
-            // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            if(isTesting) {
+                System.out.println("getCategoriy Failed");
+                // Log.w("getCategoriy()", ex.getMessage());
+            }
             return null;
         }
         return category;
@@ -815,8 +889,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             sqLiteDatabase.delete(TABLE_Recipe_Category_List, recipeID + " = ?", new String[]{String.valueOf(recipeId)});
         }
-        catch( Exception e){
+        catch( Exception ex){
             allpassed = false;
+            if(isTesting) {
+                System.out.println("deleteRecipeCategoriy Failed");
+                // Log.w("addCategoriy()", ex.getMessage());
+            }
         }
 
         return allpassed;
@@ -835,8 +913,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             sqLiteDatabase.delete(TABLE_Recipe_Category_List, KEY_ID + " = ?", new String[]{String.valueOf(categoryId)});
         }
-        catch( Exception e){
+        catch( Exception ex){
             allpassed = false;
+            if(isTesting) {
+                System.out.println("deleteCategoriy Failed");
+                // Log.w("deleteCategoriy()", ex.getMessage());
+            }
         }
 
         return allpassed;
@@ -851,158 +933,177 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Recipe mapRecipe(Cursor cursor) {
         //TODO: TEST
         Recipe recipe = new Recipe();
-
-        if (cursor != null) {
-            if (cursor.getColumnIndex(KEY_ID) != -1) {
-                int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
-                recipe.setKeyID((cursor.getInt(idIndex)));
-            }
-            if (cursor.getColumnIndex(title) != -1) {
-                int recipeTitleIndex = cursor.getColumnIndexOrThrow(title);
-                recipe.setTitle(cursor.getString(recipeTitleIndex));
-            }
-            if (cursor.getColumnIndex(tTime) != -1) {
-                int recipetTimeIndex = cursor.getColumnIndexOrThrow(tTime);
-                recipe.setTotal_time(cursor.getInt(recipetTimeIndex));
-            }
-            if (cursor.getColumnIndex(pTime) != -1) {
-                int recipepTimeIndex = cursor.getColumnIndexOrThrow(pTime);
-                recipe.setPrep_time(cursor.getInt(recipepTimeIndex));
-            }
-            if (cursor.getColumnIndex(servings) != -1) {
-                int recipeServingsIndex = cursor.getColumnIndexOrThrow(details);
-                recipe.setServings(cursor.getDouble(recipeServingsIndex));
-            }
-            //TODO not sure how to get the bit type out of the cursor... could just do 1 or 0
-            if (cursor.getColumnIndex(favorited) != -1) {
-                int recipeFavoritedIndex = cursor.getColumnIndexOrThrow(favorited);
-                if(cursor.getInt(recipeFavoritedIndex) == 1) {
-                    recipe.setFavorited(true);
-                }else{
-                    recipe.setFavorited(true);
+        try{
+            if (cursor != null) {
+                if (cursor.getColumnIndex(KEY_ID) != -1) {
+                    int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
+                    recipe.setKeyID((cursor.getInt(idIndex)));
+                }
+                if (cursor.getColumnIndex(title) != -1) {
+                    int recipeTitleIndex = cursor.getColumnIndexOrThrow(title);
+                    recipe.setTitle(cursor.getString(recipeTitleIndex));
+                }
+                if (cursor.getColumnIndex(tTime) != -1) {
+                    int recipetTimeIndex = cursor.getColumnIndexOrThrow(tTime);
+                    recipe.setTotal_time(cursor.getInt(recipetTimeIndex));
+                }
+                if (cursor.getColumnIndex(pTime) != -1) {
+                    int recipepTimeIndex = cursor.getColumnIndexOrThrow(pTime);
+                    recipe.setPrep_time(cursor.getInt(recipepTimeIndex));
+                }
+                if (cursor.getColumnIndex(servings) != -1) {
+                    int recipeServingsIndex = cursor.getColumnIndexOrThrow(details);
+                    recipe.setServings(cursor.getDouble(recipeServingsIndex));
+                }
+            //not sure how to get the bit type out of the cursor... could just do 1 or 0
+                if (cursor.getColumnIndex(favorited) != -1) {
+                    int recipeFavoritedIndex = cursor.getColumnIndexOrThrow(favorited);
+                    if(cursor.getInt(recipeFavoritedIndex) == 1) {
+                        recipe.setFavorited(true);
+                    }else{
+                        recipe.setFavorited(false);
+                    }
                 }
             }
-
+            if (recipe.getKeyID() == -1){
+                return null;
+            }
         }
-
-        if (recipe.getKeyID() == -1){
-            return null;
+        catch( Exception ex){
+            if(isTesting) {
+                System.out.println("mapRecipeDirection Failed");
+                // Log.w("mapRecipeDirection()", ex.getMessage());
         }
+    }
         return recipe;
 
     }
 
     /**
-     * This method returns a built Recipe object
+     * This method returns a built Recipe Ingredient object
      *
-     * @return If successful in fetching the cursor and building the recipe, it will
-     * return an Recipe Object, if not the method will return null.
+     * @return If successful in fetching the cursor and building the recipe ingredient, it will
+     * return an Recipe Ingredient Object, if not the method will return null.
      */
     private RecipeIngredient mapRecipeIngredient(Cursor cursor) {
         //TODO: TEST
         RecipeIngredient recipeIngredient = new RecipeIngredient();
-
-        if (cursor != null) {
-            if (cursor.getColumnIndex(KEY_ID) != -1) {
-                int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
-                recipeIngredient.setKeyID((cursor.getInt(idIndex)));
+        try{
+            if (cursor != null) {
+                if (cursor.getColumnIndex(KEY_ID) != -1) {
+                    int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
+                    recipeIngredient.setKeyID((cursor.getInt(idIndex)));
+                }
+                if (cursor.getColumnIndex(recipeID) != -1) {
+                    int recipeIdIndex = cursor.getColumnIndexOrThrow(recipeID);
+                    recipeIngredient.setRecipeID(cursor.getInt(recipeIdIndex));
+                }
+                if (cursor.getColumnIndex(ingredientID) != -1) {
+                    int ingredientIdIndex = cursor.getColumnIndexOrThrow(ingredientID);
+                    recipeIngredient.setIngredientID(cursor.getInt(ingredientIdIndex));
+                }
+                if (cursor.getColumnIndex(quantity) != -1) {
+                    int quantityIndex = cursor.getColumnIndexOrThrow(quantity);
+                    recipeIngredient.setQuantity(cursor.getDouble(quantityIndex));
+                }
+                if (cursor.getColumnIndex(unit) != -1) {
+                    int unitIndex = cursor.getColumnIndexOrThrow(unit);
+                    recipeIngredient.setUnit(cursor.getString(unitIndex));
+                }
+                if (cursor.getColumnIndex(details) != -1) {
+                    int detailsIndex = cursor.getColumnIndexOrThrow(details);
+                    recipeIngredient.setDetails(cursor.getString(detailsIndex));
+                }
             }
-            if (cursor.getColumnIndex(recipeID) != -1) {
-                int recipeIdIndex = cursor.getColumnIndexOrThrow(recipeID);
-                recipeIngredient.setRecipeID(cursor.getInt(recipeIdIndex));
+            if (recipeIngredient.getKeyID() == -1){
+                return null;
             }
-            if (cursor.getColumnIndex(ingredientID) != -1) {
-                int ingredientIdIndex = cursor.getColumnIndexOrThrow(ingredientID);
-                recipeIngredient.setIngredientID(cursor.getInt(ingredientIdIndex));
+        } catch( Exception ex){
+            if(isTesting) {
+                System.out.println("mapRecipeDirection Failed");
+                // Log.w("mapRecipeDirection()", ex.getMessage());
             }
-            if (cursor.getColumnIndex(quantity) != -1) {
-                int quantityIndex = cursor.getColumnIndexOrThrow(quantity);
-                recipeIngredient.setQuantity(cursor.getDouble(quantityIndex));
-            }
-            if (cursor.getColumnIndex(unit) != -1) {
-                int unitIndex = cursor.getColumnIndexOrThrow(unit);
-                recipeIngredient.setUnit(cursor.getString(unitIndex));
-            }
-            if (cursor.getColumnIndex(details) != -1) {
-                int detailsIndex = cursor.getColumnIndexOrThrow(details);
-                recipeIngredient.setDetails(cursor.getString(detailsIndex));
-            }
-
-
-        }
-        if (recipeIngredient.getKeyID() == -1){
-            return null;
         }
         return recipeIngredient;
 
     }
 
     /**
-     * This method returns a built ingredient object
+     * This method returns a built recipe Direction object
      *
-     * @return If successful in fetching the cursor and building the ingredient, it will
-     * return an Ingredient Object, if not the method will return null.
+     * @return If successful in fetching the cursor and building the recipe Direction, it will
+     * return an recipe Direction Object, if not the method will return null.
      */
     private RecipeDirection mapRecipeDirection(Cursor cursor) {
         //TODO: TEST
         RecipeDirection recipeDirection = new RecipeDirection();
-
-        if (cursor != null) {
-            if (cursor.getColumnIndex(KEY_ID) != -1) {
-                int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
-                recipeDirection.setKeyID((cursor.getInt(idIndex)));
+        try {
+            if (cursor != null) {
+                if (cursor.getColumnIndex(KEY_ID) != -1) {
+                    int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
+                    recipeDirection.setKeyID((cursor.getInt(idIndex)));
+                }
+                if (cursor.getColumnIndex(recipeID) != -1) {
+                    int recipeIdIndex = cursor.getColumnIndexOrThrow(recipeID);
+                    recipeDirection.setRecipeID(cursor.getInt(recipeIdIndex));
+                }
+                if (cursor.getColumnIndex(directionText) != -1) {
+                    int directionTextIndex = cursor.getColumnIndexOrThrow(directionText);
+                    recipeDirection.setDirectionText(cursor.getString(directionTextIndex));
+                }
+                if (cursor.getColumnIndex(directionNumber) != -1) {
+                    int quantityIndex = cursor.getColumnIndexOrThrow(directionNumber);
+                    recipeDirection.setDirectionNumber(cursor.getInt(quantityIndex));
+                }
             }
-            if (cursor.getColumnIndex(recipeID) != -1) {
-                int recipeIdIndex = cursor.getColumnIndexOrThrow(recipeID);
-                recipeDirection.setRecipeID(cursor.getInt(recipeIdIndex));
+            if (recipeDirection.getKeyID() == -1) {
+                return null;
             }
-            if (cursor.getColumnIndex(directionText) != -1) {
-                int directionTextIndex = cursor.getColumnIndexOrThrow(directionText);
-                recipeDirection.setDirectionText(cursor.getString(directionTextIndex));
+        } catch( Exception ex){
+            if(isTesting) {
+                System.out.println("mapRecipeDirection Failed");
+                // Log.w("mapRecipeDirection()", ex.getMessage());
             }
-            if (cursor.getColumnIndex(directionNumber) != -1) {
-                int quantityIndex = cursor.getColumnIndexOrThrow(directionNumber);
-                recipeDirection.setDirectionNumber(cursor.getInt(quantityIndex));
-            }
-        }
-        if (recipeDirection.getKeyID() == -1){
-            return null;
         }
         return recipeDirection;
-
     }
 
     /**
-     * This method returns a built ingredient object
+     * This method returns a built Recipe Category object
      *
-     * @return If successful in fetching the cursor and building the ingredient, it will
-     * return an Ingredient Object, if not the method will return null.
+     * @return If successful in fetching the cursor and building the Recipe Category, it will
+     * return an Recipe Category Object, if not the method will return null.
      */
     private RecipeCategory mapRecipeCategory(Cursor cursor) {
         //TODO: TEST
         RecipeCategory recipeCategory = new RecipeCategory();
-
-        if (cursor != null) {
-            if (cursor.getColumnIndex(KEY_ID) != -1) {
-                int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
-                recipeCategory.setKeyID((cursor.getInt(idIndex)));
+        try {
+            if (cursor != null) {
+                if (cursor.getColumnIndex(KEY_ID) != -1) {
+                    int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
+                    recipeCategory.setKeyID((cursor.getInt(idIndex)));
+                }
+                if (cursor.getColumnIndex(recipeID) != -1) {
+                    int recipeIdIndex = cursor.getColumnIndexOrThrow(recipeID);
+                    recipeCategory.setRecipeID(cursor.getInt(recipeIdIndex));
+                }
+                if (cursor.getColumnIndex(categoryID) != -1) {
+                    int categoryIdIndex = cursor.getColumnIndexOrThrow(categoryID);
+                    recipeCategory.setCategoryID(cursor.getInt(categoryIdIndex));
+                }
+                //adding the category name from Category table
+                recipeCategory.setName(getCategory(recipeCategory.getCategoryID()).getName());
             }
-            if (cursor.getColumnIndex(recipeID) != -1) {
-                int recipeIdIndex = cursor.getColumnIndexOrThrow(recipeID);
-                recipeCategory.setRecipeID(cursor.getInt(recipeIdIndex));
+            if (recipeCategory.getKeyID() == -1) {
+                return null;
             }
-            if (cursor.getColumnIndex(categoryID) != -1) {
-                int categoryIdIndex = cursor.getColumnIndexOrThrow(categoryID);
-                recipeCategory.setCategoryID(cursor.getInt(categoryIdIndex));
+        } catch( Exception ex){
+            if(isTesting) {
+                System.out.println("mapRecipeCategory Failed");
+                // Log.w("mapRecipeCategory()", ex.getMessage());
             }
-            //adding the category name from Category table
-            recipeCategory.setName(getCategory(recipeCategory.getCategoryID()).getName());
-        }
-        if (recipeCategory.getKeyID() == -1){
-            return null;
         }
         return recipeCategory;
-
     }
 
     /**
@@ -1014,7 +1115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Category mapCategory(Cursor cursor) {
         //TODO: TEST
         Category category = new Category();
-
+    try {
         if (cursor != null) {
             if (cursor.getColumnIndex(KEY_ID) != -1) {
                 int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
@@ -1026,10 +1127,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
 
         }
-        if (category.getKeyID() == -1){
+        if (category.getKeyID() == -1) {
             return null;
         }
+    } catch( Exception ex){
+            if(isTesting) {
+                System.out.println("mapCategory Failed");
+                // Log.w("mapCategory()", ex.getMessage());
+            }
+        }
         return category;
-
     }
 }

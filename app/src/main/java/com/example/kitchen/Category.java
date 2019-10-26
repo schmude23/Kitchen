@@ -18,5 +18,11 @@ public class Category {
         this.name = name;
     }
 
-
+    @Override
+    public String toString() {
+        return "Category{" +
+                "keyID=" + keyID +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
