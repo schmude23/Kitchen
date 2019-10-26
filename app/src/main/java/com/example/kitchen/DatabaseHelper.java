@@ -1068,6 +1068,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return recipeDirection;
     }
 
+
     /**
      * This method returns a built Recipe Category object
      *
