@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//create read update delete
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final int VERSION_NUMBER = 1;
@@ -25,6 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String recipeID = "RECIPE_ID";
     public static final String ingredientID = "INGREDIENT_ID";
     public static final String quantity = "QUANTITY";
+    public static final String unit = "UNIT";
     public static final String details = "DETAILS";
 
     //Recipe Table
@@ -69,7 +70,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //TODO: TEST
-
         //Recipe Table
         String CREATE_RECIPE_TABLE = "CREATE TABLE " + TABLE_Recipe_List + "("
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -92,6 +92,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + recipeID + " INTEGER, "
                 + ingredientID + " INTEGER,"
                 + quantity + " DECIMAL,"
+                + unit + " TEXT,"
                 + details + " TEXT" +")";
         sqLiteDatabase.execSQL(CREATE_RECIPE_INGREDIENT_TABLE);
 
@@ -150,10 +151,85 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param recipe
      * @return true if the operation was successful, false otherwise
      */
-    public boolean createRecipe(Recipe recipe) {
-        return false; //TODO: implement this method
+    public boolean addRecipe(Recipe recipe) {
+         //TODO: implement this method
+        boolean allpassed = true;
+        int recipeId = recipe.getKeyID();
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        ArrayList<RecipeCategory> recipeCategoryList = new ArrayList<RecipeCategory>();ArrayList<RecipeIngredient> recipeIngredientList = new ArrayList<RecipeIngredient>();
+        ArrayList<RecipeDirection> recipeDirectionList = new ArrayList<RecipeDirection>();
+
+        //updating recipe portion of table
+        try {
+            ContentValues cVals = new ContentValues();
+            cVals.put(title, recipe.getTitle());
+            cVals.put(pTime, recipe.getPrep_time());
+            cVals.put(tTime, recipe.getTotal_time());
+            cVals.put(servings, recipe.getServings());
+            cVals.put(favorited, recipe.getFavorited());
+            sqLiteDatabase.update(TABLE_Ingredient_List, cVals, KEY_ID + " = ?", new String[]{String.valueOf(recipeId)});
+        }
+        catch( Exception e){
+            System.out.println("updating recipe table failed");
+            allpassed = false;
+        }
+
+
+        //add new ingredients from ingredientList
+        try {
+            int size = recipeIngredientList.size();
+            for(int i = 0; i < size; i++){
+                if(addRecipeIngredient(recipeIngredientList.get(i))){
+                    allpassed = false;
+                    System.out.println("addRecipeIngredient failed");
+                }
+            }
+        }
+        catch( Exception e){
+            System.out.println("add new ingredients failed");
+            allpassed = false;
+        }
+
+        //add new categorys from recipeCategoryList
+        try {
+            int size = recipeCategoryList.size();
+            for(int i = 0; i < size; i++){
+                if(addRecipeCategory(recipeCategoryList.get(i))){
+                    allpassed = false;
+                    System.out.println("addRecipeCategory failed");
+                }
+            }
+        }
+        catch( Exception e){
+            System.out.println("add new Category failed");
+            allpassed = false;
+        }
+
+        //add new directions from recipeDirectionList
+        try {
+            int size = recipeDirectionList.size();
+            for(int i = 0; i < size; i++){
+                if(addRecipeDirection(recipeDirectionList.get(i))){
+                    allpassed = false;
+                    System.out.println("addRecipeDirection failed");
+                }
+            }
+        }
+        catch( Exception e){
+            System.out.println("delete and add new direction failed");
+            allpassed = false;
+        }
+
+        //in case one of the recipe portions were not updated.
+        if(!allpassed){
+            //editRecipe(temp);
+        }
+
+        return allpassed;
     }
 
+    //TODO: Add methods to get recipes by ingredients, category, both, etc. (Iteration 1 task 5.5)
     /**
      * This method retrieves the recipe for the given recipeId
      *
@@ -166,8 +242,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Recipe recipe = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_Recipe_List + "  WHERE " + recipeID +" = ? ", new String[] {String.valueOf(recipeId)});
         try {
+            Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_Recipe_List + "  WHERE " + recipeID +" = ? ", new String[] {String.valueOf(recipeId)});
             if (cursor != null) {
                 cursor.moveToFirst();
                     recipe = mapRecipe(cursor);
@@ -176,12 +252,102 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception ex) {
+            System.out.println("failed to retrieve from TABLE_Recipe-List on ID");
+            // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            return null;
+        }
+
+        //Getting Ingredient List
+        ArrayList<RecipeIngredient> recipeIngredientList = getAllRecipeIngredients(recipeId);
+        recipe.setIngredientList(recipeIngredientList);
+
+
+        //Getting Direction List
+        ArrayList<RecipeDirection> recipeDirectionList = getAllRecipeDirections(recipeId);
+        recipe.setDirectionsList(recipeDirectionList);
+
+        //Getting Category List
+        ArrayList<RecipeCategory> recipeCategoryList = getAllRecipeCategorys(recipeId);
+        recipe.setCategoryList(recipeCategoryList);
+
+        return recipe;
+    }
+
+    /**
+     * This method retrieves the recipe for the given recipe Title
+     *
+     * @param recipeTitle
+     * @return The recipe corresponding to the provided recipe Title, or null if one is not found.
+     */
+    public Recipe getRecipe(String recipeTitle) {
+
+        //TODO: TEST
+        Recipe recipe = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        try {
+            Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_Recipe_List + "  WHERE " + recipeTitle +" = ? ", new String[] {String.valueOf(recipeTitle)});
+            if (cursor != null) {
+                cursor.moveToFirst();
+                recipe = mapRecipe(cursor);
+                cursor.moveToNext();
+
+                cursor.close();
+            }
+        } catch (Exception ex) {
+            System.out.println("failed to retrieve from TABLE_Recipe_List on Title");
+            // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            return null;
+        }
+
+        int recipeId = recipe.getKeyID();
+
+        //Getting Ingredient List
+        ArrayList<RecipeIngredient> recipeIngredientList = getAllRecipeIngredients(recipeId);
+        recipe.setIngredientList(recipeIngredientList);
+
+
+        //Getting Direction List
+        ArrayList<RecipeDirection> recipeDirectionList = getAllRecipeDirections(recipeId);
+        recipe.setDirectionsList(recipeDirectionList);
+
+        //Getting Category List
+        ArrayList<RecipeCategory> recipeCategoryList = getAllRecipeCategorys(recipeId);
+        recipe.setCategoryList(recipeCategoryList);
+
+        return recipe;
+    }
+
+    /**
+     * This method returns a list of all recipes
+     *
+     * @return If successful in fetching the recipes it will return an Array list of recipes, if not
+     *  it will return null.
+     */
+    public ArrayList<Recipe> getAllRecipes() {
+        //TODO: IS GET ALL WORKiNG_____________only creates recipe with no ingredients____________________________
+        Recipe recipe;
+        ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_Recipe_List, null );
+        try {
+            if (cursor != null) {
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    recipe = mapRecipe(cursor);
+                    recipeList.add(recipe);
+                    cursor.moveToNext();
+                }
+                cursor.close();
+            }
+        } catch (Exception ex) {
             // Log.w("getAllRecipeIngredients()", ex.getMessage());
             return null;
         }
 
 
-        return recipe;
+        return recipeList;
     }
 
     /**
@@ -191,16 +357,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param recipe the provided recipe
      * @return true if the operation was successful, false otherwise.
      */
-    public boolean editRecipe(Recipe recipe, List<RecipeIngredient> recipeIngredient, List<RecipeCategory> recipeCategoryList, List<RecipeDirection> recipeDirectionList) {
+    public boolean editRecipe(Recipe recipe) {
 
         //TODO: Test
         //I want to save a version of recipe incase something goes wrong.
         //if so, update with original recipe.
-        Recipe temp = getRecipe(recipe.getKeyID());
+        //Recipe temp = getRecipe(recipe.getKeyID());
         boolean allpassed = true;
         int recipeId = recipe.getKeyID();
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-
+        ArrayList<RecipeIngredient> recipeIngredientList = new ArrayList<RecipeIngredient>();
+        ArrayList<RecipeCategory> recipeCategoryList = new ArrayList<RecipeCategory>();
+        ArrayList<RecipeDirection> recipeDirectionList = new ArrayList<RecipeDirection>();
 
         //updating recipe portion of table
         try {
@@ -221,9 +389,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //delet ingredientlist and add new ingredientlist
         try {
             sqLiteDatabase.delete(TABLE_Recipe_Ingredient_List, recipeID + " = ?", new String[]{String.valueOf(recipeId)});
-            int size = recipeIngredient.size();
+            int size = recipeIngredientList.size();
             for(int i = 0; i < size; i++){
-                if(addRecipeIngredient(recipeIngredient.get(i))){
+                if(addRecipeIngredient(recipeIngredientList.get(i))){
                     allpassed = false;
                     System.out.println("addRecipeIngredient failed");
                 }
@@ -255,7 +423,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.delete(TABLE_Recipe_Directions_List, recipeID + " = ?", new String[]{String.valueOf(recipeId)});
             int size = recipeDirectionList.size();
             for(int i = 0; i < size; i++){
-                if(addRecipeDirections(recipeDirectionList.get(i))){
+                if(addRecipeDirection(recipeDirectionList.get(i))){
                     allpassed = false;
                     System.out.println("addRecipeDirection failed");
                 }
@@ -309,6 +477,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return allpassed;
     }
 
+    /**
+     * This method returns a list of all recipes
+     *
+     * @return If successful in fetching the recipes it will return an Array list of recipes, if not
+     *  it will return null.
+     */
+    boolean addRecipeIngredient(RecipeIngredient recipeIngredient) {
+        //TODO: TEST
+        //Get the Data Repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //Create a new map of values, where column names are the keys
+        ContentValues contentValues = new ContentValues();
+
+        boolean allpassed = true;
+
+        try {
+            //contentValues.put(KEY_ID, Ingredient.getKey());  //not sure if this line is needed or if database will auto increment
+            contentValues.put(recipeID, recipeIngredient.getRecipeID());
+            contentValues.put(ingredientID, recipeIngredient.getIngredientID());
+            contentValues.put(quantity, recipeIngredient.getQuantity());
+            contentValues.put(unit, recipeIngredient.getUnit());
+            contentValues.put(details, recipeIngredient.getDetails());
+
+
+            // Insert the new row, returning the primary key value of the new row
+            long newRowId = db.insert(TABLE_Recipe_Ingredient_List, null, contentValues);
+        }catch (Exception e){
+            allpassed = false;
+        }
+        db.close();
+        return allpassed;
+    }
 
     /**
      * This method returns a list of all recipes
@@ -316,32 +517,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful in fetching the recipes it will return an Array list of recipes, if not
      *  it will return null.
      */
-    public ArrayList<Recipe> getAllRecipes() {
-        //TODO: TEST
-        Recipe recipe;
-        ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_Recipe_List, null );
-        try {
-            if (cursor != null) {
-                cursor.moveToFirst();
-                while (!cursor.isAfterLast()) {
-                    recipe = mapRecipe(cursor);
-                    recipeList.add(recipe);
-                    cursor.moveToNext();
-                }
-                cursor.close();
-            }
-        } catch (Exception ex) {
-            // Log.w("getAllRecipeIngredients()", ex.getMessage());
-            return null;
-        }
-
-
-        return recipeList;
-    }
-
     public ArrayList<RecipeIngredient> getAllRecipeIngredients(int recipeId) {
         //TODO: TEST
         RecipeIngredient recipeIngredient;
@@ -369,44 +544,302 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method returns a built ingredient object
+     * This method modifies the ingredient in the ingredients table with the same key id
      *
-     * @return If successful in fetching the cursor and building the ingredient, it will
-     * return an Ingredient Object, if not the method will return null.
+     * @param ingredient
+     * @return If successful in updating, will return true
      */
-    private RecipeIngredient mapRecipeIngredient(Cursor cursor) {
+    public boolean editIngredient(Ingredient ingredient) {
         //TODO: TEST
-        RecipeIngredient recipeIngredient = new RecipeIngredient();
-
-        if (cursor != null) {
-            if (cursor.getColumnIndex(KEY_ID) != -1) {
-                int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
-                recipeIngredient.setKeyID((cursor.getInt(idIndex)));
-            }
-            if (cursor.getColumnIndex(recipeID) != -1) {
-                int recipeIdIndex = cursor.getColumnIndexOrThrow(recipeID);
-                recipeIngredient.setRecipeID(cursor.getInt(recipeIdIndex));
-            }
-            if (cursor.getColumnIndex(ingredientID) != -1) {
-                int ingredientIdIndex = cursor.getColumnIndexOrThrow(ingredientID);
-                recipeIngredient.setIngredientID(cursor.getInt(ingredientIdIndex));
-            }
-            if (cursor.getColumnIndex(quantity) != -1) {
-                int quantityIndex = cursor.getColumnIndexOrThrow(quantity);
-                recipeIngredient.setQuantity(cursor.getDouble(quantityIndex));
-            }
-            if (cursor.getColumnIndex(details) != -1) {
-                int detailsIndex = cursor.getColumnIndexOrThrow(details);
-                recipeIngredient.setDetails(cursor.getString(detailsIndex));
-            }
-
-
+        //Ingredient temp = recipe.getKeyID());
+        boolean allpassed = true;
+        try {
+            int id = ingredient.getKeyID();
+            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+            ContentValues cVals = new ContentValues();
+            cVals.put(name, ingredient.getName());
+            sqLiteDatabase.update(TABLE_Ingredient_List, cVals, KEY_ID + " = ?", new String[]{String.valueOf(id)});
         }
-        if (recipeIngredient.getKeyID() == -1){
+        catch( Exception e){
+            allpassed = false;
+        }
+
+        return allpassed;
+    }
+
+    /**
+     * This method deletes the recipe ingredient list in the recipe ingredient table using the recipeId
+     *
+     * @param  recipeId
+     * @return If successful in updating, will return true
+     */
+    public boolean deleteRecipeIngredients(int recipeId) {
+        //TODO: TEST
+        boolean allpassed = true;
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        try {
+            sqLiteDatabase.delete(TABLE_Recipe_Ingredient_List, recipeID + " = ?", new String[]{String.valueOf(recipeId)});
+        }
+        catch( Exception e){
+            allpassed = false;
+        }
+
+        return allpassed;
+    }
+
+    /**
+     * This method deletes the ingredient in the ingredient table using the ingredientId
+     *
+     * @param  ingredintId
+     * @return If successful in updating, will return true
+     */
+    public boolean deleteIngredients(int ingredintId) {
+        //TODO: TEST
+        boolean allpassed = true;
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        try {
+            sqLiteDatabase.delete(TABLE_Recipe_Ingredient_List, KEY_ID + " = ?", new String[]{String.valueOf(ingredintId)});
+        }
+        catch( Exception e){
+            allpassed = false;
+        }
+
+        return allpassed;
+    }
+
+    /**
+     * This method returns a built Recipe object
+     *
+     * @return If successful in fetching the cursor and building the recipe, it will
+     * return an Recipe Object, if not the method will return null.
+     */
+    boolean addRecipeDirection(RecipeDirection recipeDirection) {
+        //TODO: TEST
+        //Get the Data Repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //Create a new map of values, where column names are the keys
+        ContentValues contentValues = new ContentValues();
+
+        boolean allpassed = true;
+
+        try {
+            //contentValues.put(KEY_ID, Ingredient.getKey());  //not sure if this line is needed or if database will auto increment
+            contentValues.put(recipeID, recipeDirection.getRecipeID());
+            contentValues.put(directionText, recipeDirection.getDirectionText());
+            contentValues.put(directionNumber, recipeDirection.getDirectionNumber());
+
+            // Insert the new row, returning the primary key value of the new row
+            long newRowId = db.insert(TABLE_Recipe_Directions_List, null, contentValues);
+        }catch (Exception e){
+            allpassed = false;
+        }
+        db.close();
+        return allpassed;
+    }
+
+    /**
+     * This method returns a list of all recipes
+     *
+     * @return If successful in fetching the recipes it will return an Array list of recipes, if not
+     *  it will return null.
+     */
+    public ArrayList<RecipeDirection> getAllRecipeDirections(int recipeId) {
+        //TODO: TEST
+        RecipeDirection recipeDirection;
+        ArrayList<RecipeDirection> recipeIngredientList = new ArrayList<RecipeDirection>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_Recipe_Directions_List + "  WHERE " + recipeID +" = ? ", new String[] {String.valueOf(recipeId)});
+        try {
+            if (cursor != null) {
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    recipeDirection = mapRecipeDirection(cursor);
+                    recipeIngredientList.add(recipeDirection);
+                    cursor.moveToNext();
+                }
+                cursor.close();
+            }
+        } catch (Exception ex) {
+            // Log.w("getAllRecipeIngredients()", ex.getMessage());
             return null;
         }
-        return recipeIngredient;
 
+        return recipeIngredientList;
+    }
+
+    /**
+     * This method deletes the recipe Direction list in the recipe Direction table using the recipeId
+     *
+     * @param  recipeId
+     * @return If successful in updating, will return true
+     */
+    public boolean deleteRecipeDirection(int recipeId) {
+        //TODO: TEST
+        boolean allpassed = true;
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        try {
+            sqLiteDatabase.delete(TABLE_Recipe_Directions_List, recipeID + " = ?", new String[]{String.valueOf(recipeId)});
+        }
+        catch( Exception e){
+            allpassed = false;
+        }
+
+        return allpassed;
+    }
+
+    /**
+     * This method returns a list of all recipes
+     *
+     * @return If successful in fetching the recipes it will return an Array list of recipes, if not
+     *  it will return null.
+     */
+    public ArrayList<RecipeCategory> getAllRecipeCategorys(int recipeId) {
+        //TODO: TEST
+        RecipeCategory recipeCategory;
+        ArrayList<RecipeCategory> recipeCategoryList = new ArrayList<RecipeCategory>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_Recipe_Category_List + "  WHERE " + recipeID +" = ? ", new String[] {String.valueOf(recipeId)});
+        try {
+            if (cursor != null) {
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    recipeCategory = mapRecipeCategory(cursor);
+                    recipeCategoryList.add(recipeCategory);
+                    cursor.moveToNext();
+                }
+                cursor.close();
+            }
+        } catch (Exception ex) {
+            // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            return null;
+        }
+
+        return recipeCategoryList;
+    }
+
+    /**
+     * This method returns a built Recipe object
+     *
+     * @return If successful in fetching the cursor and building the recipe, it will
+     * return an Recipe Object, if not the method will return null.
+     */
+    boolean addRecipeCategory(RecipeCategory recipeCategory) {
+        //TODO: TEST
+        //Get the Data Repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //Create a new map of values, where column names are the keys
+        ContentValues contentValues = new ContentValues();
+
+        boolean allpassed = true;
+
+        try {
+            //contentValues.put(KEY_ID, Ingredient.getKey());  //not sure if this line is needed or if database will auto increment
+            contentValues.put(recipeID, recipeCategory.getRecipeID());
+            contentValues.put(categoryID, recipeCategory.getCategoryID());
+
+            // Insert the new row, returning the primary key value of the new row
+            long newRowId = db.insert(TABLE_Recipe_Category_List, null, contentValues);
+        }catch (Exception e){
+            allpassed = false;
+        }
+        db.close();
+        return allpassed;
+    }
+
+    /**
+     * This method returns a built Recipe object
+     *
+     * @return If successful in fetching the cursor and building the recipe, it will
+     * return an Recipe Object, if not the method will return null.
+     */
+    boolean addCategory(Category category) {
+        //TODO: TEST
+        //Get the Data Repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //Create a new map of values, where column names are the keys
+        ContentValues contentValues = new ContentValues();
+
+        boolean allpassed = true;
+
+        try {
+            //contentValues.put(KEY_ID, Ingredient.getKey());  //not sure if this line is needed or if database will auto increment
+            contentValues.put(name, category.getName());
+
+            // Insert the new row
+            db.insert(TABLE_Recipe_Category_List, null, contentValues);
+        }catch (Exception e){
+            allpassed = false;
+        }
+        db.close();
+        return allpassed;
+    }
+
+    public Category getCategory(int categoryID) {
+
+        //TODO: Implement
+        Category category = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        try {
+            Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_Category_List + "  WHERE " + KEY_ID + " = ? ", new String[]{String.valueOf(categoryID)});
+            if (cursor != null) {
+                cursor.moveToFirst();
+                category = mapCategory(cursor);
+                cursor.moveToNext();
+
+                cursor.close();
+            }
+        } catch (Exception ex) {
+            System.out.println("failed to retrieve from TABLE_Category_List");
+            // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            return null;
+        }
+        return category;
+    }
+
+    /**
+     * This method deletes the recipe category list in the recipe category table using the recipeId
+     *
+     * @param  recipeId
+     * @return If successful in updating, will return true
+     */
+    public boolean deleteRecipeCategory(int recipeId) {
+        //TODO: TEST
+        boolean allpassed = true;
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        try {
+            sqLiteDatabase.delete(TABLE_Recipe_Category_List, recipeID + " = ?", new String[]{String.valueOf(recipeId)});
+        }
+        catch( Exception e){
+            allpassed = false;
+        }
+
+        return allpassed;
+    }
+
+    /**
+     * This method deletes the category in the category table using the categoryId
+     *
+     * @param  categoryId
+     * @return If successful in updating, will return true
+     */
+    public boolean deleteCategory(int categoryId) {
+        //TODO: TEST
+        boolean allpassed = true;
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        try {
+            sqLiteDatabase.delete(TABLE_Recipe_Category_List, KEY_ID + " = ?", new String[]{String.valueOf(categoryId)});
+        }
+        catch( Exception e){
+            allpassed = false;
+        }
+
+        return allpassed;
     }
 
     /**
@@ -458,129 +891,145 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return recipe;
 
     }
-    //TODO: Add methods to get recipes by ingredients, category, both, etc. (Iteration 1 task 5.5)
-
 
     /**
-     * This method modifies the ingredient in the ingredients table with the same key id
+     * This method returns a built Recipe object
      *
-     * @param ingredient
-     * @return If successful in updating, will return true
+     * @return If successful in fetching the cursor and building the recipe, it will
+     * return an Recipe Object, if not the method will return null.
      */
-    public boolean editIngredient(Ingredient ingredient) {
+    private RecipeIngredient mapRecipeIngredient(Cursor cursor) {
         //TODO: TEST
-        //Ingredient temp = recipe.getKeyID());
-        boolean allpassed = true;
-        try {
-            int id = ingredient.getKeyID();
-            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-            ContentValues cVals = new ContentValues();
-            cVals.put(name, ingredient.getName());
-            sqLiteDatabase.update(TABLE_Ingredient_List, cVals, KEY_ID + " = ?", new String[]{String.valueOf(id)});
-        }
-        catch( Exception e){
-            allpassed = false;
-        }
+        RecipeIngredient recipeIngredient = new RecipeIngredient();
 
-        return allpassed;
+        if (cursor != null) {
+            if (cursor.getColumnIndex(KEY_ID) != -1) {
+                int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
+                recipeIngredient.setKeyID((cursor.getInt(idIndex)));
+            }
+            if (cursor.getColumnIndex(recipeID) != -1) {
+                int recipeIdIndex = cursor.getColumnIndexOrThrow(recipeID);
+                recipeIngredient.setRecipeID(cursor.getInt(recipeIdIndex));
+            }
+            if (cursor.getColumnIndex(ingredientID) != -1) {
+                int ingredientIdIndex = cursor.getColumnIndexOrThrow(ingredientID);
+                recipeIngredient.setIngredientID(cursor.getInt(ingredientIdIndex));
+            }
+            if (cursor.getColumnIndex(quantity) != -1) {
+                int quantityIndex = cursor.getColumnIndexOrThrow(quantity);
+                recipeIngredient.setQuantity(cursor.getDouble(quantityIndex));
+            }
+            if (cursor.getColumnIndex(unit) != -1) {
+                int unitIndex = cursor.getColumnIndexOrThrow(unit);
+                recipeIngredient.setUnit(cursor.getString(unitIndex));
+            }
+            if (cursor.getColumnIndex(details) != -1) {
+                int detailsIndex = cursor.getColumnIndexOrThrow(details);
+                recipeIngredient.setDetails(cursor.getString(detailsIndex));
+            }
+
+
+        }
+        if (recipeIngredient.getKeyID() == -1){
+            return null;
+        }
+        return recipeIngredient;
+
     }
 
-    boolean addRecipeIngredient(RecipeIngredient recipeIngredient) {
+    /**
+     * This method returns a built ingredient object
+     *
+     * @return If successful in fetching the cursor and building the ingredient, it will
+     * return an Ingredient Object, if not the method will return null.
+     */
+    private RecipeDirection mapRecipeDirection(Cursor cursor) {
         //TODO: TEST
-        //Get the Data Repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
+        RecipeDirection recipeDirection = new RecipeDirection();
 
-        //Create a new map of values, where column names are the keys
-        ContentValues contentValues = new ContentValues();
-
-        boolean allpassed = true;
-
-        try {
-            //contentValues.put(KEY_ID, Ingredient.getKey());  //not sure if this line is needed or if database will auto increment
-            contentValues.put(recipeID, recipeIngredient.getRecipeID());
-            contentValues.put(ingredientID, recipeIngredient.getIngredientID());
-            contentValues.put(quantity, recipeIngredient.getQuantity());
-            contentValues.put(details, recipeIngredient.getDetails());
-
-
-            // Insert the new row, returning the primary key value of the new row
-            long newRowId = db.insert(TABLE_Recipe_Ingredient_List, null, contentValues);
-        }catch (Exception e){
-            allpassed = false;
+        if (cursor != null) {
+            if (cursor.getColumnIndex(KEY_ID) != -1) {
+                int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
+                recipeDirection.setKeyID((cursor.getInt(idIndex)));
+            }
+            if (cursor.getColumnIndex(recipeID) != -1) {
+                int recipeIdIndex = cursor.getColumnIndexOrThrow(recipeID);
+                recipeDirection.setRecipeID(cursor.getInt(recipeIdIndex));
+            }
+            if (cursor.getColumnIndex(directionText) != -1) {
+                int directionTextIndex = cursor.getColumnIndexOrThrow(directionText);
+                recipeDirection.setDirectionText(cursor.getString(directionTextIndex));
+            }
+            if (cursor.getColumnIndex(directionNumber) != -1) {
+                int quantityIndex = cursor.getColumnIndexOrThrow(directionNumber);
+                recipeDirection.setDirectionNumber(cursor.getInt(quantityIndex));
+            }
         }
-        db.close();
-        return allpassed;
+        if (recipeDirection.getKeyID() == -1){
+            return null;
+        }
+        return recipeDirection;
+
     }
 
-    boolean addRecipeCategory(RecipeCategory recipeCategory) {
+    /**
+     * This method returns a built ingredient object
+     *
+     * @return If successful in fetching the cursor and building the ingredient, it will
+     * return an Ingredient Object, if not the method will return null.
+     */
+    private RecipeCategory mapRecipeCategory(Cursor cursor) {
         //TODO: TEST
-        //Get the Data Repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
+        RecipeCategory recipeCategory = new RecipeCategory();
 
-        //Create a new map of values, where column names are the keys
-        ContentValues contentValues = new ContentValues();
-
-        boolean allpassed = true;
-
-        try {
-            //contentValues.put(KEY_ID, Ingredient.getKey());  //not sure if this line is needed or if database will auto increment
-            contentValues.put(recipeID, recipeCategory.getRecipeID());
-            contentValues.put(categoryID, recipeCategory.getCategoryID());
-
-            // Insert the new row, returning the primary key value of the new row
-            long newRowId = db.insert(TABLE_Recipe_Category_List, null, contentValues);
-        }catch (Exception e){
-            allpassed = false;
+        if (cursor != null) {
+            if (cursor.getColumnIndex(KEY_ID) != -1) {
+                int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
+                recipeCategory.setKeyID((cursor.getInt(idIndex)));
+            }
+            if (cursor.getColumnIndex(recipeID) != -1) {
+                int recipeIdIndex = cursor.getColumnIndexOrThrow(recipeID);
+                recipeCategory.setRecipeID(cursor.getInt(recipeIdIndex));
+            }
+            if (cursor.getColumnIndex(categoryID) != -1) {
+                int categoryIdIndex = cursor.getColumnIndexOrThrow(categoryID);
+                recipeCategory.setCategoryID(cursor.getInt(categoryIdIndex));
+            }
+            //adding the category name from Category table
+            recipeCategory.setName(getCategory(recipeCategory.getCategoryID()).getName());
         }
-        db.close();
-        return allpassed;
+        if (recipeCategory.getKeyID() == -1){
+            return null;
+        }
+        return recipeCategory;
+
     }
 
-    boolean addCategory(Category category) {
+    /**
+     * This method returns a built Category object
+     *
+     * @return If successful in fetching the cursor and building the Category, it will
+     * return a Category Object, if not the method will return null.
+     */
+    private Category mapCategory(Cursor cursor) {
         //TODO: TEST
-        //Get the Data Repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
+        Category category = new Category();
 
-        //Create a new map of values, where column names are the keys
-        ContentValues contentValues = new ContentValues();
+        if (cursor != null) {
+            if (cursor.getColumnIndex(KEY_ID) != -1) {
+                int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
+                category.setKeyID((cursor.getInt(idIndex)));
+            }
+            if (cursor.getColumnIndex(name) != -1) {
+                int categoryNameIndex = cursor.getColumnIndexOrThrow(name);
+                category.setName(cursor.getString(categoryNameIndex));
+            }
 
-        boolean allpassed = true;
-
-        try {
-            //contentValues.put(KEY_ID, Ingredient.getKey());  //not sure if this line is needed or if database will auto increment
-            contentValues.put(name, category.getName());
-
-            // Insert the new row
-            db.insert(TABLE_Recipe_Category_List, null, contentValues);
-        }catch (Exception e){
-            allpassed = false;
         }
-        db.close();
-        return allpassed;
-    }
-
-    boolean addRecipeDirections(RecipeDirection recipeDirection) {
-        //TODO: TEST
-        //Get the Data Repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        //Create a new map of values, where column names are the keys
-        ContentValues contentValues = new ContentValues();
-
-        boolean allpassed = true;
-
-        try {
-            //contentValues.put(KEY_ID, Ingredient.getKey());  //not sure if this line is needed or if database will auto increment
-            contentValues.put(recipeID, recipeDirection.getRecipeID());
-            contentValues.put(directionText, recipeDirection.getDirectionText());
-            contentValues.put(directionNumber, recipeDirection.getDirectionNumber());
-
-            // Insert the new row, returning the primary key value of the new row
-            long newRowId = db.insert(TABLE_Recipe_Directions_List, null, contentValues);
-        }catch (Exception e){
-            allpassed = false;
+        if (category.getKeyID() == -1){
+            return null;
         }
-        db.close();
-        return allpassed;
+        return category;
+
     }
 }
