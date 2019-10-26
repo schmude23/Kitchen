@@ -127,6 +127,34 @@ class Recipe {
 
     @Override
     public String toString() {
+        int ingList = ingredientList.size();
+        int dirList = directionsList.size();
+        int catList = categoryList.size();
+        String strIngList = null;
+        String strDirList = null;
+        String strCatList = null;
+        int i = 0;
+
+        //creates list for ingredient list
+        while( i < ingList){
+            strIngList = strIngList + ingredientList.get(i).toString();
+            i++;
+        }
+        i = 0;
+
+        //creates list for Direction list
+        while( i < dirList){
+            strDirList = strDirList + directionsList.get(i).toString();
+            i++;
+        }
+        i = 0;
+
+        //creates list for category list
+        while( i < catList){
+            strCatList = strCatList + categoryList.get(i).toString();
+            i++;
+        }
+
         return "Recipe{" +
                 "keyID=" + keyID +
                 ", title='" + title + '\'' + "\n" +
@@ -135,9 +163,9 @@ class Recipe {
                 ", total_time=" + total_time + "\n" +
                 ", favorited=" + favorited + "\n" +
                 ", favoritedInt=" + favoritedInt + "\n" +
-                ingredientList.toString() + "\n" +
-                directionsList.toString() + "\n" +
-                categoryList.toString()+
+                strIngList +
+                strDirList +
+                strCatList +
                 '}';
     }
 

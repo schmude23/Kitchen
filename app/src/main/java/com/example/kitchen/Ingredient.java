@@ -22,6 +22,6 @@ public class Ingredient {
         return "Ingredient{" +
                 "keyID=" + keyID +
                 ", name='" + name + '\'' +
-                '}';
+                '}' + "\n" ;
     }
 }

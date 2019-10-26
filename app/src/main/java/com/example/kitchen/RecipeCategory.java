@@ -48,6 +48,6 @@ public class RecipeCategory {
                 ", name='" + name + '\'' +
                 ", recipeID=" + recipeID + "\n" +
                 ", categoryID=" + categoryID +
-                '}';
+                '}' + "\n";
     }
 }

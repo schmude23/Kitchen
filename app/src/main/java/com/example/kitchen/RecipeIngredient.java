@@ -55,6 +55,6 @@ public class RecipeIngredient {
                 ", quantity=" + quantity + "\n" +
                 ", unit='" + unit + "\n" +
                 ", details='" + details +
-                '}';
+                '}' + "\n";
     }
 }

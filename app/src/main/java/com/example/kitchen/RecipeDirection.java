@@ -45,6 +45,6 @@ public class RecipeDirection {
                 ", recipeID=" + recipeID + + '\'' +
                 ", directionText='" + directionText  + "\n" +
                 ", directionNumber=" + directionNumber +
-                '}';
+                '}' + "\n";
     }
 }

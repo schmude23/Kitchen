@@ -23,6 +23,6 @@ public class Category {
         return "Category{" +
                 "keyID=" + keyID +
                 ", name='" + name + '\'' +
-                '}';
+                '}' + "\n";
     }
 }
