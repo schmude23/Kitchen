@@ -154,7 +154,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return true if the operation was successful, false otherwise
      */
     public boolean addRecipe(Recipe recipe) {
-         //TODO: implement this method
+         //TODO: fix this method
         boolean allpassed = true;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
@@ -661,7 +661,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param recipeDirection
      * @return true if the operation was successful, false otherwise
      */
-    boolean addRecipeDirection(RecipeDirection recipeDirection) {
+    public boolean addRecipeDirection(RecipeDirection recipeDirection) {
         //TODO: TEST
         //Get the Data Repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
@@ -839,7 +839,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             allpassed = false;
             if(IS_IN_TESTING_MODE) {
                 System.out.println("addCategory Failed");
-                // Log.w("addCategoriy()", ex.getMessage());
+                // Log.w("addCategory()", ex.getMessage());
             }
         }
         db.close();

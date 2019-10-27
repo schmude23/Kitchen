@@ -31,17 +31,22 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void addCategory_ReturnsID(){
-        //assertEquals(true, testDatabase.addCategory(category));
+        /*int returned = testDatabase.addCategory(category);
+        assertNotEquals(-1, returned);*/
     }
 
     @Test
     public void addCategory_ReturnsNeg1(){
-
+        /*int returned; // set equal to addCategory on an invalid category
+        assertEquals(-1, returned);*/
     }
 
     @Test
     public void addCategory_DatabaseUpdates(){
-
+        /*int returned = testDatabase.addCategory(category);
+        Category retrieved = testDatabase.getCategory(returned);
+        assertEquals("Check that Category was added with the correct name", "Lunch", retrieved.getName());
+        assertEquals("Check the added Category's ID was set", returned, retrieved.getKeyID());*/
     }
 
     {
@@ -56,7 +61,29 @@ public class ExampleInstrumentedTest {
     }
 
     Ingredient ingredient = new Ingredient(-1, "Flour");
+    @Test
+    public void addIngredient_ReturnsID(){
+        /*int returned = testDatabase.addIngredient(ingredient);
+        assertNotEquals(-1, returned);*/
+    }
 
+    @Test
+    public void addIngredient_ReturnsNeg1(){
+        /*int returned; // set equal to addIngredient on an invalid ingredient
+        assertEquals(-1, returned);*/
+    }
+
+    @Test
+    public void addIngredient_DatabaseUpdates(){
+        /*int returned = testDatabase.addIngredient(category);
+        Ingredient retrieved = testDatabase.getIngredient(returned);
+        assertEquals("Check that Ingredient was added with correct name", "Flour", retrieved.getName());
+        assertEquals("Check the added Ingredients ID was set", returned, retrieved.getKeyID());*/
+    }
+
+    {
+        //testDatabase.addIngredient(ingredient);
+    }
     RecipeIngredient recipeIngredient = new RecipeIngredient();
     List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
     {
@@ -66,14 +93,11 @@ public class ExampleInstrumentedTest {
         recipeIngredient.setDetails("White Flour");
         listOfIngredients.add(recipeIngredient);
     }
-    RecipeDirection recipeDirection1 = new RecipeDirection();
-    RecipeDirection recipeDirection2 = new RecipeDirection();
+
+    RecipeDirection recipeDirection1 = new RecipeDirection(-1, -1, "TestDirection1", 1);
+    RecipeDirection recipeDirection2 = new RecipeDirection(-1, -1, "TestDirection2", 2);
     List<RecipeDirection> listOfDirections = new ArrayList<RecipeDirection>();
     {
-        recipeDirection1.setDirectionNumber(1);
-        recipeDirection1.setDirectionText("Test Direction1");
-        recipeDirection2.setDirectionNumber(2);
-        recipeDirection2.setDirectionText("Test Direction2");
         listOfDirections.add(recipeDirection1);
         listOfDirections.add(recipeDirection2);
     }
