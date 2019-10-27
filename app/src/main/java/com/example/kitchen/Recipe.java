@@ -1,10 +1,21 @@
 package com.example.kitchen;
 
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+
+import androidx.core.content.ContextCompat;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.List;
 
 class Recipe {
-    //private int keyID = -1;
-    private String keyID = null; //MICHAELA DID
+    private int keyID = -1;
     private String title = null;
     private double servings = -1;
     private int prep_time = -1;
@@ -18,19 +29,11 @@ class Recipe {
 
     public Recipe() {    }
 
-    /*public int getKeyID() {
+    public int getKeyID() {
         return keyID;
     }
 
     public void setKeyID(int keyID) {
-        this.keyID = keyID;
-    }*/
-
-    public String getKeyID() {
-        return keyID;
-    }
-
-    public void setKeyID(String keyID) {
         this.keyID = keyID;
     }
 
@@ -178,5 +181,55 @@ class Recipe {
                 '}';
     }
 
-    //TODO: Add method to retrive image
+    /**
+     * This method will set the image for the Recipe to the specified image
+     *
+     * @param image the new image
+     * @param context The application context
+     * @return will return true if successful, false if not.
+     */
+    public boolean setImage(Bitmap image, Context context) {
+
+        ContextWrapper cw = new ContextWrapper(context);
+        File directory = cw.getDir("images", Context.MODE_PRIVATE);
+        File file = new File(directory, keyID + ".jpg");
+        if (!file.exists()) {
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(file);
+                image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.flush();
+                fos.close();
+            } catch (java.io.IOException e) {
+                return false;
+            }
+        }
+
+        return true;
+
+    }
+
+    /**
+     * This method retrieves the image stored for the Recipe
+     *
+     * @param context The application context
+     *
+     * @return the image stored for the Recipe or a default filler image if not.
+     */
+    public Bitmap getImage(Context context) {
+        Bitmap image = null;
+
+        try {
+            ContextWrapper cw = new ContextWrapper(context);
+            File directory = cw.getDir("images", Context.MODE_PRIVATE);
+            File f = new File(directory, keyID + ".jpg");
+            image = BitmapFactory.decodeStream(new FileInputStream(f));
+        }
+        catch (FileNotFoundException e) {
+            //Set default image
+            image = BitmapFactory.decodeResource(context.getResources(),R.drawable.ic_default_image);
+        }
+
+        return image;
+    }
 }
