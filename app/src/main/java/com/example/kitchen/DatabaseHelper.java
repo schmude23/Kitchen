@@ -29,7 +29,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String RI_INGREDIENT_ID = "INGREDIENT_ID";
     public static final String RI_QUANTITY = "QUANTITY";
     public static final String RI_UNIT = "UNIT";
-    public static final String RI_NAME = "NAME";
     public static final String RI_DETAILS = "DETAILS";
 
     //Recipe Table (Uses prefix RT)
@@ -96,7 +95,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + RI_INGREDIENT_ID + " INTEGER,"
                 + RI_QUANTITY + " DECIMAL,"
                 + RI_UNIT + " TEXT,"
-                + RI_NAME + " TEXT,"
                 + RI_DETAILS + " TEXT" + ")";
         sqLiteDatabase.execSQL(CREATE_RECIPE_INGREDIENT_TABLE);
 
@@ -456,7 +454,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(RI_INGREDIENT_ID, recipeIngredient.getIngredientID());
         contentValues.put(RI_QUANTITY, recipeIngredient.getQuantity());
         contentValues.put(RI_UNIT, recipeIngredient.getUnit());
-        contentValues.put(RI_NAME, recipeIngredient.getName());
         contentValues.put(RI_DETAILS, recipeIngredient.getDetails());
 
         // Insert the new row, returning the primary key value of the new row
@@ -952,10 +949,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
                 if (cursor.getColumnIndex(RI_UNIT) != -1) {
                     int unitIndex = cursor.getColumnIndexOrThrow(RI_UNIT);
-                    recipeIngredient.setUnit(cursor.getString(unitIndex));
-                }
-                if (cursor.getColumnIndex(RI_NAME) != -1) {
-                    int unitIndex = cursor.getColumnIndexOrThrow(RI_NAME);
                     recipeIngredient.setUnit(cursor.getString(unitIndex));
                 }
                 if (cursor.getColumnIndex(RI_DETAILS) != -1) {

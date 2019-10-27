@@ -160,6 +160,7 @@ public class ExampleInstrumentedTest {
      */
     @Test
     public void editRecipe_ReturnsTrue(){
+        testDatabase.addRecipe(testRecipe);
         testRecipe.setTitle("TestRecipe Updated");
         testRecipe.setServings(1.5);
         testRecipe.setPrep_time(15);
@@ -201,7 +202,7 @@ public class ExampleInstrumentedTest {
      */
     @Test
     public void editRecipe_CorrectInformation(){
-        // TODO: Add recipe to database first or does it count from the other tests?
+        int returned = testDatabase.addRecipe(testRecipe);
         testRecipe.setTitle("TestRecipe Updated");
         testRecipe.setServings(1.5);
         testRecipe.setPrep_time(15);
@@ -224,20 +225,10 @@ public class ExampleInstrumentedTest {
         //TODO: Change picture
 
         testDatabase.editRecipe(testRecipe);
-        Recipe test = new Recipe();
-        ArrayList<Recipe> allRecipes = testDatabase.getAllRecipes();
-        try {
-            for (int i = 0; i < allRecipes.size(); i++) {
-                if (allRecipes.get(i).getTitle().equals("TestRecipe Updated")) {
-                    test = allRecipes.get(i);
-                }
-            }
-        } catch(NullPointerException e){
-            // Do nothing, all assertEquals will give AssertionErrors
-        }
+        Recipe test = testDatabase.getRecipe(returned);
 
         // Check all recipe fields are accurate
-        assertEquals("Check Recipe Title", recipeTitle, test.getTitle());
+        assertEquals("Check Recipe Title", "TestRecipe Updated", test.getTitle());
         assertEquals("Check Recipe Servings", 1.5, test.getServings(), 0);
         assertEquals("Check Recipe prep_time", 15, test.getPrep_time(), 0);
         assertEquals("Check Recipe total_time", 45, test.getTotal_time(), 0);
@@ -246,7 +237,7 @@ public class ExampleInstrumentedTest {
         assertEquals("Check Ingredient Unit", "tbsp", test.getIngredientList().get(0).getUnit());
         assertEquals("Check Ingredient Quantity", 1.5, test.getIngredientList().get(0).getQuantity(), 0);
         assertEquals("Check Ingredient Details", "Brown Sugar", test.getIngredientList().get(0).getDetails());
-        assertEquals("Check First Direction", "Test Direction1", test.getDirectionsList().get(0));
+        assertEquals("Check First Direction", "TestDirection1", test.getDirectionsList().get(0));
         assertEquals("Check Recipe Category", "Dinner", test.getCategoryList().get(0));
         // TODO: Add picture check
     }
