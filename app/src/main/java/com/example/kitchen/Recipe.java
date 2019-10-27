@@ -19,7 +19,6 @@ class Recipe {
     private int prep_time;
     private int total_time;
     private boolean favorited;
-    private int favoritedInt; //TODO: Possily remove this? It should be dealt with in DB handler
     private List<RecipeIngredient> ingredientList;
     private List<RecipeDirection> directionsList;
     private List<RecipeCategory> categoryList;
@@ -63,7 +62,6 @@ class Recipe {
         this.ingredientList = ingredients;
         this.directionsList = directions;
         this.categoryList = categories;
-        setFavoritedInt();
     }
 
     public void createRecipe(String name){
@@ -108,20 +106,6 @@ class Recipe {
 
     //also updates favorite int for TABLE_Recipe
     public void setFavorited(Boolean favorited) {
-        this.favorited = favorited;
-        setFavoritedInt();
-    }
-
-    public int getFavoritedInt() { return favoritedInt; }
-
-    //updates favorite int for TABLE_Recipe
-    public void setFavoritedInt() {
-        if(favorited){
-            favoritedInt = 1;
-        }
-        else{
-            favoritedInt=0;
-        }
     }
 
     public List<RecipeIngredient> getIngredientList() {
@@ -183,7 +167,6 @@ class Recipe {
                 ", prep_time=" + prep_time + "\n" +
                 ", total_time=" + total_time + "\n" +
                 ", favorited=" + favorited + "\n" +
-                ", favoritedInt=" + favoritedInt + "\n" +
                 strIngList +
                 strDirList +
                 strCatList +

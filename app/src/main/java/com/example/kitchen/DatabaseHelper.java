@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,9 +169,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cVals.put(pTime, recipe.getPrep_time());
             cVals.put(tTime, recipe.getTotal_time());
             cVals.put(servings, recipe.getServings());
-            cVals.put(favorited, recipe.getFavoritedInt());
+            cVals.put(favorited, recipe.getFavorited() ? 1 : 0);
             long res = sqLiteDatabase.insert(TABLE_Recipe_List, null, cVals);
-            recipe.setKeyID(String.valueOf(res)); //TODO: I don't think this is correct but not sure what's right
+            recipe.setKeyID((int)res); //TODO: possibly dangerous cast?
         }
         catch( Exception e){
             if(isTesting) {
@@ -254,7 +253,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param recipeId
      * @return The recipe corresponding to the provided recipeId, or null if one is not found.
      */
-    public Recipe getRecipe(String recipeId) {
+    public Recipe getRecipe(int recipeId) {
 
         //TODO: TEST
         Recipe recipe = null;
@@ -287,7 +286,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         recipe.setDirectionsList(recipeDirectionList);
 
         //Getting Category List
-        ArrayList<RecipeCategory> recipeCategoryList = getAllRecipeCategorys(recipeId);
+        ArrayList<RecipeCategory> recipeCategoryList = getAllRecipeCategories(recipeId);
         recipe.setCategoryList(recipeCategoryList);
 
         return recipe;
@@ -299,7 +298,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param recipeTitle
      * @return The recipe corresponding to the provided recipe Title, or null if one is not found.
      */
-    public Recipe getRecipe(String recipeTitle, int i) { // Need int so getRecipe's have two different signatures
+    public Recipe getRecipe(String recipeTitle) {
 
         //TODO: TEST
         Recipe recipe = null;
@@ -322,7 +321,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return null;
         }
 
-        String recipeId = recipe.getKeyID();
+        int recipeId = recipe.getKeyID();
 
         //Getting Ingredient List
         ArrayList<RecipeIngredient> recipeIngredientList = getAllRecipeIngredients(recipeId);
@@ -334,7 +333,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         recipe.setDirectionsList(recipeDirectionList);
 
         //Getting Category List
-        ArrayList<RecipeCategory> recipeCategoryList = getAllRecipeCategorys(recipeId);
+        ArrayList<RecipeCategory> recipeCategoryList = getAllRecipeCategories(recipeId);
         recipe.setCategoryList(recipeCategoryList);
 
         return recipe;
@@ -384,7 +383,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //if so, update with original recipe.
         //Recipe temp = getRecipe(recipe.getKeyID());
         boolean allpassed = true;
-        String recipeId = recipe.getKeyID();
+        int recipeId = recipe.getKeyID();
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ArrayList<RecipeIngredient> recipeIngredientList = new ArrayList<RecipeIngredient>();
         ArrayList<RecipeCategory> recipeCategoryList = new ArrayList<RecipeCategory>();
@@ -397,7 +396,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cVals.put(pTime, recipe.getPrep_time());
             cVals.put(tTime, recipe.getTotal_time());
             cVals.put(servings, recipe.getServings());
-            cVals.put(favorited, recipe.getFavoritedInt());
+            cVals.put(favorited, recipe.getFavorited() ? 1 : 0);
             sqLiteDatabase.update(TABLE_Ingredient_List, cVals, KEY_ID + " = ?", new String[]{String.valueOf(recipeId)});
         }
         catch( Exception e){
@@ -482,7 +481,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param recipeId
      * @return true if successful, false if not
      */
-    public boolean deleteRecipe(String recipeId) {
+    public boolean deleteRecipe(int recipeId) {
 
          //TODO: TEST
 
@@ -554,7 +553,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful in fetching the recipes this method will return an Array list of recipe
      * Ingredients, if not, this method will return null.
      */
-    public ArrayList<RecipeIngredient> getAllRecipeIngredients(String recipeId) {
+    public ArrayList<RecipeIngredient> getAllRecipeIngredients(int recipeId) {
         //TODO: TEST
         RecipeIngredient recipeIngredient;
         ArrayList<RecipeIngredient> recipeIngredientList = new ArrayList<RecipeIngredient>();
@@ -637,7 +636,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param  ingredintId
      * @return If successful in updating, will return true
      */
-    public boolean deleteIngredients(int ingredintId) {
+    public boolean deleteIngredient(int ingredintId) {
         //TODO: TEST
         boolean allpassed = true;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -696,7 +695,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful in fetching the recipes this method will return an Array list of recipe
      * Directions, if not, this method will return null.
      */
-    public ArrayList<RecipeDirection> getAllRecipeDirections(String recipeId) {
+    public ArrayList<RecipeDirection> getAllRecipeDirections(int recipeId) {
         //TODO: TEST
         RecipeDirection recipeDirection;
         ArrayList<RecipeDirection> recipeIngredientList = new ArrayList<RecipeDirection>();
@@ -729,7 +728,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param  recipeId
      * @return If successful in updating, will return true
      */
-    public boolean deleteRecipeDirection(String recipeId) {
+    public boolean deleteRecipeDirections(int recipeId) {
         //TODO: TEST
         boolean allpassed = true;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -747,13 +746,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method returns a list of all recipe Categorys using the specified recipe id
+     * This method returns a list of all recipe Categories using the specified recipe id
      *
      * @param recipeId
      * @return If successful in fetching the recipes this method will return an Array list of recipe
      * Categories, if not, this method will return null.
      */
-    public ArrayList<RecipeCategory> getAllRecipeCategorys(String recipeId) {
+    public ArrayList<RecipeCategory> getAllRecipeCategories(int recipeId) {
         //TODO: TEST
         RecipeCategory recipeCategory;
         ArrayList<RecipeCategory> recipeCategoryList = new ArrayList<RecipeCategory>();
@@ -939,7 +938,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (cursor != null) {
                 if (cursor.getColumnIndex(KEY_ID) != -1) {
                     int idIndex = cursor.getColumnIndexOrThrow(KEY_ID);
-                    recipe.setKeyID((cursor.getString(idIndex)));
+                    recipe.setKeyID((cursor.getInt(idIndex)));
                 }
                 if (cursor.getColumnIndex(title) != -1) {
                     int recipeTitleIndex = cursor.getColumnIndexOrThrow(title);
@@ -967,7 +966,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     }
                 }
             }
-            if (recipe.getKeyID() == null){
+            if (recipe.getKeyID() == -1){
                 return null;
             }
         }
