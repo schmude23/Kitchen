@@ -929,10 +929,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private RecipeIngredient mapRecipeIngredient(Cursor cursor) {
         //TODO: TEST
         RecipeIngredient recipeIngredient = new RecipeIngredient();
+        //had to take this out so ingredient can set name
+        int idIndex = -1;
         try {
             if (cursor != null) {
                 if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
-                    int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
+                    idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
                     recipeIngredient.setKeyID((cursor.getInt(idIndex)));
                 }
                 if (cursor.getColumnIndex(RI_RECIPE_ID) != -1) {
@@ -954,6 +956,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 if (cursor.getColumnIndex(RI_DETAILS) != -1) {
                     int detailsIndex = cursor.getColumnIndexOrThrow(RI_DETAILS);
                     recipeIngredient.setDetails(cursor.getString(detailsIndex));
+                }
+                if(idIndex != -1) {
+                    recipeIngredient.setName(getIngredient(cursor.getInt(idIndex)).getName());
                 }
             }
             if (recipeIngredient.getKeyID() == -1) {
