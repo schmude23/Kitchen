@@ -387,9 +387,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cVals.put(RT_TOTAL_TIME, recipe.getTotal_time());
             cVals.put(RT_SERVINGS, recipe.getServings());
             cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
-            sqLiteDatabase.update(TABLE_INGREDIENT_LIST, cVals, IT_KEY_ID + " = ?", new String[]{String.valueOf(recipeId)});
-        } catch (Exception e) {
-            if (IS_IN_TESTING_MODE) {
+            sqLiteDatabase.update(TABLE_RECIPE_LIST, cVals, IT_KEY_ID + " = ?", new String[]{String.valueOf(recipeId)});
+        }
+        catch( Exception e){
+            if(IS_IN_TESTING_MODE) {
                 System.out.println("updating recipe table failed");
             }
             allpassed = false;
@@ -566,6 +567,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return recipeIngredientList;
     }
 
+    // TODO: Create addIngredient method
+
     /**
      * This method modifies the ingredient in the ingredients table with the same key id
      *
@@ -635,6 +638,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return allpassed; //TODO: Delete references to this ingredient from RECIPE_INGREDIENTs table
     }
+
+    // TODO: Create addDirection method
 
     /**
      * This method creates a new row in the Recipe Direction table using the provided recipeDirection
@@ -817,9 +822,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.insert(TABLE_CATEGORY_LIST, null, contentValues);
         } catch (Exception ex) {
             allpassed = false;
-            if (IS_IN_TESTING_MODE) {
-                System.out.println("addCategoriy Failed");
-                // Log.w("addCategoriy()", ex.getMessage());
+            if(IS_IN_TESTING_MODE) {
+                System.out.println("addCategory Failed");
             }
         }
         db.close();
