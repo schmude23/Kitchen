@@ -28,6 +28,7 @@ public class ExampleInstrumentedTest {
     // Create recipe to test with
     String recipeTitle = "TestRecipe";
     Category category = new Category(-1, "Lunch");
+    int categoryID;
 
     @Test
     public void addCategory_ReturnsID(){
@@ -37,7 +38,7 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void addCategory_ReturnsNeg1(){
-        /*int returned; // set equal to addCategory on an invalid category
+        /*int returned; //TODO set equal to addCategory on an invalid category
         assertEquals(-1, returned);*/
     }
 
@@ -50,10 +51,9 @@ public class ExampleInstrumentedTest {
     }
 
     {
-        testDatabase.addCategory(category);
+        categoryID = testDatabase.addCategory(category);
     }
-    RecipeCategory recipeCategory = new RecipeCategory();
-    //RecipeCategory recipeCategory = new RecipeCategory(-1, "Lunch", -1, );
+    RecipeCategory recipeCategory = new RecipeCategory(-1, "Lunch", -1, categoryID);
     List<RecipeCategory> listOfCategories = new ArrayList<RecipeCategory>();
     {
         recipeCategory.setName("Lunch");
@@ -61,6 +61,7 @@ public class ExampleInstrumentedTest {
     }
 
     Ingredient ingredient = new Ingredient(-1, "Flour");
+    int ingredientID;
     @Test
     public void addIngredient_ReturnsID(){
         int returned = testDatabase.addIngredient(ingredient);
@@ -69,7 +70,7 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void addIngredient_ReturnsNeg1(){
-        /*int returned; // set equal to addIngredient on an invalid ingredient
+        /*int returned; // TODO set equal to addIngredient on an invalid ingredient
         assertEquals(-1, returned);*/
     }
 
@@ -82,15 +83,11 @@ public class ExampleInstrumentedTest {
     }
 
     {
-        //testDatabase.addIngredient(ingredient);
+        ingredientID = testDatabase.addIngredient(ingredient);
     }
-    RecipeIngredient recipeIngredient = new RecipeIngredient();
+    RecipeIngredient recipeIngredient = new RecipeIngredient(-1, -1, ingredientID, 2.0, "Flour", "cups", "White Flour");
     List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
     {
-        recipeIngredient.setName("Flour");
-        recipeIngredient.setUnit("cups");
-        recipeIngredient.setQuantity(2.0);
-        recipeIngredient.setDetails("White Flour");
         listOfIngredients.add(recipeIngredient);
     }
 
@@ -116,7 +113,8 @@ public class ExampleInstrumentedTest {
      */
     @Test
     public void addRecipe_ReturnsTrue(){
-       assertEquals(true, testDatabase.addRecipe(testRecipe));
+        int returned = testDatabase.addRecipe(testRecipe);
+        assertNotEquals(-1, returned);
     }
 
     /**
@@ -125,7 +123,9 @@ public class ExampleInstrumentedTest {
     @Test
     public void addRecipe_ReturnsFalse(){
         Recipe invalidRecipe = new Recipe();
-        assertEquals(false, testDatabase.addRecipe(invalidRecipe));
+        //TODO WHAT COUNTS AS AN INVALID RECIPE BECAUSE THIS ADDED IT
+        int returned = testDatabase.addRecipe(invalidRecipe);
+        assertEquals(-1, returned);
     }
 
     /**
@@ -133,37 +133,25 @@ public class ExampleInstrumentedTest {
      */
     @Test
     public void addRecipe_CorrectInformation(){
-        //testDatabase.addRecipe(testRecipe);
-        int num = -1;
-        ArrayList<Recipe> allRecipes = testDatabase.getAllRecipes();
-        try {
-            for (int i = 0; i < allRecipes.size(); i++) {
-                if (allRecipes.get(i).getTitle().equals(recipeTitle)) {
-                    num = i;
-                }
-            }
-        } catch(NullPointerException e){
-            // Do nothing, all assertEquals will give AssertionErrors
-        }
-
-        ArrayList<RecipeIngredient> allRecipeIngredients = testDatabase.getAllRecipeIngredients(testRecipe.getKeyID());
-        ArrayList<RecipeDirection> allRecipeDirections = testDatabase.getAllRecipeDirections(testRecipe.getKeyID());
-        //ArrayList<RecipeCategory> allRecipeCategories = testDatabase.getAllRecipeCategorys(testRecipe.getKeyID());
+        int returned = testDatabase.addRecipe(testRecipe);
+        Recipe retrieved = testDatabase.getRecipe(returned);
 
         // Check all recipe fields are accurate
-        assertEquals("Check Recipe Title", recipeTitle, allRecipes.get(num).getTitle());
-        assertEquals("Check Recipe Servings", 1, allRecipes.get(num).getServings(), 0); //TODO: Failing
-        assertEquals("Check Recipe prep_time", 30, allRecipes.get(num).getPrep_time(), 0);
-        assertEquals("Check Recipe total_time", 60, allRecipes.get(num).getTotal_time(), 0);
-        assertEquals("Check Recipe Favorited", false, allRecipes.get(num).getFavorited());
-        //TODO: Failing from here on down
-        assertEquals("Check Ingredient Name", "Flour", allRecipeIngredients.get(0).getName());
-        assertEquals("Check Ingredient Unit", "cups", allRecipeIngredients.get(0).getUnit());
-        assertEquals("Check Ingredient Quantity", 2.0, allRecipeIngredients.get(0).getQuantity(), 0);
-        assertEquals("Check Ingredient Details", "White Flour", allRecipeIngredients.get(0).getDetails());
-        assertEquals("Check First Direction", "Test Direction1", allRecipeDirections.get(0));
-        assertEquals("Check Second Direction", "Test Direction2", allRecipeDirections.get(1));
-        //assertEquals("Check Recipe Category", "Lunch", allRecipeCategories.get(0));
+        assertEquals("Check Recipe Title", recipeTitle, retrieved.getTitle());
+        assertEquals("Check Recipe Servings", 1, retrieved.getServings(), 0);
+        assertEquals("Check Recipe prep_time", 30, retrieved.getPrep_time(), 0);
+        assertEquals("Check Recipe total_time", 60, retrieved.getTotal_time(), 0);
+        assertEquals("Check Recipe Favorited", false, retrieved.getFavorited());
+        //TODO: Failing ingredient NAME
+        assertEquals("Check Ingredient Name", "Flour", retrieved.getIngredientList().get(0).getName());
+        assertEquals("Check Ingredient Unit", "cups", retrieved.getIngredientList().get(0).getUnit());
+        assertEquals("Check Ingredient Quantity", 2.0, retrieved.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("Check Ingredient Details", "White Flour", retrieved.getIngredientList().get(0).getDetails());
+        assertEquals("Check First Direction Number", 1, retrieved.getDirectionsList().get(0).getDirectionNumber());
+        assertEquals("Check First Direction Text", "TestDirection1", retrieved.getDirectionsList().get(0).getDirectionText());
+        assertEquals("Check Second Direction Number", 2, retrieved.getDirectionsList().get(1).getDirectionNumber());
+        assertEquals("Check Second Direction Text", "TestDirection2", retrieved.getDirectionsList().get(1).getDirectionText());
+        assertEquals("Check Recipe Category", "Lunch", retrieved.getCategoryList().get(0).getName());
         // TODO: Add picture check
     }
 

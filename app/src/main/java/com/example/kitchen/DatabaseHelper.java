@@ -14,7 +14,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //set to true for printouts.
     private static boolean IS_IN_TESTING_MODE = true;
 
-    public static final int VERSION_NUMBER = 2;
+    public static final int VERSION_NUMBER = 4;
     public static final String DATABASE_NAME = "RECIPE_DATABASE";
 
     //Ingredient Table (Uses prefix IT)
@@ -29,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String RI_INGREDIENT_ID = "INGREDIENT_ID";
     public static final String RI_QUANTITY = "QUANTITY";
     public static final String RI_UNIT = "UNIT";
+    public static final String RI_NAME = "NAME";
     public static final String RI_DETAILS = "DETAILS";
 
     //Recipe Table (Uses prefix RT)
@@ -95,6 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + RI_INGREDIENT_ID + " INTEGER,"
                 + RI_QUANTITY + " DECIMAL,"
                 + RI_UNIT + " TEXT,"
+                + RI_NAME + " TEXT,"
                 + RI_DETAILS + " TEXT" + ")";
         sqLiteDatabase.execSQL(CREATE_RECIPE_INGREDIENT_TABLE);
 
@@ -174,8 +176,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cVals.put(RT_TOTAL_TIME, recipe.getTotal_time());
         cVals.put(RT_SERVINGS, recipe.getServings());
         cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
-        long res = sqLiteDatabase.insert(TABLE_RECIPE_LIST, null, cVals);
-        recipe.setKeyID((int) res); //possibly dangerous cast?
+        int res = (int) sqLiteDatabase.insert(TABLE_RECIPE_LIST, null, cVals);
+        recipe.setKeyID(res);
 
         if (res == -1) {
             if (IS_IN_TESTING_MODE) {
@@ -186,6 +188,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //add new ingredients from ingredientList
         for (int i = 0; i < recipeIngredientList.size(); i++) {
+            recipeIngredientList.get(i).setRecipeID(res);
             int result = addRecipeIngredient(recipeIngredientList.get(i));
 
             if (result == -1) {
@@ -195,6 +198,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //add new categorys from recipeCategoryList
         for (int i = 0; i < recipeCategoryList.size(); i++) {
+            recipeCategoryList.get(i).setRecipeID(res);
             int result = addRecipeCategory(recipeCategoryList.get(i));
 
             if (result == -1) {
@@ -204,6 +208,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //add new directions from recipeDirectionList
         for (int i = 0; i < recipeDirectionList.size(); i++) {
+            recipeDirectionList.get(i).setRecipeID(res);
             int result = addRecipeDirection(recipeDirectionList.get(i));
 
             if (result == -1) {
@@ -211,7 +216,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
 
-        return (int) res;
+        return res;
     }
 
     /**
@@ -246,7 +251,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Getting Ingredient List
         ArrayList<RecipeIngredient> recipeIngredientList = getAllRecipeIngredients(recipeId);
         recipe.setIngredientList(recipeIngredientList);
-
 
         //Getting Direction List
         ArrayList<RecipeDirection> recipeDirectionList = getAllRecipeDirections(recipeId);
@@ -448,20 +452,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //Create a new map of values, where column names are the keys
         ContentValues contentValues = new ContentValues();
+        contentValues.put(RI_RECIPE_ID, recipeIngredient.getRecipeID());
+        contentValues.put(RI_INGREDIENT_ID, recipeIngredient.getIngredientID());
+        contentValues.put(RI_QUANTITY, recipeIngredient.getQuantity());
+        contentValues.put(RI_UNIT, recipeIngredient.getUnit());
+        contentValues.put(RI_NAME, recipeIngredient.getName());
+        contentValues.put(RI_DETAILS, recipeIngredient.getDetails());
 
-            //contentValues.put(KEY_ID, Ingredient.getKey());  //not sure if this line is needed or if database will auto increment
-            contentValues.put(RI_RECIPE_ID, recipeIngredient.getRecipeID());
-            contentValues.put(RI_INGREDIENT_ID, recipeIngredient.getIngredientID());
-            contentValues.put(RI_QUANTITY, recipeIngredient.getQuantity());
-            contentValues.put(RI_UNIT, recipeIngredient.getUnit());
-            contentValues.put(RI_DETAILS, recipeIngredient.getDetails());
-
-
-            // Insert the new row, returning the primary key value of the new row
-            long newRowId = db.insert(TABLE_RECIPE_INGREDIENT_LIST, null, contentValues);
+        // Insert the new row, returning the primary key value of the new row
+        int newRowId = (int) db.insert(TABLE_RECIPE_INGREDIENT_LIST, null, contentValues);
 
         db.close();
-        return (int)newRowId;
+        return newRowId;
     }
 
     /**
@@ -640,13 +642,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //Create a new map of values, where column names are the keys
         ContentValues contentValues = new ContentValues();
+        contentValues.put(RD_RECIPE_ID, recipeDirection.getRecipeID());
+        contentValues.put(RD_DIRECTION_TEXT, recipeDirection.getDirectionText());
+        contentValues.put(RD_DIRECTION_NUMBER, recipeDirection.getDirectionNumber());
 
-            contentValues.put(RD_RECIPE_ID, recipeDirection.getRecipeID());
-            contentValues.put(RD_DIRECTION_TEXT, recipeDirection.getDirectionText());
-            contentValues.put(RD_DIRECTION_NUMBER, recipeDirection.getDirectionNumber());
-
-            // Insert the new row, returning the primary key value of the new row
-            int newRowId = (int)db.insert(TABLE_RECIPE_DIRECTIONS_LIST, null, contentValues);
+        // Insert the new row, returning the primary key value of the new row
+        int newRowId = (int)db.insert(TABLE_RECIPE_DIRECTIONS_LIST, null, contentValues);
 
         db.close();
         return newRowId;
@@ -953,6 +954,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     int unitIndex = cursor.getColumnIndexOrThrow(RI_UNIT);
                     recipeIngredient.setUnit(cursor.getString(unitIndex));
                 }
+                if (cursor.getColumnIndex(RI_NAME) != -1) {
+                    int unitIndex = cursor.getColumnIndexOrThrow(RI_NAME);
+                    recipeIngredient.setUnit(cursor.getString(unitIndex));
+                }
                 if (cursor.getColumnIndex(RI_DETAILS) != -1) {
                     int detailsIndex = cursor.getColumnIndexOrThrow(RI_DETAILS);
                     recipeIngredient.setDetails(cursor.getString(detailsIndex));
@@ -963,8 +968,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         } catch (Exception ex) {
             if (IS_IN_TESTING_MODE) {
-                System.out.println("mapRecipeDirection Failed");
-                // Log.w("mapRecipeDirection()", ex.getMessage());
+                System.out.println("mapRecipeIngredient Failed");
+                // Log.w("mapRecipeIngredient()", ex.getMessage());
             }
         }
         return recipeIngredient;
