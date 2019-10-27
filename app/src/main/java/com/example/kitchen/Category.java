@@ -2,8 +2,17 @@ package com.example.kitchen;
 
 public class Category {
 
-    private int keyID = -1;
-    private String name = null;
+    private int keyID;
+    private String name;
+
+    public Category() {
+        keyID = -1;
+    }
+
+    public Category(int keyID, String name) {
+        this.keyID = keyID;
+        this.name = name;
+    }
 
 
     public int getKeyID() { return keyID; }

@@ -4,30 +4,37 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-
-import androidx.core.content.ContextCompat;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 class Recipe {
-    private int keyID = -1;
-    private String title = null;
-    private double servings = -1;
-    private int prep_time = -1;
-    private int total_time = -1;
-    private boolean favorited = false;
-    private int favoritedInt = -1;
+    private int keyID;
+    private String title;
+    private double servings;
+    private int prep_time;
+    private int total_time;
+    private boolean favorited;
+    private int favoritedInt; //TODO: Possily remove this? It should be dealt with in DB handler
     private List<RecipeIngredient> ingredientList;
     private List<RecipeDirection> directionsList;
     private List<RecipeCategory> categoryList;
 
 
-    public Recipe() {    }
+    public Recipe() {
+        keyID = -1;
+        servings = -1;
+        prep_time = -1;
+        total_time = -1;
+        favorited = false;
+        ingredientList = new ArrayList<RecipeIngredient>();
+        directionsList = new ArrayList<RecipeDirection>();
+        categoryList = new ArrayList<RecipeCategory>();
+    }
 
     public int getKeyID() {
         return keyID;
@@ -38,6 +45,7 @@ class Recipe {
     }
 
     public Recipe(String title, double servings, int prep_time, int total_time, boolean favorited) {
+        this(); //Call default constructor
         this.title = title;
         this.servings = servings;
         this.prep_time = prep_time;
@@ -46,6 +54,7 @@ class Recipe {
     }
 
     public Recipe(String title, double servings, int prep_time, int total_time, boolean favorited, List<RecipeIngredient> ingredients, List<RecipeDirection> directions, List<RecipeCategory> categories) {
+        this(); //Call default constructor
         this.title = title;
         this.servings = servings;
         this.prep_time = prep_time;

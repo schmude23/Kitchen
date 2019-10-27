@@ -1,9 +1,17 @@
 package com.example.kitchen;
 
 public class Ingredient {
-    private int keyID = -1;
-    private String name = null;
+    private int keyID;
+    private String name;
 
+    public Ingredient() {
+        keyID = -1;
+    }
+
+    public Ingredient(int keyID, String name) {
+        this.keyID = keyID;
+        this.name = name;
+    }
 
     public int getKeyID() { return keyID; }
 
