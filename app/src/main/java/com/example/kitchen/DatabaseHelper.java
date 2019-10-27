@@ -173,7 +173,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cVals.put(RT_PREP_TIME, recipe.getPrep_time());
         cVals.put(RT_TOTAL_TIME, recipe.getTotal_time());
         cVals.put(RT_SERVINGS, recipe.getServings());
-        cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
+        //temporary fix
+        if(recipe.getFavorited()){
+            cVals.put(RT_FAVORITED, (int) 1);
+        }else{
+            cVals.put(RT_FAVORITED, (int) 0);
+        }
+        //cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
         int res = (int) sqLiteDatabase.insert(TABLE_RECIPE_LIST, null, cVals);
         recipe.setKeyID(res);
 
@@ -363,7 +369,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cVals.put(RT_PREP_TIME, recipe.getPrep_time());
             cVals.put(RT_TOTAL_TIME, recipe.getTotal_time());
             cVals.put(RT_SERVINGS, recipe.getServings());
-            cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
+            //temporary fix
+            if(recipe.getFavorited()){
+                cVals.put(RT_FAVORITED, (int) 1);
+            }else{
+                cVals.put(RT_FAVORITED, (int) 0);
+            }
+            //cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
             long res = sqLiteDatabase.update(TABLE_RECIPE_LIST, cVals, IT_KEY_ID + " = ?", new String[]{String.valueOf(recipeId)});
 
             if (res != 1) {
