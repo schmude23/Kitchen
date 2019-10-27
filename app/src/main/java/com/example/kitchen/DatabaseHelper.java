@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
 //create read update delete
 public class DatabaseHelper extends SQLiteOpenHelper {
     //set to true for printouts.
@@ -58,7 +59,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String RC_CATEGORY_ID = "CATEGORY_ID";
 
 
-
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION_NUMBER);
     }
@@ -82,10 +82,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + RT_FAVORITED + " INTEGER " + ")";
         sqLiteDatabase.execSQL(CREATE_RECIPE_TABLE);
 
-         //Ingredients Table
+        //Ingredients Table
         String CREATE_INGREDIENT_TABLE = "CREATE TABLE " + TABLE_INGREDIENT_LIST + "("
                 + IT_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + IT_NAME + " TEXT" +")";
+                + IT_NAME + " TEXT" + ")";
         sqLiteDatabase.execSQL(CREATE_INGREDIENT_TABLE);
 
         //Recipe Ingredient Table
@@ -95,7 +95,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + RI_INGREDIENT_ID + " INTEGER,"
                 + RI_QUANTITY + " DECIMAL,"
                 + RI_UNIT + " TEXT,"
-                + RI_DETAILS + " TEXT" +")";
+                + RI_DETAILS + " TEXT" + ")";
         sqLiteDatabase.execSQL(CREATE_RECIPE_INGREDIENT_TABLE);
 
         //Recipe Directions Table
@@ -103,13 +103,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + RD_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + RD_RECIPE_ID + " INTEGER, "
                 + RD_DIRECTION_TEXT + " TEXT,"
-                + RD_DIRECTION_NUMBER + " INTEGER"+")";
+                + RD_DIRECTION_NUMBER + " INTEGER" + ")";
         sqLiteDatabase.execSQL(CREATE_RECIPE_DIRECTIONS_TABLE);
 
         //Category Table
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY_LIST + "("
                 + CT_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + CT_NAME + " TEXT" +")";
+                + CT_NAME + " TEXT" + ")";
         sqLiteDatabase.execSQL(CREATE_CATEGORY_TABLE);
 
         //Recipe Category Table
@@ -134,6 +134,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         //TODO: TEST
+        //TODO: what are the int params being passed in. Give better names please.
 
         //find and drop existing databases
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPE_LIST);
@@ -149,13 +150,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * This method creates a new row in the Recipe table using the provided Recipe
+     * <p>
+     * Proper usage:
+     * To use this method you should create a recipe object. The recipeID in the object will
+     * be ignored since adding the recipe to the table will generate a recipeID for it.
      *
      * @param recipe
      * @return true if the operation was successful, false otherwise
      */
-    public boolean addRecipe(Recipe recipe) {
-         //TODO: fix this method
-        boolean allpassed = true;
+
+    public int addRecipe(Recipe recipe) {
+
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         List<RecipeCategory> recipeCategoryList = recipe.getCategoryList();
@@ -163,86 +168,75 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<RecipeDirection> recipeDirectionList = recipe.getDirectionsList();
 
         //updating recipe portion of table
-        try {
-            ContentValues cVals = new ContentValues();
-            cVals.put(RT_TITLE, recipe.getTitle());
-            cVals.put(RT_PREP_TIME, recipe.getPrep_time());
-            cVals.put(RT_TOTAL_TIME, recipe.getTotal_time());
-            cVals.put(RT_SERVINGS, recipe.getServings());
-            cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
-            long res = sqLiteDatabase.insert(TABLE_RECIPE_LIST, null, cVals);
-            recipe.setKeyID((int)res); //TODO: possibly dangerous cast?
-        }
-        catch( Exception e){
-            if(IS_IN_TESTING_MODE) {
+        ContentValues cVals = new ContentValues();
+        cVals.put(RT_TITLE, recipe.getTitle());
+        cVals.put(RT_PREP_TIME, recipe.getPrep_time());
+        cVals.put(RT_TOTAL_TIME, recipe.getTotal_time());
+        cVals.put(RT_SERVINGS, recipe.getServings());
+        cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
+        long res = sqLiteDatabase.insert(TABLE_RECIPE_LIST, null, cVals);
+        recipe.setKeyID((int) res); //possibly dangerous cast?
+
+        if (res == -1) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("updating recipe table failed");
             }
-            allpassed = false;
+            return -1;
         }
 
         //add new ingredients from ingredientList
-        try {
-            int size = recipeIngredientList.size();
-            for(int i = 0; i < size; i++){
-                if(addRecipeIngredient(recipeIngredientList.get(i))){
-                    allpassed = false;
-                    if(IS_IN_TESTING_MODE) {
-                        System.out.println("addRecipeIngredient failed");
-                    }
+        for (int i = 0; i < recipeIngredientList.size(); i++) { //TODO: left off here
+            if (addRecipeIngredient(recipeIngredientList.get(i))) {
+                if (IS_IN_TESTING_MODE) {
+                    System.out.println("addRecipeIngredient failed");
                 }
             }
         }
-        catch( Exception e){
-            if(IS_IN_TESTING_MODE) {
-                System.out.println("add new ingredients failed");
-            }
-            allpassed = false;
-        }
+
 
         //add new categorys from recipeCategoryList
         try {
             int size = recipeCategoryList.size();
-            for(int i = 0; i < size; i++){
-                if(addRecipeCategory(recipeCategoryList.get(i))){
-                    allpassed = false;
-                    if(IS_IN_TESTING_MODE) {
+            for (int i = 0; i < size; i++) {
+                if (addRecipeCategory(recipeCategoryList.get(i))) {
+                    //allpassed = false;
+                    if (IS_IN_TESTING_MODE) {
                         System.out.println("addRecipeCategory failed");
                     }
                 }
             }
-        }
-        catch( Exception e){
-            if(IS_IN_TESTING_MODE) {
+        } catch (Exception e) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("add new Category failed");
             }
-            allpassed = false;
+            //allpassed = false;
         }
 
         //add new directions from recipeDirectionList
         try {
             int size = recipeDirectionList.size();
-            for(int i = 0; i < size; i++){
-                if(addRecipeDirection(recipeDirectionList.get(i))){
-                    allpassed = false;
-                    if(IS_IN_TESTING_MODE) {
+            for (int i = 0; i < size; i++) {
+                if (addRecipeDirection(recipeDirectionList.get(i))) {
+                    //allpassed = false;
+                    if (IS_IN_TESTING_MODE) {
                         System.out.println("addRecipeDirection failed");
                     }
                 }
             }
-        }
-        catch( Exception e){
-            if(IS_IN_TESTING_MODE) {
+        } catch (Exception e) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("delete and add new direction failed");
             }
-            allpassed = false;
+            //allpassed = false;
         }
 
         //in case one of the recipe portions were not updated.
-        if(!allpassed){
-            //editRecipe(temp);
-        }
+        //if (!allpassed) {
+        //editRecipe(temp);
+        //}
 
-        return allpassed;
+        //return allpassed;
+        return (int) res;
     }
 
     /**
@@ -258,16 +252,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         try {
-            Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_KEY_ID +" = ? ", new String[] {String.valueOf(recipeId)});
+            Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_KEY_ID + " = ? ", new String[]{String.valueOf(recipeId)});
             if (cursor != null) {
                 cursor.moveToFirst();
-                    recipe = mapRecipe(cursor);
-                    cursor.moveToNext();
+                recipe = mapRecipe(cursor);
+                cursor.moveToNext();
 
                 cursor.close();
             }
         } catch (Exception ex) {
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("failed to retrieve from TABLE_Recipe-List on ID");
                 // Log.w("getAllRecipeIngredients()", ex.getMessage());
             }
@@ -303,7 +297,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         try {
-            Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + recipeTitle +" = ? ", new String[] {String.valueOf(recipeTitle)});
+            Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + recipeTitle + " = ? ", new String[]{String.valueOf(recipeTitle)});
             if (cursor != null) {
                 cursor.moveToFirst();
                 recipe = mapRecipe(cursor);
@@ -312,7 +306,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception ex) {
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("failed to retrieve from TABLE_Recipe_List on Title");
                 // Log.w("getAllRecipeIngredients()", ex.getMessage());
             }
@@ -349,7 +343,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST, null );
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST, null);
         try {
             if (cursor != null) {
                 cursor.moveToFirst();
@@ -396,9 +390,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cVals.put(RT_SERVINGS, recipe.getServings());
             cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
             sqLiteDatabase.update(TABLE_RECIPE_LIST, cVals, IT_KEY_ID + " = ?", new String[]{String.valueOf(recipeId)});
-        }
-        catch( Exception e){
-            if(IS_IN_TESTING_MODE) {
+        } catch (Exception e) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("updating recipe table failed");
             }
             allpassed = false;
@@ -409,17 +402,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             sqLiteDatabase.delete(TABLE_RECIPE_INGREDIENT_LIST, RI_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
             int size = recipeIngredientList.size();
-            for(int i = 0; i < size; i++){
-                if(addRecipeIngredient(recipeIngredientList.get(i))){
+            for (int i = 0; i < size; i++) {
+                if (addRecipeIngredient(recipeIngredientList.get(i))) {
                     allpassed = false;
-                    if(IS_IN_TESTING_MODE) {
+                    if (IS_IN_TESTING_MODE) {
                         System.out.println("addRecipeIngredient failed");
                     }
                 }
             }
-        }
-        catch( Exception e){
-            if(IS_IN_TESTING_MODE) {
+        } catch (Exception e) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("delete and add new ingredients failed");
             }
             allpassed = false;
@@ -429,17 +421,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             sqLiteDatabase.delete(TABLE_RECIPE_CATEGORY_LIST, RC_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
             int size = recipeCategoryList.size();
-            for(int i = 0; i < size; i++){
-                if(addRecipeCategory(recipeCategoryList.get(i))){
+            for (int i = 0; i < size; i++) {
+                if (addRecipeCategory(recipeCategoryList.get(i))) {
                     allpassed = false;
-                    if(IS_IN_TESTING_MODE) {
+                    if (IS_IN_TESTING_MODE) {
                         System.out.println("addRecipeCategory failed");
                     }
                 }
             }
-        }
-        catch( Exception e){
-            if(IS_IN_TESTING_MODE) {
+        } catch (Exception e) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("delete and add new Category failed");
             }
             allpassed = false;
@@ -449,24 +440,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             sqLiteDatabase.delete(TABLE_RECIPE_DIRECTIONS_LIST, RD_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
             int size = recipeDirectionList.size();
-            for(int i = 0; i < size; i++){
-                if(addRecipeDirection(recipeDirectionList.get(i))){
+            for (int i = 0; i < size; i++) {
+                if (addRecipeDirection(recipeDirectionList.get(i))) {
                     allpassed = false;
-                    if(IS_IN_TESTING_MODE) {
+                    if (IS_IN_TESTING_MODE) {
                         System.out.println("addRecipeDirection failed");
                     }
                 }
             }
-        }
-        catch( Exception e){
-            if(IS_IN_TESTING_MODE) {
+        } catch (Exception e) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("delete and add new direction failed");
             }
             allpassed = false;
         }
 
         //in case one of the recipe portions were not updated.
-        if(!allpassed){
+        if (!allpassed) {
             //editRecipe(temp);
         }
         return allpassed;
@@ -481,7 +471,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public boolean deleteRecipe(int recipeId) {
 
-         //TODO: TEST
+        //TODO: TEST
 
         boolean allpassed = true;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -501,7 +491,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             //close writable database
             sqLiteDatabase.close();
-        }catch(Exception e){
+        } catch (Exception e) {
             allpassed = false;
         }
         return allpassed;
@@ -534,9 +524,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             // Insert the new row, returning the primary key value of the new row
             long newRowId = db.insert(TABLE_RECIPE_INGREDIENT_LIST, null, contentValues);
-        }catch (Exception e){
+        } catch (Exception e) {
             allpassed = false;
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("add Recipe Ingredient Failed");
             }
         }
@@ -557,7 +547,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<RecipeIngredient> recipeIngredientList = new ArrayList<RecipeIngredient>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_INGREDIENT_LIST + "  WHERE " + RI_RECIPE_ID +" = ? ", new String[] {String.valueOf(recipeId)});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_INGREDIENT_LIST + "  WHERE " + RI_RECIPE_ID + " = ? ", new String[]{String.valueOf(recipeId)});
         try {
             if (cursor != null) {
                 cursor.moveToFirst();
@@ -569,7 +559,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception ex) {
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("getAllRecipeIngredients Failed");
                 // Log.w("getAllRecipeIngredients()", ex.getMessage());
             }
@@ -578,7 +568,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return recipeIngredientList;
     }
 
-    // TODO: Create addIngredient method
+    /**
+     * This method adds an ingredient to the ingredients table.
+     *
+     * @param ingredient The ingredient to be inserted. (id is ignored)
+     * @return The id of the added ingredient
+     */
+    public int addIngredient(Ingredient ingredient) {
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        //adding ingredients
+        ContentValues cVals = new ContentValues();
+        cVals.put(IT_KEY_ID, ingredient.getKeyID());
+        cVals.put(IT_NAME, ingredient.getName());
+        long res = sqLiteDatabase.insert(TABLE_RECIPE_LIST, null, cVals);
+        ingredient.setKeyID((int) res); //possibly dangerous cast?
+
+        if (res == -1) {
+            if (IS_IN_TESTING_MODE) {
+                System.out.println("updating recipe table failed");
+            }
+            return -1;
+        }
+
+        return (int) res;
+    }
 
     /**
      * This method modifies the ingredient in the ingredients table with the same key id
@@ -595,11 +610,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
             ContentValues cVals = new ContentValues();
             cVals.put(IT_NAME, ingredient.getName());
-            sqLiteDatabase.update(TABLE_RECIPE_LIST, cVals, IT_KEY_ID + " = ?", new String[]{String.valueOf(id)});
-        }
-        catch( Exception ex){
+            sqLiteDatabase.update(TABLE_INGREDIENT_LIST, cVals, IT_KEY_ID + " = ?", new String[]{String.valueOf(id)});
+        } catch (Exception ex) {
             allpassed = false;
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("editIngredients Failed");
                 // Log.w("getAllRecipeIngredients()", ex.getMessage());
             }
@@ -610,7 +624,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * This method deletes the recipe ingredient list in the recipe ingredient table using the recipeId
      *
-     * @param  recipeId
+     * @param recipeId
      * @return If successful in updating, will return true
      */
     public boolean deleteRecipeIngredients(int recipeId) {
@@ -619,10 +633,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         try {
             sqLiteDatabase.delete(TABLE_RECIPE_INGREDIENT_LIST, RI_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
-        }
-        catch( Exception ex){
+        } catch (Exception ex) {
             allpassed = false;
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("deleteRecipeIngredients Failed");
                 // Log.w("getAllRecipeIngredients()", ex.getMessage());
             }
@@ -633,7 +646,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * This method deletes the ingredient in the ingredient table using the ingredientId
      *
-     * @param  ingredintId
+     * @param ingredintId
      * @return If successful in updating, will return true
      */
     public boolean deleteIngredient(int ingredintId) {
@@ -642,18 +655,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         try {
             sqLiteDatabase.delete(TABLE_INGREDIENT_LIST, IT_KEY_ID + " = ?", new String[]{String.valueOf(ingredintId)});
-        }
-        catch( Exception e){
+        } catch (Exception e) {
             allpassed = false;
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("deleteIngredients Failed");
                 // Log.w("getAllRecipeIngredients()", ex.getMessage());
             }
         }
         return allpassed; //TODO: Delete references to this ingredient from RECIPE_INGREDIENTs table
     }
-
-    // TODO: Create addDirection method
 
     /**
      * This method creates a new row in the Recipe Direction table using the provided recipeDirection
@@ -678,9 +688,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             // Insert the new row, returning the primary key value of the new row
             long newRowId = db.insert(TABLE_RECIPE_DIRECTIONS_LIST, null, contentValues);
-        }catch (Exception e){
+        } catch (Exception e) {
             allpassed = false;
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("addRecipeDirections Failed");
                 // Log.w("getAllRecipeIngredients()", ex.getMessage());
             }
@@ -702,7 +712,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<RecipeDirection> recipeIngredientList = new ArrayList<RecipeDirection>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_DIRECTIONS_LIST + "  WHERE " + RD_RECIPE_ID +" = ? ", new String[] {String.valueOf(recipeId)});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_DIRECTIONS_LIST + "  WHERE " + RD_RECIPE_ID + " = ? ", new String[]{String.valueOf(recipeId)});
         try {
             if (cursor != null) {
                 cursor.moveToFirst();
@@ -714,7 +724,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception ex) {
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("getAllRecipeDirections Failed");
                 // Log.w("getAllRecipeIngredients()", ex.getMessage());
             }
@@ -726,7 +736,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * This method deletes the recipe Direction list in the recipe Direction table using the recipeId
      *
-     * @param  recipeId
+     * @param recipeId
      * @return If successful in updating, will return true
      */
     public boolean deleteRecipeDirections(int recipeId) {
@@ -735,10 +745,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         try {
             sqLiteDatabase.delete(TABLE_RECIPE_DIRECTIONS_LIST, RD_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
-        }
-        catch( Exception ex){
+        } catch (Exception ex) {
             allpassed = false;
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("deleteRecipeDirections Failed");
                 // Log.w("getAllRecipeIngredients()", ex.getMessage());
             }
@@ -759,7 +768,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<RecipeCategory> recipeCategoryList = new ArrayList<RecipeCategory>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_CATEGORY_LIST + "  WHERE " + RC_RECIPE_ID +" = ? ", new String[] {String.valueOf(recipeId)});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_CATEGORY_LIST + "  WHERE " + RC_RECIPE_ID + " = ? ", new String[]{String.valueOf(recipeId)});
         try {
             if (cursor != null) {
                 cursor.moveToFirst();
@@ -771,7 +780,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception ex) {
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("getAllRecipeCategories Failed");
                 // Log.w("getAllRecipeIngredients()", ex.getMessage());
             }
@@ -802,9 +811,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             // Insert the new row, returning the primary key value of the new row
             long newRowId = db.insert(TABLE_RECIPE_CATEGORY_LIST, null, contentValues);
-        }catch (Exception e){
+        } catch (Exception e) {
             allpassed = false;
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("addRecipeCategorie Failed");
                 // Log.w("getAllRecipeIngredients()", ex.getMessage());
             }
@@ -817,9 +826,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * This method creates a new row in the Category table using the provided category
      *
      * @param category
-     * @return true if the operation was successful, false otherwise
+     * @return returns the id of the inserted category, or -1 otherwise.
      */
-    boolean addCategory(Category category) {
+    public int addCategory(Category category) {
         //TODO: TEST
         //Get the Data Repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
@@ -829,10 +838,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         boolean allpassed = true;
 
-        try {
-            //contentValues.put(KEY_ID, Ingredient.getKey());  //not sure if this line is needed or if database will auto increment
-            contentValues.put(CT_NAME, category.getName());
+        //contentValues.put(KEY_ID, Ingredient.getKey());  //not sure if this line is needed or if database will auto increment
+        contentValues.put(CT_NAME, category.getName());
 
+<<<<<<< HEAD
             // Insert the new row
             db.insert(TABLE_CATEGORY_LIST, null, contentValues);
         }catch (Exception ex){
@@ -842,8 +851,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 // Log.w("addCategory()", ex.getMessage());
             }
         }
+=======
+        // Insert the new row
+        int res = (int)db.insert(TABLE_CATEGORY_LIST, null, contentValues);
+>>>>>>> b61d98569748c6a0bafcd30c5753c0469fb929ff
         db.close();
-        return allpassed;
+
+        return res;
+
     }
 
     /**
@@ -868,7 +883,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         } catch (Exception ex) {
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("getCategoriy Failed");
                 // Log.w("getCategoriy()", ex.getMessage());
             }
@@ -880,7 +895,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * This method deletes the recipe category list in the recipe category table using the recipeId
      *
-     * @param  recipeId
+     * @param recipeId
      * @return If successful in updating, will return true
      */
     public boolean deleteRecipeCategory(int recipeId) {
@@ -889,10 +904,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         try {
             sqLiteDatabase.delete(TABLE_RECIPE_CATEGORY_LIST, RC_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
-        }
-        catch( Exception ex){
+        } catch (Exception ex) {
             allpassed = false;
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("deleteRecipeCategoriy Failed");
                 // Log.w("addCategoriy()", ex.getMessage());
             }
@@ -904,7 +918,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * This method deletes the category in the category table using the categoryId
      *
-     * @param  categoryId
+     * @param categoryId
      * @return If successful in updating, will return true
      */
     public boolean deleteCategory(int categoryId) {
@@ -913,10 +927,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         try {
             sqLiteDatabase.delete(TABLE_RECIPE_CATEGORY_LIST, IT_KEY_ID + " = ?", new String[]{String.valueOf(categoryId)});
-        }
-        catch( Exception ex){
+        } catch (Exception ex) {
             allpassed = false;
-            if(IS_IN_TESTING_MODE) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("deleteCategoriy Failed");
                 // Log.w("deleteCategoriy()", ex.getMessage());
             }
@@ -934,7 +947,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Recipe mapRecipe(Cursor cursor) {
         //TODO: TEST
         Recipe recipe = new Recipe();
-        try{
+        try {
             if (cursor != null) {
                 if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
                     int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
@@ -956,26 +969,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     int recipeServingsIndex = cursor.getColumnIndexOrThrow(RT_SERVINGS);
                     recipe.setServings(cursor.getDouble(recipeServingsIndex));
                 }
-            //not sure how to get the bit type out of the cursor... could just do 1 or 0
+                //not sure how to get the bit type out of the cursor... could just do 1 or 0
                 if (cursor.getColumnIndex(RT_FAVORITED) != -1) {
                     int recipeFavoritedIndex = cursor.getColumnIndexOrThrow(RT_FAVORITED);
-                    if(cursor.getInt(recipeFavoritedIndex) == 1) {
+                    if (cursor.getInt(recipeFavoritedIndex) == 1) {
                         recipe.setFavorited(true);
-                    }else{
+                    } else {
                         recipe.setFavorited(false);
                     }
                 }
             }
-            if (recipe.getKeyID() == -1){
+            if (recipe.getKeyID() == -1) {
                 return null;
             }
-        }
-        catch( Exception ex){
-            if(IS_IN_TESTING_MODE) {
+        } catch (Exception ex) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("mapRecipeDirection Failed");
                 // Log.w("mapRecipeDirection()", ex.getMessage());
+            }
         }
-    }
         return recipe;
 
     }
@@ -989,7 +1001,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private RecipeIngredient mapRecipeIngredient(Cursor cursor) {
         //TODO: TEST
         RecipeIngredient recipeIngredient = new RecipeIngredient();
-        try{
+        try {
             if (cursor != null) {
                 if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
                     int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
@@ -1016,11 +1028,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     recipeIngredient.setDetails(cursor.getString(detailsIndex));
                 }
             }
-            if (recipeIngredient.getKeyID() == -1){
+            if (recipeIngredient.getKeyID() == -1) {
                 return null;
             }
-        } catch( Exception ex){
-            if(IS_IN_TESTING_MODE) {
+        } catch (Exception ex) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("mapRecipeDirection Failed");
                 // Log.w("mapRecipeDirection()", ex.getMessage());
             }
@@ -1060,8 +1072,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (recipeDirection.getKeyID() == -1) {
                 return null;
             }
-        } catch( Exception ex){
-            if(IS_IN_TESTING_MODE) {
+        } catch (Exception ex) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("mapRecipeDirection Failed");
                 // Log.w("mapRecipeDirection()", ex.getMessage());
             }
@@ -1099,8 +1111,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (recipeCategory.getKeyID() == -1) {
                 return null;
             }
-        } catch( Exception ex){
-            if(IS_IN_TESTING_MODE) {
+        } catch (Exception ex) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("mapRecipeCategory Failed");
                 // Log.w("mapRecipeCategory()", ex.getMessage());
             }
@@ -1117,23 +1129,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Category mapCategory(Cursor cursor) {
         //TODO: TEST
         Category category = new Category();
-    try {
-        if (cursor != null) {
-            if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
-                int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
-                category.setKeyID((cursor.getInt(idIndex)));
-            }
-            if (cursor.getColumnIndex(IT_NAME) != -1) {
-                int categoryNameIndex = cursor.getColumnIndexOrThrow(IT_NAME);
-                category.setName(cursor.getString(categoryNameIndex));
-            }
+        try {
+            if (cursor != null) {
+                if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
+                    int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
+                    category.setKeyID((cursor.getInt(idIndex)));
+                }
+                if (cursor.getColumnIndex(IT_NAME) != -1) {
+                    int categoryNameIndex = cursor.getColumnIndexOrThrow(IT_NAME);
+                    category.setName(cursor.getString(categoryNameIndex));
+                }
 
-        }
-        if (category.getKeyID() == -1) {
-            return null;
-        }
-    } catch( Exception ex){
-            if(IS_IN_TESTING_MODE) {
+            }
+            if (category.getKeyID() == -1) {
+                return null;
+            }
+        } catch (Exception ex) {
+            if (IS_IN_TESTING_MODE) {
                 System.out.println("mapCategory Failed");
                 // Log.w("mapCategory()", ex.getMessage());
             }
