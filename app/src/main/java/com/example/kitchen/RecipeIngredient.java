@@ -1,13 +1,30 @@
 package com.example.kitchen;
 
 public class RecipeIngredient {
-    private int keyID = -1;
-    private int recipeID = -1;
-    private int ingredientID = -1;
-    private double quantity = -1;
-    private String name = null;
-    private String unit = null;
-    private String details = null;
+    private int keyID;
+    private int recipeID;
+    private int ingredientID;
+    private double quantity;
+    private String name;
+    private String unit;
+    private String details;
+
+    public RecipeIngredient() {
+        keyID = -1;
+        recipeID = -1;
+        ingredientID = -1;
+        quantity = -1;
+    }
+
+    public RecipeIngredient(int keyID, int recipeID, int ingredientID, double quantity, String name, String unit, String details) {
+        this.keyID = keyID;
+        this.recipeID = recipeID;
+        this.ingredientID = ingredientID;
+        this.quantity = quantity;
+        this.name = name;
+        this.unit = unit;
+        this.details = details;
+    }
 
     public int getRecipeID() { return recipeID; }
 
