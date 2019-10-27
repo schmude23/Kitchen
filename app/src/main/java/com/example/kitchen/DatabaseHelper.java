@@ -173,13 +173,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cVals.put(RT_PREP_TIME, recipe.getPrep_time());
         cVals.put(RT_TOTAL_TIME, recipe.getTotal_time());
         cVals.put(RT_SERVINGS, recipe.getServings());
-        //temporary fix
-        if(recipe.getFavorited()){
-            cVals.put(RT_FAVORITED, (int) 1);
-        }else{
-            cVals.put(RT_FAVORITED, (int) 0);
-        }
-        //cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
+        cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
         int res = (int) sqLiteDatabase.insert(TABLE_RECIPE_LIST, null, cVals);
         recipe.setKeyID(res);
 
@@ -369,13 +363,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cVals.put(RT_PREP_TIME, recipe.getPrep_time());
             cVals.put(RT_TOTAL_TIME, recipe.getTotal_time());
             cVals.put(RT_SERVINGS, recipe.getServings());
-            //temporary fix
-            if(recipe.getFavorited()){
-                cVals.put(RT_FAVORITED, (int) 1);
-            }else{
-                cVals.put(RT_FAVORITED, (int) 0);
-            }
-            //cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
+            cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
             long res = sqLiteDatabase.update(TABLE_RECIPE_LIST, cVals, IT_KEY_ID + " = ?", new String[]{String.valueOf(recipeId)});
 
             if (res != 1) {
@@ -386,6 +374,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //delete ingredientlist and add new ingredientlist
             sqLiteDatabase.delete(TABLE_RECIPE_INGREDIENT_LIST, RI_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
             for (int i = 0; i < recipeIngredientList.size(); i++) {
+                recipeIngredientList.get(i).setRecipeID(recipeId);
                 int ingredientRes = addRecipeIngredient(recipeIngredientList.get(i));
                 if (ingredientRes == -1) {
                     return false;
@@ -396,6 +385,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             sqLiteDatabase.delete(TABLE_RECIPE_CATEGORY_LIST, RC_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
             for (int i = 0; i < recipeCategoryList.size(); i++) {
+                recipeCategoryList.get(i).setRecipeID(recipeId);
                 int recipeCategoryResult = addRecipeCategory(recipeCategoryList.get(i));
                 if (recipeCategoryResult == -1) {
                     return false;
@@ -405,6 +395,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //delete recipeDirections and add new recipeDirections
             sqLiteDatabase.delete(TABLE_RECIPE_DIRECTIONS_LIST, RD_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
             for (int i = 0; i < recipeDirectionList.size(); i++) {
+                recipeDirectionList.get(i).setRecipeID(recipeId);
                 int recipeDirectionResult = addRecipeDirection(recipeDirectionList.get(i));
                 if (recipeDirectionResult == -1) {
                     return false;

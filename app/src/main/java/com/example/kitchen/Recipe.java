@@ -106,6 +106,7 @@ class Recipe {
 
     //also updates favorite int for TABLE_Recipe
     public void setFavorited(Boolean favorited) {
+        this.favorited = favorited;
     }
 
     public List<RecipeIngredient> getIngredientList() {
