@@ -3,7 +3,8 @@ package com.example.kitchen;
 import java.util.List;
 
 class Recipe {
-    private int keyID = -1;
+    //private int keyID = -1;
+    private String keyID = null; //MICHAELA DID
     private String title = null;
     private double servings = -1;
     private int prep_time = -1;
@@ -17,11 +18,19 @@ class Recipe {
 
     public Recipe() {    }
 
-    public int getKeyID() {
+    /*public int getKeyID() {
         return keyID;
     }
 
     public void setKeyID(int keyID) {
+        this.keyID = keyID;
+    }*/
+
+    public String getKeyID() {
+        return keyID;
+    }
+
+    public void setKeyID(String keyID) {
         this.keyID = keyID;
     }
 
