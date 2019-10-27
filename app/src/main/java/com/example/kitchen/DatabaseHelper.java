@@ -14,7 +14,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //set to true for printouts.
     private static boolean IS_IN_TESTING_MODE = true;
 
-    public static final int VERSION_NUMBER = 1;
+    public static final int VERSION_NUMBER = 2;
     public static final String DATABASE_NAME = "RECIPE_DATABASE";
 
     //Ingredient Table (Uses prefix IT)
@@ -580,19 +580,49 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //adding ingredients
         ContentValues cVals = new ContentValues();
-        cVals.put(IT_KEY_ID, ingredient.getKeyID());
         cVals.put(IT_NAME, ingredient.getName());
-        long res = sqLiteDatabase.insert(TABLE_RECIPE_LIST, null, cVals);
-        ingredient.setKeyID((int) res); //possibly dangerous cast?
+        int res = (int) sqLiteDatabase.insert(TABLE_INGREDIENT_LIST, null, cVals);
+        ingredient.setKeyID(res); //possibly dangerous cast?
 
         if (res == -1) {
             if (IS_IN_TESTING_MODE) {
-                System.out.println("updating recipe table failed");
+                System.out.println("updating ingredient table failed");
             }
             return -1;
         }
 
-        return (int) res;
+        return res;
+    }
+
+    /**
+     * This method returns an Ingredient using the specified category ID
+     *
+     * @param ingredientID
+     * @return If successful in fetching the ingredient return, if not, this method will return null.
+     */
+    public Ingredient getIngredient(int ingredientID) {
+
+        //TODO: Implement
+        Ingredient ingredient = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        try {
+            Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_INGREDIENT_LIST + "  WHERE " + IT_KEY_ID + " = ? ", new String[]{String.valueOf(ingredientID)});
+            if (cursor != null) {
+                cursor.moveToFirst();
+                ingredient = mapIngredient(cursor);
+                cursor.moveToNext();
+
+                cursor.close();
+            }
+        } catch (Exception ex) {
+            if (IS_IN_TESTING_MODE) {
+                System.out.println("getIngredient Failed");
+                // Log.w("getCategoriy()", ex.getMessage());
+            }
+            return null;
+        }
+        return ingredient;
     }
 
     /**
@@ -835,26 +865,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //Create a new map of values, where column names are the keys
         ContentValues contentValues = new ContentValues();
-
-        boolean allpassed = true;
-
-        //contentValues.put(KEY_ID, Ingredient.getKey());  //not sure if this line is needed or if database will auto increment
         contentValues.put(CT_NAME, category.getName());
 
-<<<<<<< HEAD
-            // Insert the new row
-            db.insert(TABLE_CATEGORY_LIST, null, contentValues);
-        }catch (Exception ex){
-            allpassed = false;
-            if(IS_IN_TESTING_MODE) {
-                System.out.println("addCategory Failed");
-                // Log.w("addCategory()", ex.getMessage());
-            }
-        }
-=======
         // Insert the new row
         int res = (int)db.insert(TABLE_CATEGORY_LIST, null, contentValues);
->>>>>>> b61d98569748c6a0bafcd30c5753c0469fb929ff
+        category.setKeyID(res);
+
         db.close();
 
         return res;
@@ -1151,6 +1167,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return category;
+    }
+
+    /**
+     * This method returns a built Ingredient object
+     *
+     * @return If successful in fetching the cursor and building the Ingredient, it will
+     * return a Ingredient Object, if not the method will return null.
+     */
+    private Ingredient mapIngredient(Cursor cursor) {
+        //TODO: TEST
+        Ingredient ingredient = new Ingredient();
+        try {
+            if (cursor != null) {
+                if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
+                    int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
+                    ingredient.setKeyID((cursor.getInt(idIndex)));
+                }
+                if (cursor.getColumnIndex(IT_NAME) != -1) {
+                    int categoryNameIndex = cursor.getColumnIndexOrThrow(IT_NAME);
+                    ingredient.setName(cursor.getString(categoryNameIndex));
+                }
+
+            }
+            if (ingredient.getKeyID() == -1) {
+                return null;
+            }
+        } catch (Exception ex) {
+            if (IS_IN_TESTING_MODE) {
+                System.out.println("mapCategory Failed");
+                // Log.w("mapCategory()", ex.getMessage());
+            }
+        }
+        return ingredient;
     }
 
 }

@@ -31,8 +31,8 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void addCategory_ReturnsID(){
-        /*int returned = testDatabase.addCategory(category);
-        assertNotEquals(-1, returned);*/
+        int returned = testDatabase.addCategory(category);
+        assertNotEquals(-1, returned);
     }
 
     @Test
@@ -43,10 +43,10 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void addCategory_DatabaseUpdates(){
-        /*int returned = testDatabase.addCategory(category);
+        int returned = testDatabase.addCategory(category);
         Category retrieved = testDatabase.getCategory(returned);
         assertEquals("Check that Category was added with the correct name", "Lunch", retrieved.getName());
-        assertEquals("Check the added Category's ID was set", returned, retrieved.getKeyID());*/
+        assertEquals("Check the added Category's ID was set", returned, retrieved.getKeyID());
     }
 
     {
@@ -63,8 +63,8 @@ public class ExampleInstrumentedTest {
     Ingredient ingredient = new Ingredient(-1, "Flour");
     @Test
     public void addIngredient_ReturnsID(){
-        /*int returned = testDatabase.addIngredient(ingredient);
-        assertNotEquals(-1, returned);*/
+        int returned = testDatabase.addIngredient(ingredient);
+        assertNotEquals(-1, returned);
     }
 
     @Test
@@ -75,10 +75,10 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void addIngredient_DatabaseUpdates(){
-        /*int returned = testDatabase.addIngredient(category);
+        int returned = testDatabase.addIngredient(ingredient);
         Ingredient retrieved = testDatabase.getIngredient(returned);
         assertEquals("Check that Ingredient was added with correct name", "Flour", retrieved.getName());
-        assertEquals("Check the added Ingredients ID was set", returned, retrieved.getKeyID());*/
+        assertEquals("Check the added Ingredients ID was set", returned, retrieved.getKeyID());
     }
 
     {
