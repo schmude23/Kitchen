@@ -64,6 +64,19 @@ class Recipe {
         this.categoryList = categories;
     }
 
+    public Recipe(int keyID, String title, double servings, int prep_time, int total_time, boolean favorited, List<RecipeIngredient> ingredients, List<RecipeDirection> directions, List<RecipeCategory> categories) {
+        this(); //Call default constructor
+        this.keyID = keyID;
+        this.title = title;
+        this.servings = servings;
+        this.prep_time = prep_time;
+        this.total_time = total_time;
+        this.favorited = favorited;
+        this.ingredientList = ingredients;
+        this.directionsList = directions;
+        this.categoryList = categories;
+    }
+
     public void createRecipe(String name){
         this.title = name;
     }

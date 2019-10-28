@@ -5,7 +5,6 @@ public class RecipeIngredient {
     private int recipeID;
     private int ingredientID;
     private double quantity;
-    private String name;
     private String unit;
     private String details;
 
@@ -16,12 +15,11 @@ public class RecipeIngredient {
         quantity = -1;
     }
 
-    public RecipeIngredient(int keyID, int recipeID, int ingredientID, double quantity, String name, String unit, String details) {
+    public RecipeIngredient(int keyID, int recipeID, int ingredientID, double quantity, String unit, String details) {
         this.keyID = keyID;
         this.recipeID = recipeID;
         this.ingredientID = ingredientID;
         this.quantity = quantity;
-        this.name = name;
         this.unit = unit;
         this.details = details;
     }
@@ -46,10 +44,6 @@ public class RecipeIngredient {
         this.quantity = quantity;
     }
 
-    public String getName() { return name; }
-
-    public void setName(String name) { this.name = name; }
-
     public String getUnit() { return unit; }
 
     public void setUnit(String unit) { this.unit = unit; }
@@ -66,7 +60,6 @@ public class RecipeIngredient {
     public String toString() {
         return "RecipeIngredient{" +
                 "keyID=" + keyID +
-                ", name='" + name + '\'' +
                 ", recipeID=" + recipeID + "\n" +
                 ", ingredientID=" + ingredientID + "\n" +
                 ", quantity=" + quantity + "\n" +

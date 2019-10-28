@@ -259,7 +259,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<RecipeCategory> recipeCategoryList = getAllRecipeCategories(recipeId);
         recipe.setCategoryList(recipeCategoryList);
 
-        if(recipe.getKeyID() == -1){
+        if (recipe.getKeyID() == -1) {
             return null;
         }
         return recipe;
@@ -362,49 +362,50 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<RecipeDirection> recipeDirectionList = recipe.getDirectionsList();
 
         //updating recipe portion of table
-            ContentValues cVals = new ContentValues();
-            cVals.put(RT_TITLE, recipe.getTitle());
-            cVals.put(RT_PREP_TIME, recipe.getPrep_time());
-            cVals.put(RT_TOTAL_TIME, recipe.getTotal_time());
-            cVals.put(RT_SERVINGS, recipe.getServings());
-            cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
-            long res = sqLiteDatabase.update(TABLE_RECIPE_LIST, cVals, IT_KEY_ID + " = ?", new String[]{String.valueOf(recipeId)});
+        ContentValues cVals = new ContentValues();
+        cVals.put(RT_TITLE, recipe.getTitle());
+        cVals.put(RT_PREP_TIME, recipe.getPrep_time());
+        cVals.put(RT_TOTAL_TIME, recipe.getTotal_time());
+        cVals.put(RT_SERVINGS, recipe.getServings());
+        cVals.put(RT_FAVORITED, recipe.getFavorited() ? 1 : 0);
+        long res = sqLiteDatabase.update(TABLE_RECIPE_LIST, cVals, IT_KEY_ID + " = ?", new String[]{String.valueOf(recipeId)});
 
-            if (res != 1) {
-                return false;
-            }
-
+        if (res != 1) {
+            return false;
+        }
 
         //delete ingredientlist and add new ingredientlist
-            sqLiteDatabase.delete(TABLE_RECIPE_INGREDIENT_LIST, RI_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
-            for (int i = 0; i < recipeIngredientList.size(); i++) {
-                recipeIngredientList.get(i).setRecipeID(recipeId);
-                int ingredientRes = addRecipeIngredient(recipeIngredientList.get(i));
-                if (ingredientRes == -1) {
-                    return false;
-                }
+        sqLiteDatabase.delete(TABLE_RECIPE_INGREDIENT_LIST, RI_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
+        for (int i = 0; i < recipeIngredientList.size(); i++) {
+            recipeIngredientList.get(i).setRecipeID(recipeId);
+            int ingredientRes = addRecipeIngredient(recipeIngredientList.get(i));
+            if (ingredientRes == -1) {
+                return false;
             }
+        }
 
         //delete recipecategorylist and add new recipecategorylist
+        sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.delete(TABLE_RECIPE_CATEGORY_LIST, RC_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
+        for (int i = 0; i < recipeCategoryList.size(); i++) {
+            recipeCategoryList.get(i).setRecipeID(recipeId);
+            int recipeCategoryResult = addRecipeCategory(recipeCategoryList.get(i));
 
-            sqLiteDatabase.delete(TABLE_RECIPE_CATEGORY_LIST, RC_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
-            for (int i = 0; i < recipeCategoryList.size(); i++) {
-                recipeCategoryList.get(i).setRecipeID(recipeId);
-                int recipeCategoryResult = addRecipeCategory(recipeCategoryList.get(i));
-                if (recipeCategoryResult == -1) {
-                    return false;
-                }
+            if (recipeCategoryResult == -1) {
+                return false;
             }
+        }
 
         //delete recipeDirections and add new recipeDirections
-            sqLiteDatabase.delete(TABLE_RECIPE_DIRECTIONS_LIST, RD_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
-            for (int i = 0; i < recipeDirectionList.size(); i++) {
-                recipeDirectionList.get(i).setRecipeID(recipeId);
-                int recipeDirectionResult = addRecipeDirection(recipeDirectionList.get(i));
-                if (recipeDirectionResult == -1) {
-                    return false;
-                }
+        sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.delete(TABLE_RECIPE_DIRECTIONS_LIST, RD_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
+        for (int i = 0; i < recipeDirectionList.size(); i++) {
+            recipeDirectionList.get(i).setRecipeID(recipeId);
+            int recipeDirectionResult = addRecipeDirection(recipeDirectionList.get(i));
+            if (recipeDirectionResult == -1) {
+                return false;
             }
+        }
 
         return true;
     }
@@ -420,28 +421,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //TODO: TEST
 
-        boolean allpassed = true;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
-        try {
-            //delete recipe
-            sqLiteDatabase.delete(TABLE_RECIPE_LIST, IT_KEY_ID + " = ?", new String[]{String.valueOf(recipeId)});
+        //delete recipe
+        long returned = sqLiteDatabase.delete(TABLE_RECIPE_LIST, IT_KEY_ID + " = ?", new String[]{String.valueOf(recipeId)});
 
-            //delete recipeIngredients
-            sqLiteDatabase.delete(TABLE_RECIPE_INGREDIENT_LIST, RI_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
+        //delete recipeIngredients
+        sqLiteDatabase.delete(TABLE_RECIPE_INGREDIENT_LIST, RI_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
 
-            //delete recipeCategories
-            sqLiteDatabase.delete(TABLE_RECIPE_CATEGORY_LIST, RC_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
+        //delete recipeCategories
+        sqLiteDatabase.delete(TABLE_RECIPE_CATEGORY_LIST, RC_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
 
-            //delete recipeDirections
-            sqLiteDatabase.delete(TABLE_RECIPE_DIRECTIONS_LIST, RD_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
+        //delete recipeDirections
+        sqLiteDatabase.delete(TABLE_RECIPE_DIRECTIONS_LIST, RD_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
 
-            //close writable database
-            sqLiteDatabase.close();
-        } catch (Exception e) {
-            allpassed = false;
+        //close writable database
+        sqLiteDatabase.close();
+
+        if(returned == 0){
+            return false;
         }
-        return allpassed;
+
+        return true;
     }
 
     /**
@@ -651,7 +652,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(RD_DIRECTION_NUMBER, recipeDirection.getDirectionNumber());
 
         // Insert the new row, returning the primary key value of the new row
-        int newRowId = (int)db.insert(TABLE_RECIPE_DIRECTIONS_LIST, null, contentValues);
+        int newRowId = (int) db.insert(TABLE_RECIPE_DIRECTIONS_LIST, null, contentValues);
 
         db.close();
         return newRowId;
@@ -761,11 +762,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Create a new map of values, where column names are the keys
         ContentValues contentValues = new ContentValues();
 
-            contentValues.put(RC_RECIPE_ID, recipeCategory.getRecipeID());
-            contentValues.put(RC_CATEGORY_ID, recipeCategory.getCategoryID());
+        contentValues.put(RC_RECIPE_ID, recipeCategory.getRecipeID());
+        contentValues.put(RC_CATEGORY_ID, recipeCategory.getCategoryID());
 
-            // Insert the new row, returning the primary key value of the new row
-            int newRowId = (int)db.insert(TABLE_RECIPE_CATEGORY_LIST, null, contentValues);
+        // Insert the new row, returning the primary key value of the new row
+        int newRowId = (int) db.insert(TABLE_RECIPE_CATEGORY_LIST, null, contentValues);
 
         db.close();
         return newRowId;
@@ -787,7 +788,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CT_NAME, category.getName());
 
         // Insert the new row
-        int res = (int)db.insert(TABLE_CATEGORY_LIST, null, contentValues);
+        int res = (int) db.insert(TABLE_CATEGORY_LIST, null, contentValues);
         category.setKeyID(res);
 
         db.close();
@@ -964,9 +965,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     int detailsIndex = cursor.getColumnIndexOrThrow(RI_DETAILS);
                     recipeIngredient.setDetails(cursor.getString(detailsIndex));
                 }
-                if(idIndex != -1) {
+                /*if (idIndex != -1) {
                     recipeIngredient.setName(getIngredient(cursor.getInt(idIndex)).getName());
-                }
+                }*/ //TODO: SAVANNAH LOOK AT THIS
             }
             if (recipeIngredient.getKeyID() == -1) {
                 return null;
@@ -1046,7 +1047,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     recipeCategory.setCategoryID(cursor.getInt(categoryIdIndex));
                 }
                 //adding the category name from Category table
-                recipeCategory.setName(getCategory(recipeCategory.getCategoryID()).getName());
+                //recipeCategory.setName(getCategory(recipeCategory.getCategoryID()).getName()); //TODO SAVANNAH LOOK AT THIS
             }
             if (recipeCategory.getKeyID() == -1) {
                 return null;
