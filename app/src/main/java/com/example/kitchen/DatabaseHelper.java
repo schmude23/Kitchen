@@ -259,6 +259,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<RecipeCategory> recipeCategoryList = getAllRecipeCategories(recipeId);
         recipe.setCategoryList(recipeCategoryList);
 
+        if(recipe.getKeyID() == -1){
+            return null;
+        }
         return recipe;
     }
 
