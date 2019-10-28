@@ -231,11 +231,11 @@ public class ExampleInstrumentedTest {
         assertEquals("Check Recipe Servings", 1.5, test.getServings(), 0);
         assertEquals("Check Recipe prep_time", 15, test.getPrep_time(), 0);
         assertEquals("Check Recipe total_time", 45, test.getTotal_time(), 0);
-        /*assertEquals("Check Recipe Favorited", true, test.getFavorited());
+        assertEquals("Check Recipe Favorited", true, test.getFavorited());
         assertEquals("Check Ingredient Name", "Sugar", test.getIngredientList().get(0).getName());
         assertEquals("Check Ingredient Unit", "tbsp", test.getIngredientList().get(0).getUnit());
         assertEquals("Check Ingredient Quantity", 1.5, test.getIngredientList().get(0).getQuantity(), 0);
-        assertEquals("Check Ingredient Details", "Brown Sugar", test.getIngredientList().get(0).getDetails());*/
+        assertEquals("Check Ingredient Details", "Brown Sugar", test.getIngredientList().get(0).getDetails());
         assertEquals("Check First Direction", "TestDirection1", test.getDirectionsList().get(0));
         assertEquals("Check Recipe Category", "Dinner", test.getCategoryList().get(0));
         // TODO: Add picture check
@@ -246,9 +246,8 @@ public class ExampleInstrumentedTest {
      */
     @Test
     public void deleteRecipe_ReturnsTrue(){
-        // TODO: .getKeyID will only work if they set this in the createRecipe method
-        // TODO: Add recipe to database first or does it count from the other tests?
-        assertEquals(true, testDatabase.deleteRecipe(testRecipe.getKeyID()));
+        int returned = testDatabase.addRecipe(testRecipe);
+        assertEquals(true, testDatabase.deleteRecipe(returned));
 
     }
 
@@ -257,7 +256,7 @@ public class ExampleInstrumentedTest {
      */
     @Test
     public void deleteRecipe_ReturnsFalse(){
-        //assertEquals(false, testDatabase.deleteRecipe(String.valueOf(Integer.MAX_VALUE)));
+        assertEquals(false, testDatabase.deleteRecipe(Integer.MAX_VALUE));
     }
 
     /**
@@ -266,19 +265,9 @@ public class ExampleInstrumentedTest {
     @Test
     public void deleteRecipe_Deletes(){
         // TODO: FIX THIS TEST
-        /*testDatabase.deleteRecipe(testRecipe.getKeyID());
-        ArrayList<Recipe> allRecipes = testDatabase.getAllRecipes();
-        Boolean deleted = true;
-        try {
-            for (int i = 0; i < allRecipes.size(); i++) {
-                if (allRecipes.get(i).getTitle().equals(recipeTitle)) {
-                    deleted = false;
-                }
-            }
-        } catch(NullPointerException e){
-            // Database is empty, do nothing so deleted stays true
-        }
-        assertEquals(true, deleted);*/
+        int returned = testDatabase.addRecipe(testRecipe);
+        testDatabase.deleteRecipe(returned);
+        assertEquals(null, testDatabase.getRecipe(returned));
     }
 
     /**

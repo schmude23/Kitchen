@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -353,9 +354,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Recipe temp = getRecipe(recipe.getKeyID());
         int recipeId = recipe.getKeyID();
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        ArrayList<RecipeIngredient> recipeIngredientList = new ArrayList<RecipeIngredient>();
-        ArrayList<RecipeCategory> recipeCategoryList = new ArrayList<RecipeCategory>();
-        ArrayList<RecipeDirection> recipeDirectionList = new ArrayList<RecipeDirection>();
+        List<RecipeIngredient> recipeIngredientList = recipe.getIngredientList();
+        List<RecipeCategory> recipeCategoryList = recipe.getCategoryList();
+        List<RecipeDirection> recipeDirectionList = recipe.getDirectionsList();
 
         //updating recipe portion of table
             ContentValues cVals = new ContentValues();
