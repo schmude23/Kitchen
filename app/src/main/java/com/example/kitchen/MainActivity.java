@@ -6,19 +6,26 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
+import android.view.View.OnClickListener;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnClickListener {
     RecyclerView mRecyclerView;
     List<Recipe> recipes;
     @Override
@@ -44,48 +51,7 @@ public class MainActivity extends AppCompatActivity {
             recipe.createRecipe("Recipe" + i);
             recipes.add(recipe);
         }
-        mRecyclerView.setAdapter(new RecipeAdapter(recipes));
-    }
-    class RecipeAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
-        private List<Recipe> mHouse;
-        public RecipeAdapter(List<Recipe> houses) {
-            super();
-            this.mHouse = houses;
-        }
-
-        @NonNull
-        @Override
-        public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new RecipeViewHolder(parent);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
-            holder.bind(this.mHouse.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return this.mHouse.size();
-        }
-    }
-    class RecipeViewHolder extends RecyclerView.ViewHolder{
-        private TextView recipe;
-        private TextView servings;
-        private TextView prep_time;
-        private TextView total_time;
-
-        public RecipeViewHolder(ViewGroup container){
-            super(LayoutInflater.from(MainActivity.this).inflate(R.layout.recipe_list_item, container, false));
-            recipe = (TextView) itemView.findViewById(R.id.text_recipe_name);
-            //servings = (TextView) itemView.findViewById(R.id.recipe_servings);
-            //prep_time = (TextView) itemView.findViewById(R.id.total_rooms_text);
-        }
-        public void bind(Recipe recipe){
-            this.recipe.setText(recipe.getTitle());
-            //prep_time.setText(Integer.toString(recipe.getRooms()));
-            //servings.setText(Integer.toString(recipe.getRoomsAvail()) );
-        }
+        mRecyclerView.setAdapter(new RecipeAdapter(recipes, this));
     }
 
 
@@ -101,9 +67,26 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.advanced_search_item:
                 return true;
-
+            case R.id.action_add_recipe:
+                Intent addRecipe = new Intent(this, AddRecipeActivity.class);
+                startActivity(addRecipe);
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-}
+
+    @Override
+    public void onClick(int position) {
+        Context context = getApplicationContext();
+        CharSequence text = "Hello toast!";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+
+        recipes.get(position);
+        Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
+        startActivity(intent);
+        }
+    }
+

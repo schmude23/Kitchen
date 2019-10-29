@@ -1,42 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <EditText
-        android:id="@+id/edit_text_ingredient"
+        android:id="@+id/edit_text_timer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter ingredient"
-        android:textSize="24dp" />
+        android:hint="Enter timer"
+        android:textSize="24sp" />
 
     <Button
-        android:id="@+id/add_ingredient_btn"
+        android:id="@+id/add_timer_btn"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Add Ingredient"
-        android:onClick="ShowPopup"/>
+        android:text="Add Timer" />
 
     <TextView
-        android:id="@+id/ingredient_header"
+        android:id="@+id/timer_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#5e5e5e"
-        android:text="        Ingredient"
+        android:text="        Timer"
         android:textColor="#FFFFFF"
-        android:textSize="14dp" />
+        android:textSize="14sp" />
 
     <ListView
-        android:id="@+id/ingredient_list"
+        android:id="@+id/timer_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="false"
+        android:layout_weight="1"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/next_btn"
         android:text="NEXT" />
-
 </LinearLayout>

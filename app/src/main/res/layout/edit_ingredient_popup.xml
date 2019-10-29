@@ -2,14 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:outlineSpotShadowColor="@color/colorPrimary"
-    android:background="@color/colorAccent">
+    android:background="@color/colorAccent"
+    android:outlineSpotShadowColor="@color/colorPrimary">
 
-    <TextView
+    <EditText
         android:id="@+id/ingredient_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,45 +18,43 @@
         android:layout_marginTop="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
-        android:text="Ingredient"
         android:textSize="22sp"
+        android:hint="ingredient"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.097" />
 
-    <ImageButton
-        android:id="@+id/add_image_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/colorAccent"
-        app:layout_constraintStart_toEndOf="@+id/ingredient_quantity_text"
-        app:layout_constraintTop_toBottomOf="@+id/ingredient_text"
-        app:srcCompat="@drawable/ic_add" />
-
-    <ImageButton
-        android:id="@+id/subtract_image_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:background="@color/colorAccent"
-        app:layout_constraintEnd_toStartOf="@+id/ingredient_quantity_text"
-        app:layout_constraintTop_toBottomOf="@+id/ingredient_text"
-        app:srcCompat="@drawable/ic_remove" />
-
-    <TextView
+    <EditText
         android:id="@+id/ingredient_quantity_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="quantity"
+        android:layout_marginTop="32dp"
+        android:hint="quantity"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="165dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ingredient_text" />
+
+    <Button
+        android:id="@+id/button_okay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="okay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ingredient_quantity_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
