@@ -1,6 +1,5 @@
 package com.example.kitchen;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
-    private List<Recipe> mHouse;
+    private List<Recipe> recipes;
     private OnClickListener listener;
     public RecipeAdapter(List<Recipe> houses, OnClickListener listener) {
         super();
-        this.mHouse = houses;
+        this.recipes = houses;
         this.listener = listener;
     }
 
@@ -29,12 +28,12 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
-        holder.bind(this.mHouse.get(position));
+        holder.bind(this.recipes.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return this.mHouse.size();
+        return this.recipes.size();
     }
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
             case R.id.advanced_search_item:
                 return true;
             case R.id.action_add_recipe:
-                Intent addRecipe = new Intent(this, AddRecipeActivity.class);
+                Intent addRecipe = new Intent(this, EditRecipeActivity.class);
                 startActivity(addRecipe);
             default:
                 return super.onOptionsItemSelected(item);

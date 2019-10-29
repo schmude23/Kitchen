@@ -1,7 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-</RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+
+        <EditText
+            android:id="@+id/edit_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@color/colorPrimary" />
+
+        <EditText
+            android:id="@+id/edit_servings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Servings"
+            android:ems="10"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_prep_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Prep Time (minutes)"
+            android:ems="10"
+            android:inputType="time" />
+
+        <EditText
+            android:id="@+id/edit_total_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Total Time (minutes)"
+            android:ems="10"
+            android:inputType="time" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload Image"
+            android:textAlignment="center"
+            android:textSize="20sp"/>
+        <ImageView
+            android:id="@+id/recipe_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@android:drawable/ic_menu_upload" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/next_btn"
+            android:text="NEXT" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -18,12 +18,16 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.String.valueOf;
 
 public class EditIngredientActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private Button btnAddIngredient, btnNext;
     private EditText editIngredient;
     private ListView ingredientListView;
+    private List<RecipeIngredient> recipeIngredientList = new ArrayList<RecipeIngredient>();
     ArrayList<String> ingredientList = new ArrayList<String>();
     ArrayAdapter<String> ingredientAdapter;
     Dialog myDialog;
@@ -46,6 +50,12 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
         // set the ingredientListView variable to your ingredientList in the xml
         ingredientListView = (ListView) findViewById(R.id.ingredient_list);
         ingredientListView.setAdapter(ingredientAdapter);
+        ingredientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ShowPopup(view, position);
+            }
+        });
 
     }
 
@@ -56,7 +66,7 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
             case R.id.add_ingredient_btn:
                 input = editIngredient.getText().toString();
                 if (input.length() > 0) {
-                    ShowPopup(v);
+                    ShowPopup(v, -1);
                 }
                 break;
 
@@ -71,14 +81,22 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
 
     }
 
-    public void ShowPopup (View v) {
+    public void ShowPopup (View v, final int position) {
         final EditText edit_name, edit_quantity ;
         Button btnOkay;
 
         myDialog.setContentView(R.layout.edit_ingredient_popup);
         edit_name = myDialog.findViewById(R.id.ingredient_text);
-        edit_name.setText(editIngredient.getText().toString());
         edit_quantity = myDialog.findViewById(R.id.ingredient_quantity_text);
+        if(position != -1)
+        {
+            edit_name.setText(recipeIngredientList.get(position).getDetails());
+            edit_quantity.setText(valueOf(recipeIngredientList.get(position).getQuantity()));
+        }
+        else{
+            edit_name.setText(editIngredient.getText().toString());
+            edit_quantity.setText(edit_quantity.getText().toString());
+        }
 
         btnOkay = myDialog.findViewById(R.id.button_okay);
 
@@ -98,9 +116,24 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
             @Override
             public void onClick(View v) {
                 ingredient_quantity = edit_quantity.getText().toString();
-                // add string to the ingredientAdapter, not the listview
 
-                ingredientAdapter.add(edit_name.getText().toString() + " (" + ingredient_quantity + " " + ingredient_unit + ")" );
+                RecipeIngredient recipeIngredient = new RecipeIngredient();
+                recipeIngredient.setDetails(edit_name.getText().toString());
+                recipeIngredient.setQuantity(Double.valueOf(ingredient_quantity));
+                recipeIngredient.setUnit(ingredient_unit);
+
+
+                if(position != -1)
+                {
+                    ingredientList.set(position, edit_name.getText().toString() + " (" + ingredient_quantity + " " + ingredient_unit + ")"  );
+                    ingredientAdapter.notifyDataSetChanged();
+                    recipeIngredientList.set(position, recipeIngredient);
+                }
+                else
+                {
+                    ingredientAdapter.add(edit_name.getText().toString() + " (" + ingredient_quantity + " " + ingredient_unit + ")" );
+                    recipeIngredientList.add(recipeIngredient);
+                }
                 // no need to call ingredientAdapter.notifyDataSetChanged(); as it is done by the ingredientAdapter.add() method
                 myDialog.dismiss();
             }

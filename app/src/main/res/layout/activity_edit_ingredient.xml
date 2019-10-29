@@ -9,14 +9,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="Enter ingredient"
-        android:textSize="24dp" />
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/add_ingredient_btn"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Add Ingredient"
-        android:onClick="ShowPopup"/>
+        android:text="Add Ingredient" />
 
     <TextView
         android:id="@+id/ingredient_header"
@@ -29,10 +28,9 @@
 
     <ListView
         android:id="@+id/ingredient_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_centerHorizontal="true" />
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
