@@ -226,7 +226,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public Recipe getRecipe(int recipeId) {
 
-        //TODO: TEST
         Recipe recipe = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -273,7 +272,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public Recipe getRecipe(String recipeTitle) {
 
-        //TODO: TEST
         Recipe recipe = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -319,7 +317,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * recipes, if not this method will return null.
      */
     public ArrayList<Recipe> getAllRecipes() {
-        //TODO: IS GET ALL WORKiNG_____________only creates recipe with no ingredients____________________________
+
         Recipe recipe;
         ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -351,7 +349,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public boolean editRecipe(Recipe recipe) {
 
-        //TODO: Test
         //I want to save a version of recipe incase something goes wrong.
         //if so, update with original recipe.
         //Recipe temp = getRecipe(recipe.getKeyID());
@@ -418,8 +415,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return true if successful, false if not
      */
     public boolean deleteRecipe(int recipeId) {
-
-        //TODO: TEST
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
@@ -539,7 +534,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public Ingredient getIngredient(int ingredientID) {
 
-        //TODO: Implement
         Ingredient ingredient = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -594,20 +588,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param recipeId
      * @return If successful in updating, will return true
      */
-    public boolean deleteRecipeIngredients(int recipeId) {
+    public boolean deleteRecipeIngredient(int recipeId) {
         //TODO: TEST
-        boolean allpassed = true;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        try {
-            sqLiteDatabase.delete(TABLE_RECIPE_INGREDIENT_LIST, RI_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
-        } catch (Exception ex) {
-            allpassed = false;
-            if (IS_IN_TESTING_MODE) {
-                System.out.println("deleteRecipeIngredients Failed");
-                // Log.w("getAllRecipeIngredients()", ex.getMessage());
-            }
+        long returned = sqLiteDatabase.delete(TABLE_RECIPE_INGREDIENT_LIST, RI_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
+
+        if(returned == 0){
+            return false;
         }
-        return allpassed;
+        return true;
     }
 
     /**
@@ -617,19 +606,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful in updating, will return true
      */
     public boolean deleteIngredient(int ingredintId) {
-        //TODO: TEST
-        boolean allpassed = true;
+
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        try {
-            sqLiteDatabase.delete(TABLE_INGREDIENT_LIST, IT_KEY_ID + " = ?", new String[]{String.valueOf(ingredintId)});
-        } catch (Exception e) {
-            allpassed = false;
-            if (IS_IN_TESTING_MODE) {
-                System.out.println("deleteIngredients Failed");
-                // Log.w("getAllRecipeIngredients()", ex.getMessage());
-            }
+        long returned = sqLiteDatabase.delete(TABLE_INGREDIENT_LIST, IT_KEY_ID + " = ?", new String[]{String.valueOf(ingredintId)});
+
+        if (returned == 0) {
+            return false;
         }
-        return allpassed; //TODO: Delete references to this ingredient from RECIPE_INGREDIENTs table
+
+        return true; //TODO: Delete references to this ingredient from RECIPE_INGREDIENTs table
     }
 
     /**
@@ -700,18 +685,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public boolean deleteRecipeDirections(int recipeId) {
         //TODO: TEST
-        boolean allpassed = true;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        try {
-            sqLiteDatabase.delete(TABLE_RECIPE_DIRECTIONS_LIST, RD_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
-        } catch (Exception ex) {
-            allpassed = false;
-            if (IS_IN_TESTING_MODE) {
-                System.out.println("deleteRecipeDirections Failed");
-                // Log.w("getAllRecipeIngredients()", ex.getMessage());
-            }
+        long returned = sqLiteDatabase.delete(TABLE_RECIPE_DIRECTIONS_LIST, RD_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
+        if(returned == 0){
+            return false;
         }
-        return allpassed;
+        return true;
     }
 
     /**
@@ -779,7 +758,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return returns the id of the inserted category, or -1 otherwise.
      */
     public int addCategory(Category category) {
-        //TODO: TEST
+
         //Get the Data Repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -805,7 +784,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public Category getCategory(int categoryID) {
 
-        //TODO: Implement
         Category category = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -836,19 +814,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public boolean deleteRecipeCategory(int recipeId) {
         //TODO: TEST
-        boolean allpassed = true;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        try {
-            sqLiteDatabase.delete(TABLE_RECIPE_CATEGORY_LIST, RC_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
-        } catch (Exception ex) {
-            allpassed = false;
-            if (IS_IN_TESTING_MODE) {
-                System.out.println("deleteRecipeCategoriy Failed");
-                // Log.w("addCategoriy()", ex.getMessage());
-            }
-        }
+        long returned = sqLiteDatabase.delete(TABLE_RECIPE_CATEGORY_LIST, RC_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
 
-        return allpassed;
+        if(returned == 0){
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -858,20 +830,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful in updating, will return true
      */
     public boolean deleteCategory(int categoryId) {
-        //TODO: TEST
-        boolean allpassed = true;
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        try {
-            sqLiteDatabase.delete(TABLE_RECIPE_CATEGORY_LIST, IT_KEY_ID + " = ?", new String[]{String.valueOf(categoryId)});
-        } catch (Exception ex) {
-            allpassed = false;
-            if (IS_IN_TESTING_MODE) {
-                System.out.println("deleteCategoriy Failed");
-                // Log.w("deleteCategoriy()", ex.getMessage());
-            }
-        }
 
-        return allpassed;
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        long returned = sqLiteDatabase.delete(TABLE_CATEGORY_LIST, IT_KEY_ID + " = ?", new String[]{String.valueOf(categoryId)});
+
+        if(returned == 0){
+            return false;
+        }
+        return true;
     }
 
     /**
