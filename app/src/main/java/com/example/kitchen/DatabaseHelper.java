@@ -307,6 +307,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<RecipeCategory> recipeCategoryList = getAllRecipeCategories(recipeId);
         recipe.setCategoryList(recipeCategoryList);
 
+        if(recipe.getKeyID() == -1){
+            return null;
+        }
         return recipe;
     }
 
@@ -335,6 +338,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         } catch (Exception ex) {
             // Log.w("getAllRecipeIngredients()", ex.getMessage());
+            return null;
+        }
+        if(recipeList.size() == 0){
             return null;
         }
         return recipeList;
@@ -497,6 +503,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             return null;
         }
+        if(recipeIngredientList.size() == 0){
+            return null;
+        }
         return recipeIngredientList;
     }
 
@@ -551,6 +560,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 System.out.println("getIngredient Failed");
                 // Log.w("getCategoriy()", ex.getMessage());
             }
+            return null;
+        }
+
+        if(ingredient.getKeyID() == -1){
             return null;
         }
         return ingredient;
@@ -674,6 +687,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             return null;
         }
+        if(recipeIngredientList.size() == 0){
+            return null;
+        }
         return recipeIngredientList;
     }
 
@@ -722,6 +738,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 System.out.println("getAllRecipeCategories Failed");
                 // Log.w("getAllRecipeIngredients()", ex.getMessage());
             }
+            return null;
+        }
+        if(recipeCategoryList.size() == 0){
             return null;
         }
         return recipeCategoryList;
@@ -801,6 +820,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 System.out.println("getCategoriy Failed");
                 // Log.w("getCategoriy()", ex.getMessage());
             }
+            return null;
+        }
+        if(category.getKeyID() == -1){
             return null;
         }
         return category;
