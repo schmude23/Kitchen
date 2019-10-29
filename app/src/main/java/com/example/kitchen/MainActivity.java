@@ -84,8 +84,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
 
-        recipes.get(position);
+        int recipeId = recipes.get(position).getKeyID();
         Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
+
+        //adding extra information from intent
+        intent.putExtra("recipeId", recipeId);
         startActivity(intent);
         }
     }
