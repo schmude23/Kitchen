@@ -18,43 +18,38 @@ import android.view.View.OnClickListener;
 import java.util.ArrayList;
 
 
-import static java.lang.String.valueOf;
-
-public class EditDirectionActivity extends AppCompatActivity implements OnClickListener {
+public class EditCategoryActivity extends AppCompatActivity implements OnClickListener {
     DatabaseHelper database = new DatabaseHelper(this);
     Recipe recipe;
     Dialog myDialog;
-    private Button btnAddDirection, btnNext;
-    private EditText editDirection;
-    private ListView directionListView;
-    ArrayList<String> directionList = new ArrayList<String>();
-    ArrayAdapter<String> directionAdapter;
-    int dirNum; // direction number
+    private Button btnAddCategory, btnNext;
+    private EditText editCategory;
+    private ListView categoryListView;
+    ArrayList<String> categoryList = new ArrayList<String>();
+    ArrayAdapter<String> categoryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_direction);
+        setContentView(R.layout.activity_edit_category);
+
         // get recipe and create new RecipeDirection ArrayList
         int recipeID = getIntent().getIntExtra("recipeId", -1);
         recipe = database.getRecipe(recipeID);
-        recipe.setDirectionsList(new ArrayList<RecipeDirection>());
         recipe.setCategoryList(new ArrayList<RecipeCategory>());
 
-
         myDialog = new Dialog(this);
-        dirNum = 0;
-        btnAddDirection = (Button) findViewById(R.id.add_direction_btn);
-        btnAddDirection.setOnClickListener(this);
+        btnAddCategory = (Button) findViewById(R.id.btn_add_category);
+        btnAddCategory.setOnClickListener(this);
         btnNext = (Button) findViewById(R.id.next_btn);
         btnNext.setOnClickListener(this);
-        editDirection = (EditText) findViewById(R.id.edit_text_direction);
-        directionAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, directionList);
+        editCategory = (EditText) findViewById(R.id.edit_category);
+        categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, categoryList);
 
         // set the ingredientListView variable to your ingredientList in the xml
-        directionListView = (ListView) findViewById(R.id.direction_list);
-        directionListView.setAdapter(directionAdapter);
-        directionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        categoryListView = (ListView) findViewById(R.id.category_list);
+        categoryListView.setAdapter(categoryAdapter);
+        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ShowPopup(view, position);
@@ -69,16 +64,18 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
     public void onClick(View v) {
         String input;
         switch (v.getId()) {
-            case R.id.add_direction_btn:
-                input = editDirection.getText().toString();
+            case R.id.btn_add_category:
+                input = editCategory.getText().toString();
                 if (input.length() > 0) {
                     // add string to the categoryAdapter, not the listview
-                    directionAdapter.add(input);
+                    categoryAdapter.add(input);
 
                     // Create new RecipeDirection object and add it to database
-                    RecipeDirection recipeDirection = new RecipeDirection(-1, recipe.getKeyID(), input, ++dirNum);
-                    database.addRecipeDirection(recipeDirection);
-                    recipe.getDirectionsList().add(recipeDirection);
+                    Category category = new Category(-1, input);
+                    int categoryID = database.addCategory(category);
+                    RecipeCategory recipeCategory = new RecipeCategory(-1, recipe.getKeyID(), categoryID);
+                    database.addRecipeCategory(recipeCategory);
+                    recipe.getCategoryList().add(recipeCategory);
                 }
                 break;
             case R.id.next_btn:
@@ -102,28 +99,32 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
      * @param position element in ListView that was clicked
      */
     public void ShowPopup(View v, final int position) {
-        final EditText edit_direction;
+        final EditText edit_category;
         Button btnOkay;
 
-        myDialog.setContentView(R.layout.edit_direction_popup);
+        myDialog.setContentView(R.layout.edit_category_popup);
 
-        edit_direction = myDialog.findViewById(R.id.edit_direction);
-        edit_direction.setText(recipe.getDirectionsList().get(position).getDirectionText());
+        edit_category = myDialog.findViewById(R.id.edit_category);
+        final int categoryID = recipe.getCategoryList().get(position).getCategoryID();
+        edit_category.setText(database.getCategory(categoryID).getName());
         btnOkay = myDialog.findViewById(R.id.button_okay);
 
         btnOkay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // edit the direction that was clicked and update
-                String input = edit_direction.getText().toString();
+                // edit the category that was clicked and update
+                String input = edit_category.getText().toString();
                 if (input.length() > 0) {
-                    directionList.set(position, input);
-                    directionAdapter.notifyDataSetChanged();
 
-                    // Change directionText but not directionNumber
-                    RecipeDirection recipeDirection = recipe.getDirectionsList().get(position);
-                    recipeDirection.setDirectionText(input);
-                    recipe.getDirectionsList().set(position, recipeDirection);
+                    categoryList.set(position, input);
+                    categoryAdapter.notifyDataSetChanged();
+
+                    // Remove the old category and create a new one
+                    RecipeCategory recipeCategory = recipe.getCategoryList().get(position);
+                    database.deleteCategory(categoryID);
+                    // set the new categoryID for recipeCategory
+                    recipeCategory.setCategoryID(database.addCategory(new Category(-1, input)));
+                    recipe.getCategoryList().set(position, recipeCategory);
                     myDialog.dismiss();
                 }
             }

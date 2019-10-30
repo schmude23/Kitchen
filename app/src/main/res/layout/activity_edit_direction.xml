@@ -7,28 +7,27 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="Enter direction"
-        android:textSize="24dp" />
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/add_direction_btn"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Direction" />
 
     <TextView
         android:id="@+id/direction_header"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#5e5e5e"
         android:text="        Direction"
         android:textColor="#FFFFFF"
-        android:textSize="14dp" />
+        android:textSize="14sp" />
 
     <ListView
         android:id="@+id/direction_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"/>
     <Button
         android:layout_width="match_parent"

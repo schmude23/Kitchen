@@ -9,7 +9,7 @@
     android:outlineSpotShadowColor="@color/colorPrimary">
 
     <EditText
-        android:id="@+id/edit_timer"
+        android:id="@+id/edit_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -19,8 +19,8 @@
         android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
         android:textSize="22sp"
-        android:hint="timer (minutes)"
-        android:inputType="time"
+        android:hint="category"
+        android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -35,6 +35,6 @@
         android:text="okay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_timer" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_category" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
