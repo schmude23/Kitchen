@@ -228,30 +228,40 @@ public class DatabaseTester {
     }
 
     @Test
-    public void addPicture(){
-        //Bitmap image = null;
-        Bitmap image = BitmapFactory.decodeResource(appContext.getResources(),R.drawable.ic_default_image);
-        /*image = ResourcesCompat.getDrawable(appContext.getResources(), R.drawable.ic_default_image, null);
-        Bitmap imageBitmap = ((BitmapDrawable)image).getBitmap();*/
-
-        if(image == null) {
-            System.out.println("Problem");
-        }
+    public void addPicture_ReturnsTrue(){
+        Bitmap image = BitmapFactory.decodeResource(appContext.getResources(),R.drawable.ic_add);
         assertEquals("addPicture - Returns True Upon Valid Pic", true, testRecipe.setImage(image, appContext));
+        assertNotEquals("addPicture - Not Null Upon Valid Pic", null, testRecipe.getImage(appContext));
     }
 
     @Test
-    public void editPicture(){
-        //TODO
+    public void addPicture_ReturnsFalse(){
+        Bitmap image = BitmapFactory.decodeResource(appContext.getResources(),R.drawable.ic_default_image);
+        assertEquals("addPicture - Returns False Upon Invalid Pic", false, testRecipe.setImage(image, appContext));
+        assertEquals("addPicture - Image is Null Upon Invalid Pic", null, testRecipe.getImage(appContext));
     }
 
     @Test
-    public void getPicture(){
-        //TODO
-        Bitmap image = null;
-        image = BitmapFactory.decodeResource(appContext.getResources(),R.drawable.ic_default_image);
+    public void editPicture_NotNull(){
+        Bitmap originalImage = BitmapFactory.decodeResource(appContext.getResources(),R.drawable.ic_add);
+        testRecipe.setImage(originalImage, appContext);
+        Bitmap newImage = BitmapFactory.decodeResource(appContext.getResources(),R.drawable.ic_cart);
+        testRecipe.setImage(newImage, appContext);
+        assertNotEquals("editPicture - New Image Not Null", null, testRecipe.getImage(appContext));
+    }
+
+    @Test
+    public void getPicture_Exists(){
+        Bitmap image = BitmapFactory.decodeResource(appContext.getResources(),R.drawable.ic_add);
         testRecipe.setImage(image, appContext);
-        assertNotEquals("getPicture - Not Null", null, testRecipe.getImage(appContext));
+        Bitmap retrieved = testRecipe.getImage(appContext);
+        assertNotEquals("getPicture - Not Null", null, retrieved);
+    }
+
+    @Test
+    public void getPicture_NoPictureExist(){
+        Bitmap retrieved = testRecipe.getImage(appContext);
+        assertNotEquals("getPicture - Not Null", null, retrieved);
     }
 
     @Test
@@ -271,6 +281,27 @@ public class DatabaseTester {
         Ingredient retrieved = testDatabase.getIngredient(returned);
         assertEquals("getIngredient - Correct Name", "Flour", retrieved.getName());
         assertEquals("getIngredient - Correct ID", returned, retrieved.getKeyID());
+    }
+
+    @Test
+    public void editIngredient_ReturnsTrue(){
+        Ingredient newIngredient = new Ingredient(ingredientID, "egg");
+        assertEquals("editIngredient - Returns True", true, testDatabase.editIngredient(newIngredient));
+    }
+
+    @Test
+    public void editIngredient_ReturnsFalse(){
+        Ingredient newIngredient = new Ingredient(Integer.MAX_VALUE, "egg");
+        assertEquals("editIngredient - Ingredient Doesn't Exist", false, testDatabase.editIngredient(newIngredient));
+    }
+
+    @Test
+    public void editIngredient_CorrectInformation(){
+        Ingredient newIngredient = new Ingredient(ingredientID, "egg");
+        testDatabase.editIngredient(newIngredient);
+        Ingredient retrieved = testDatabase.getIngredient(ingredientID);
+        assertEquals("editIngredient - Correct Name", "egg", retrieved.getName());
+        assertEquals("editIngredient - Correct ID", ingredientID, retrieved.getKeyID());
     }
 
     @Test
@@ -329,13 +360,26 @@ public class DatabaseTester {
     }
 
     @Test
-    public void addRecipeIngredient_ReturnsTrue(){
-        //TODO
+    public void addRecipeIngredient_ReturnsID(){
+        int returned = testDatabase.addRecipeIngredient(recipeIngredient);
+        assertNotEquals("addRecipeIngredient - Returns True", -1, returned);
     }
 
     @Test
     public void addRecipeIngredient_DatabaseUpdates(){
-        //TODO
+        int returnedRecipe = testDatabase.addRecipe(testRecipe);
+        ArrayList<RecipeIngredient> allRecipeIngredients = testDatabase.getAllRecipeIngredients(returnedRecipe);
+        RecipeIngredient retrieved = new RecipeIngredient();
+        if(allRecipeIngredients != null){
+            for(int i = 0; i < allRecipeIngredients.size(); i++){
+                if(allRecipeIngredients.get(i).getIngredientID() == ingredientID){
+                    retrieved = allRecipeIngredients.get(i);
+                }
+            }
+        }
+        assertEquals("addRecipeIngredient - Correct Quantity", 2.0, retrieved.getQuantity(), 0);
+        assertEquals("addRecipeIngredient - Correct Unit", "cups", retrieved.getUnit());
+        assertEquals("addRecipeIngredient - Correct Details", "White Flour", retrieved.getDetails());
     }
 
     @Test
@@ -367,6 +411,29 @@ public class DatabaseTester {
     }
 
     @Test
+    public void addRecipeCategory_ReturnsID(){
+        int returned = testDatabase.addRecipeCategory(recipeCategory);
+        assertNotEquals("addRecipeCategory - Returns True", -1, returned);
+    }
+
+    @Test
+    public void addRecipeCategory_DatabaseUpdates(){
+        int returnedRecipe = testDatabase.addRecipe(testRecipe);
+        int returnedCategory = testDatabase.addRecipeCategory(recipeCategory);
+        ArrayList<RecipeCategory> allCategories = testDatabase.getAllRecipeCategories(returnedRecipe);
+        RecipeCategory retrieved = new RecipeCategory();
+        if(allCategories != null){
+            for(int i = 0; i < allCategories.size(); i++){
+                if(allCategories.get(i).getKeyID() == returnedCategory){
+                    retrieved = allCategories.get(i);
+                }
+            }
+        }
+        assertEquals("addRecipeDirection - Correct RecipeID", returnedRecipe, retrieved.getRecipeID());
+        assertEquals("addRecipeDirection - Correct CategoryID", categoryID, retrieved.getCategoryID());
+    }
+
+    @Test
     public void deleteRecipeCategory_ReturnsTrue(){
         int returned = testDatabase.addRecipe(testRecipe);
         assertEquals("deleteRecipeCategory - Returns True",true, testDatabase.deleteRecipeCategory(returned));
@@ -392,6 +459,29 @@ public class DatabaseTester {
             }
         }
         assertEquals("deleteRecipeCategory - Deletes From Database", true, deleted);
+    }
+
+    @Test
+    public void addRecipeDirection_ReturnsID(){
+        int returned = testDatabase.addRecipeDirection(recipeDirection1);
+        assertNotEquals("addRecipeDirection - Returns True", -1, returned);
+    }
+
+    @Test
+    public void addRecipeDirection_DatabaseUpdates(){
+        int returnedRecipe = testDatabase.addRecipe(testRecipe);
+        int returnedDirection1 = testDatabase.addRecipeDirection(recipeDirection1);
+        ArrayList<RecipeDirection> allDirections = testDatabase.getAllRecipeDirections(returnedRecipe);
+        RecipeDirection retrieved = new RecipeDirection();
+        if(allDirections != null){
+            for(int i = 0; i < allDirections.size(); i++){
+                if(allDirections.get(i).getKeyID() == returnedDirection1){
+                    retrieved = allDirections.get(i);
+                }
+            }
+        }
+        assertEquals("addRecipeDirection - Correct Number", 1, retrieved.getDirectionNumber(), 0);
+        assertEquals("addRecipeDirection - Correct Text", "TestDirection1", retrieved.getDirectionText());
     }
 
     @Test

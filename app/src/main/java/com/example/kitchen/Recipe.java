@@ -77,7 +77,7 @@ class Recipe {
         this.categoryList = categories;
     }
 
-    public void createRecipe(String name){
+    public void createRecipe(String name) {
         this.title = name;
     }
 
@@ -138,9 +138,11 @@ class Recipe {
         this.directionsList = directionsList;
     }
 
-    public List<RecipeCategory> getCategoryList() { return categoryList; }
+    public List<RecipeCategory> getCategoryList() {
+        return categoryList;
+    }
 
-    public void setCategoryList(List<RecipeCategory> categoryList){
+    public void setCategoryList(List<RecipeCategory> categoryList) {
         this.categoryList = categoryList;
     }
 
@@ -155,21 +157,21 @@ class Recipe {
         int i = 0;
 
         //creates list for ingredient list
-        while( i < ingList){
+        while (i < ingList) {
             strIngList = strIngList + ingredientList.get(i).toString();
             i++;
         }
         i = 0;
 
         //creates list for Direction list
-        while( i < dirList){
+        while (i < dirList) {
             strDirList = strDirList + directionsList.get(i).toString();
             i++;
         }
         i = 0;
 
         //creates list for category list
-        while( i < catList){
+        while (i < catList) {
             strCatList = strCatList + categoryList.get(i).toString();
             i++;
         }
@@ -190,7 +192,7 @@ class Recipe {
     /**
      * This method will set the image for the Recipe to the specified image
      *
-     * @param image the new image
+     * @param image   the new image
      * @param context The application context
      * @return will return true if successful, false if not.
      */
@@ -199,17 +201,17 @@ class Recipe {
         ContextWrapper cw = new ContextWrapper(context);
         File directory = cw.getDir("images", Context.MODE_PRIVATE);
         File file = new File(directory, keyID + ".jpg");
-        //if (!file.exists()) {
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(file);
-                image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.flush();
-                fos.close();
-            } catch (java.io.IOException e) {
-                return false;
-            }
-       // }
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (java.io.IOException e) {
+            return false;
+        } catch (NullPointerException e) {
+            return false;
+        }
 
         return true;
 
@@ -219,7 +221,6 @@ class Recipe {
      * This method retrieves the image stored for the Recipe
      *
      * @param context The application context
-     *
      * @return the image stored for the Recipe or a default filler image if not.
      */
     public Bitmap getImage(Context context) {
@@ -230,10 +231,9 @@ class Recipe {
             File directory = cw.getDir("images", Context.MODE_PRIVATE);
             File f = new File(directory, keyID + ".jpg");
             image = BitmapFactory.decodeStream(new FileInputStream(f));
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             //Set default image
-            image = BitmapFactory.decodeResource(context.getResources(),R.drawable.ic_default_image);
+            image = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_default_image);
         }
 
         return image;
