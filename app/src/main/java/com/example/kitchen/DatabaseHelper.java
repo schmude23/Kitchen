@@ -134,7 +134,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        //TODO: what are the int params being passed in. Give better names please.
 
         //find and drop existing databases
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPE_LIST);
@@ -189,7 +188,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             int result = addRecipeIngredient(recipeIngredientList.get(i));
 
             if (result == -1) {
-                //TODO: do something if inserting recipe ingredients doesnt work
+                //Inserting recipeIngredient didn't work.
             }
         }
 
@@ -199,7 +198,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             int result = addRecipeCategory(recipeCategoryList.get(i));
 
             if (result == -1) {
-                //TODO: do something if inserting recipe categories doesnt work
+                //Inserting recipeCategory didn't work
             }
         }
 
@@ -209,7 +208,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             int result = addRecipeDirection(recipeDirectionList.get(i));
 
             if (result == -1) {
-                //TODO: do something if inserting recipe directions doesnt work.
+                //Inserting recipeDirection didn't work
             }
         }
 
@@ -557,12 +556,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean deleteIngredient(int ingredintId) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         long returned = sqLiteDatabase.delete(TABLE_INGREDIENT_LIST, IT_KEY_ID + " = ?", new String[]{String.valueOf(ingredintId)});
+        sqLiteDatabase.delete(TABLE_RECIPE_INGREDIENT_LIST, RI_INGREDIENT_ID + " = ?", new String[]{String.valueOf(ingredintId)});
 
         if (returned == 0) {
             return false;
         }
 
-        return true; //TODO: Delete references to this ingredient from RECIPE_INGREDIENTs table
+
+        return true;
     }
 
     /**
@@ -846,9 +847,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     int detailsIndex = cursor.getColumnIndexOrThrow(RI_DETAILS);
                     recipeIngredient.setDetails(cursor.getString(detailsIndex));
                 }
-                /*if (idIndex != -1) {
-                    recipeIngredient.setName(getIngredient(cursor.getInt(idIndex)).getName());
-                }*/ //TODO: SAVANNAH LOOK AT THIS
             }
         } catch (CursorIndexOutOfBoundsException ex) {
             return null;
@@ -919,8 +917,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     int categoryIdIndex = cursor.getColumnIndexOrThrow(RC_CATEGORY_ID);
                     recipeCategory.setCategoryID(cursor.getInt(categoryIdIndex));
                 }
-                //adding the category name from Category table
-                //recipeCategory.setName(getCategory(recipeCategory.getCategoryID()).getName()); //TODO SAVANNAH LOOK AT THIS
             }
         } catch (CursorIndexOutOfBoundsException ex) {
             return null;
