@@ -257,11 +257,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return The recipe corresponding to the provided recipe Title, or null if one is not found.
      */
     public Recipe getRecipe(String recipeTitle) {
-        //TODO: TEST
         Recipe recipe = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + recipeTitle + " = ? ", new String[]{String.valueOf(recipeTitle)});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_TITLE + " = ? ", new String[]{String.valueOf(recipeTitle)});
         if (cursor != null) {
             cursor.moveToFirst();
             recipe = mapRecipe(cursor);
@@ -270,24 +269,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
         }
 
-        int recipeId = recipe.getKeyID();
+        if(recipe != null) {
+            int recipeId = recipe.getKeyID();
 
-        //Getting Ingredient List
-        ArrayList<RecipeIngredient> recipeIngredientList = getAllRecipeIngredients(recipeId);
-        recipe.setIngredientList(recipeIngredientList);
+            //Getting Ingredient List
+            ArrayList<RecipeIngredient> recipeIngredientList = getAllRecipeIngredients(recipeId);
+            recipe.setIngredientList(recipeIngredientList);
 
 
-        //Getting Direction List
-        ArrayList<RecipeDirection> recipeDirectionList = getAllRecipeDirections(recipeId);
-        recipe.setDirectionsList(recipeDirectionList);
+            //Getting Direction List
+            ArrayList<RecipeDirection> recipeDirectionList = getAllRecipeDirections(recipeId);
+            recipe.setDirectionsList(recipeDirectionList);
 
-        //Getting Category List
-        ArrayList<RecipeCategory> recipeCategoryList = getAllRecipeCategories(recipeId);
-        recipe.setCategoryList(recipeCategoryList);
-
-        if (recipe.getKeyID() == -1) {
-            return null;
+            //Getting Category List
+            ArrayList<RecipeCategory> recipeCategoryList = getAllRecipeCategories(recipeId);
+            recipe.setCategoryList(recipeCategoryList);
         }
+
         return recipe;
     }
 
