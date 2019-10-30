@@ -16,7 +16,7 @@
         android:id="@+id/btn_add_category"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Add Ingredient" />
+        android:text="Add Category" />
 
     <TextView
         android:id="@+id/category_header"
@@ -32,10 +32,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+
     <Button
+        android:id="@+id/next_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/next_btn"
-        android:text="NEXT" />
+        android:text="Finish" />
 
 </LinearLayout>

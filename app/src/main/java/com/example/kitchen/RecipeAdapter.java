@@ -44,19 +44,24 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
         OnClickListener listener;
 
         public RecipeViewHolder(View view, OnClickListener listener) {
-            //super(LayoutInflater.from(container.getContext()).inflate(R.layout.recipe_list_item, container, false));
             super(view);
             recipe = (TextView) itemView.findViewById(R.id.text_recipe_name);
             this.listener = listener;
             view.setOnClickListener(this);
-            //servings = (TextView) itemView.findViewById(R.id.recipe_servings);
-            //prep_time = (TextView) itemView.findViewById(R.id.total_rooms_text);
+            servings = (TextView) itemView.findViewById(R.id.recipe_servings);
+            prep_time = (TextView) itemView.findViewById(R.id.recipe_prep_time);
+            total_time = (TextView) itemView.findViewById(R.id.recipe_total_time);
         }
 
         public void bind(Recipe recipe) {
             this.recipe.setText(recipe.getTitle());
-            //prep_time.setText(Integer.toString(recipe.getRooms()));
-            //servings.setText(Integer.toString(recipe.getRoomsAvail()) );
+            servings.setText(String.valueOf(recipe.getServings()));
+            String text = recipe.getPrep_time() + " min";
+            prep_time.setText(text);
+            text = recipe.getTotal_time() + " min";
+            total_time.setText(text);
+
+
         }
 
         @Override

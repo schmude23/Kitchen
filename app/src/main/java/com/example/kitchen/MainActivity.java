@@ -28,6 +28,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnClickListener {
     RecyclerView mRecyclerView;
     List<Recipe> recipes;
+    DatabaseHelper database = new DatabaseHelper(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,13 +45,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(layoutManager);
-        recipes = new ArrayList<>();
-        for(int i = 0; i < 100; i++)
-        {
-            Recipe recipe = new Recipe();
-            recipe.createRecipe("Recipe" + i);
-            recipes.add(recipe);
-        }
+        recipes = database.getAllRecipes();
         mRecyclerView.setAdapter(new RecipeAdapter(recipes, this));
     }
 

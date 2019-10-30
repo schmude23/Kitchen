@@ -97,4 +97,27 @@
         app:layout_constraintStart_toEndOf="@+id/recipe_servings"
         app:layout_constraintTop_toBottomOf="@+id/text_total_time" />
 
+    <ListView
+        android:id="@+id/ingredient_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ingredient_header" />
+
+    <TextView
+        android:id="@+id/ingredient_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#5e5e5e"
+        android:text="        Ingredients"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recipe_image" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

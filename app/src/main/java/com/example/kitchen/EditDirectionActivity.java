@@ -18,7 +18,6 @@ import android.view.View.OnClickListener;
 import java.util.ArrayList;
 
 
-import static java.lang.String.valueOf;
 
 public class EditDirectionActivity extends AppCompatActivity implements OnClickListener {
     DatabaseHelper database = new DatabaseHelper(this);

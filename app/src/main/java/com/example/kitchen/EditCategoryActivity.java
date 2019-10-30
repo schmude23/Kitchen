@@ -3,6 +3,7 @@ package com.example.kitchen;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -81,7 +83,14 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
             case R.id.next_btn:
                 // Next Activity
                 database.editRecipe(recipe);
-                Intent intent = new Intent(this, EditCategoryActivity.class);
+                Context context = getApplicationContext();
+                CharSequence text = "Recipe Added!";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+
+                Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
                 intent.putExtra("recipeId", recipe.getKeyID());
                 startActivity(intent);
                 break;

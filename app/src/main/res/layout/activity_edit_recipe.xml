@@ -61,12 +61,13 @@
             android:text="Upload Image"
             android:textAlignment="center"
             android:textSize="20sp"/>
+
         <ImageView
             android:id="@+id/recipe_image"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
-            app:srcCompat="@android:drawable/ic_menu_upload" />
+            app:srcCompat="@drawable/ic_default_image" />
 
         <Button
             android:layout_width="match_parent"
