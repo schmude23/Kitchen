@@ -33,7 +33,13 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
 
     @Override
     public int getItemCount() {
-        return this.recipes.size();
+
+        try{
+          return  this.recipes.size();
+        }catch (NullPointerException e){
+            return 0;
+        }
+
     }
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
