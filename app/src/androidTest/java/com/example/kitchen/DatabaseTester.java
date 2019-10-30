@@ -3,10 +3,6 @@ package com.example.kitchen;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-
-import androidx.core.content.res.ResourcesCompat;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -15,8 +11,6 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.concurrent.ThreadSafe;
 
 import static org.junit.Assert.*;
 
@@ -549,7 +543,7 @@ public class DatabaseTester {
         assertEquals("getRecipeByID - Returns Null", null, testDatabase.getRecipe(Integer.MAX_VALUE));
     }
 
-    /*@Test
+    @Test
     public void getRecipeByName_ReturnsRecipe(){
         int returned = testDatabase.addRecipe(testRecipe);
         assertNotEquals("getRecipeByName - Returns a Recipe", null, testDatabase.getRecipe(recipeTitle));
@@ -576,7 +570,7 @@ public class DatabaseTester {
     @Test
     public void getRecipeByName_ReturnsNull(){
         assertEquals("getRecipeByName - Returns Null", null, testDatabase.getRecipe("NotHere"));
-    }*/
+    }
 
     @Test
     public void getAllRecipeIngredients_ReturnsList(){
