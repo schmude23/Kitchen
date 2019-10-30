@@ -199,7 +199,7 @@ class Recipe {
         ContextWrapper cw = new ContextWrapper(context);
         File directory = cw.getDir("images", Context.MODE_PRIVATE);
         File file = new File(directory, keyID + ".jpg");
-        if (!file.exists()) {
+        //if (!file.exists()) {
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(file);
@@ -209,7 +209,7 @@ class Recipe {
             } catch (java.io.IOException e) {
                 return false;
             }
-        }
+       // }
 
         return true;
 

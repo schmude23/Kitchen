@@ -13,7 +13,7 @@ public class RecipeCategory {
         categoryID = -1;
     }
 
-    public RecipeCategory(int keyID, String name, int recipeID, int categoryID) {
+    public RecipeCategory(int keyID, int recipeID, int categoryID) {
         this.keyID = keyID;
         this.recipeID = recipeID;
         this.categoryID = categoryID;
