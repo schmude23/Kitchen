@@ -1,6 +1,5 @@
 package com.example.kitchen;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,21 +7,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.View.OnClickListener;
 
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewOutlineProvider;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnClickListener {
@@ -35,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         setContentView(R.layout.activity_recipe_list);
 
         // Display Toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.recipe_toolbar);
         //TextView toolbarText = (TextView) findViewById(R.id.toolbar_text);
         setSupportActionBar(toolbar);
         //toolbarText.setText(getTitle());
@@ -53,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     // Toolbar functions
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
     @Override

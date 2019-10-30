@@ -1,23 +1,59 @@
 package com.example.kitchen;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class DisplaySelectedRecipeActivity extends AppCompatActivity {
+
+    DatabaseHelper dbHandler = new DatabaseHelper(DisplaySelectedRecipeActivity.this);
     private TextView recipe_title;
     private TextView servings;
     private TextView prep_time;
     private TextView total_time;
     Recipe recipe;
 
+    // Ingredient ListView variables
+    private ListView ingredientListView;
+    private ArrayList<String> ingredientList = new ArrayList<String>();
+    private ArrayAdapter<String> ingredientAdapter;
+
+    // Direction ListView variables
+    private ListView directionListView;
+    ArrayList<String> directionList = new ArrayList<String>();
+    ArrayAdapter<String> directionAdapter;
+
+    // Category ListView variables
+    private ListView categoryListView;
+    ArrayList<String> categoryList = new ArrayList<String>();
+    ArrayAdapter<String> categoryAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_display_selected_recipe);
-        DatabaseHelper dbHandler = new DatabaseHelper(DisplaySelectedRecipeActivity.this);
+        // Display Toolbar
+        Toolbar toolbar = findViewById(R.id.recipe_toolbar);
+        //TextView toolbarText = (TextView) findViewById(R.id.toolbar_text);
+        setSupportActionBar(toolbar);
+        //toolbarText.setText(getTitle());
+
 
         //retrieving the extra infromation from intent
         int recipeId = getIntent().getIntExtra("recipeId", -1);
@@ -35,6 +71,160 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
         text = recipe.getTotal_time() + " min";
         total_time.setText(text);
 
+        getIngredients();
+        getDirections();
+        getCategories();
 
+    }
+
+    /**
+     * Sets the size of ListView based on the number of items in the list
+     *
+     * @param listView to be updated
+     * @return true on success, otherwise false
+     */
+    public boolean setListViewHeightBasedOnItems(ListView listView) {
+
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter != null) {
+
+            int numberOfItems = listAdapter.getCount();
+
+            // Get total height of all items.
+            int totalItemsHeight = 0;
+            for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
+                View item = listAdapter.getView(itemPos, null, listView);
+                float px = 500 * (listView.getResources().getDisplayMetrics().density);
+                item.measure(View.MeasureSpec.makeMeasureSpec((int)px, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                totalItemsHeight += item.getMeasuredHeight();
+            }
+
+            // Get total height of all item dividers.
+            int totalDividersHeight = listView.getDividerHeight() *
+                    (numberOfItems - 1);
+            // Get padding
+            int totalPadding = listView.getPaddingTop() + listView.getPaddingBottom();
+
+            // Set list height.
+            ViewGroup.LayoutParams params = listView.getLayoutParams();
+            params.height = totalItemsHeight + totalDividersHeight + totalPadding;
+            listView.setLayoutParams(params);
+            listView.requestLayout();
+            return true;
+
+        } else {
+            return false;
+        }
+
+    }
+    private void getIngredients()
+    {
+        // setup Ingredient List
+        //ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
+        ingredientAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,ingredientList){
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
+                textView.setMinHeight(0); // Min Height
+                textView.setMinimumHeight(0); // Min Height
+                textView.setHeight(100); // Height
+                return view;
+            }
+        };
+        // set the ingredientListView variable to ingredientList in the xml
+        ingredientListView = (ListView) findViewById(R.id.ingredient_list);
+        ingredientListView.setAdapter(ingredientAdapter);
+
+        // Retrieve ingredients and add to ListView
+        for(int i = 0; i < recipe.getIngredientList().size(); i++)
+        {
+            int ingredientID = recipe.getIngredientList().get(i).getIngredientID();
+            Ingredient ingredient = dbHandler.getIngredient(ingredientID);
+            String name = ingredient.getName();
+            String quantity = String.valueOf(recipe.getIngredientList().get(i).getQuantity());
+            String unit = recipe.getIngredientList().get(i).getUnit();
+            // Add to ListView and update height
+            ingredientList.add(name + " (" + quantity + " " + unit + ")");
+            ingredientAdapter.notifyDataSetChanged();
+            ingredientListView.setAdapter(ingredientAdapter);
+            setListViewHeightBasedOnItems(ingredientListView);
+        }
+    }
+    private void getDirections(){
+        directionAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,directionList){
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
+                textView.setMinHeight(0); // Min Height
+                textView.setMinimumHeight(0); // Min Height
+                textView.setHeight(100); // Height
+                return view;
+            }
+        };
+        // set the directionListView variable to directionList in the xml
+        directionListView = (ListView) findViewById(R.id.direction_list);
+        directionListView.setAdapter(directionAdapter);
+        for(int i = 0; i < recipe.getDirectionsList().size(); i++)
+        {
+            String text = recipe.getDirectionsList().get(i).getDirectionText();
+            String number = String.valueOf(recipe.getDirectionsList().get(i).getDirectionNumber());
+            // Add to ListView and update height
+            directionList.add(number + ") " + text);
+            directionAdapter.notifyDataSetChanged();
+            directionListView.setAdapter(directionAdapter);
+            setListViewHeightBasedOnItems(directionListView);
+        }
+    }
+
+    private void getCategories(){
+        categoryAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,categoryList){
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
+                textView.setMinHeight(0); // Min Height
+                textView.setMinimumHeight(0); // Min Height
+                textView.setHeight(100); // Height
+                return view;
+            }
+        };
+        // set the directionListView variable to directionList in the xml
+        categoryListView= (ListView) findViewById(R.id.category_list);
+        categoryListView.setAdapter(categoryAdapter);
+        for(int i = 0; i < recipe.getCategoryList().size(); i++)
+        {
+            int categoryID = recipe.getCategoryList().get(i).getCategoryID();
+            Category category = dbHandler.getCategory(categoryID);
+            String text = category.getName();
+            // Add to ListView and update height
+            categoryList.add(text);
+            categoryAdapter.notifyDataSetChanged();
+            categoryListView.setAdapter(categoryAdapter);
+            setListViewHeightBasedOnItems(categoryListView);
+        }
+    }
+    // Toolbar functions
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.recipe_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_edit_recipe:
+                int recipeId = recipe.getKeyID();
+                Intent editRecipe = new Intent(this, EditRecipeActivity.class);
+                editRecipe.putExtra("recipeId", recipeId);
+                startActivity(editRecipe);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
