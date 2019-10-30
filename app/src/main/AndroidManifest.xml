@@ -13,7 +13,7 @@
         <activity android:name=".EditIngredientActivity" />
         <activity android:name=".EditRecipeActivity" />
         <activity android:name=".EditDirectionActivity" />
-        <activity android:name=".EditTimerActivity" />
+        <activity android:name=".EditCategoryActivity" />
         <activity android:name=".AdvancedSearchActivity" />
         <activity android:name=".DisplaySelectedRecipeActivity" />
         <activity android:name=".RecipeListActivity" />

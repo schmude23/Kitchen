@@ -17,10 +17,11 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class EditRecipeActivity extends AppCompatActivity implements OnClickListener {
-
-    public static Recipe recipe = new Recipe();
+    DatabaseHelper database = new DatabaseHelper(this);
+    public Recipe recipe;// = new Recipe();
     private Button btnNext;
     private EditText editTitle, editServings, editPrepTime, editTotalTime;
     private ImageView recipeImage;
@@ -31,6 +32,7 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_recipe);
 
+        recipe = new Recipe();
         btnNext = (Button) findViewById(R.id.next_btn);
         btnNext.setOnClickListener(this);
         editTitle = (EditText) findViewById(R.id.edit_title);
@@ -54,8 +56,23 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
                     recipe.setServings(Double.valueOf(inputServings));
                     recipe.setPrep_time(Integer.parseInt(inputPrepTime));
                     recipe.setTotal_time(Integer.parseInt(inputTotalTime));
-                    Intent intent = new Intent(this, EditIngredientActivity.class);
-                    startActivity(intent);
+                    recipe.setIngredientList(new ArrayList<RecipeIngredient>(1));
+                    recipe.setDirectionsList(new ArrayList<RecipeDirection>(1));
+                    recipe.setCategoryList(new ArrayList<RecipeCategory>(1));
+                    int ret = database.addRecipe(recipe);
+                    if(ret == -1) {
+                        Context context = getApplicationContext();
+                        CharSequence text = "Error creating recipe";
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
+                    else {
+                        Intent intent = new Intent(this, EditIngredientActivity.class);
+                        intent.putExtra("recipeId", recipe.getKeyID());
+                        startActivity(intent);
+                    }
                 }
                 break;
             case R.id.recipe_image:
