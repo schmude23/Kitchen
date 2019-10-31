@@ -1,8 +1,10 @@
 package com.example.kitchen;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,10 +15,12 @@ import java.util.List;
 class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
     private List<Recipe> recipes;
     private OnClickListener listener;
-    public RecipeAdapter(List<Recipe> houses, OnClickListener listener) {
+    private Context context;
+    public RecipeAdapter(List<Recipe> recipes, OnClickListener listener, Context context) {
         super();
-        this.recipes = houses;
+        this.recipes = recipes;
         this.listener = listener;
+        this.context = context;
     }
 
     @NonNull
@@ -48,6 +52,7 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
         private TextView prep_time;
         private TextView total_time;
         OnClickListener listener;
+        private ImageView image;
 
         public RecipeViewHolder(View view, OnClickListener listener) {
             super(view);
@@ -57,6 +62,7 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
             servings = (TextView) itemView.findViewById(R.id.recipe_servings);
             prep_time = (TextView) itemView.findViewById(R.id.recipe_prep_time);
             total_time = (TextView) itemView.findViewById(R.id.recipe_total_time);
+            image = itemView.findViewById(R.id.recipe_image);
         }
 
         public void bind(Recipe recipe) {
@@ -66,7 +72,7 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
             prep_time.setText(text);
             text = recipe.getTotal_time() + " min";
             total_time.setText(text);
-
+            image.setImageBitmap(recipe.getImage(context));
 
         }
 

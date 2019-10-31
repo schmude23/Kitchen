@@ -26,13 +26,13 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
     private EditText editTitle, editServings, editPrepTime, editTotalTime;
     private ImageView recipeImage;
     private static final int RESULT_LOAD_IMAGE = 1;
-
+    private int recipeId;
+    private boolean newRecipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_recipe);
 
-        recipe = new Recipe();
         btnNext = (Button) findViewById(R.id.next_btn);
         btnNext.setOnClickListener(this);
         editTitle = (EditText) findViewById(R.id.edit_title);
@@ -41,6 +41,14 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
         editTotalTime = (EditText) findViewById(R.id.edit_total_time);
         recipeImage = (ImageView) findViewById(R.id.recipe_image);
         recipeImage.setOnClickListener(this);
+        //retrieving the extra infromation from intent
+        newRecipe = getIntent().getBooleanExtra("newRecipe", true);
+        if(newRecipe) {
+            addRecipe();
+        }
+        else {
+            editRecipe();
+        }
     }
 
     public void onClick(View v) {
@@ -56,9 +64,6 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
                     recipe.setServings(Double.valueOf(inputServings));
                     recipe.setPrep_time(Integer.parseInt(inputPrepTime));
                     recipe.setTotal_time(Integer.parseInt(inputTotalTime));
-                    recipe.setIngredientList(new ArrayList<RecipeIngredient>(1));
-                    recipe.setDirectionsList(new ArrayList<RecipeDirection>(1));
-                    recipe.setCategoryList(new ArrayList<RecipeCategory>(1));
                     int ret = database.addRecipe(recipe);
                     if(ret == -1) {
                         Context context = getApplicationContext();
@@ -71,6 +76,7 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
                     else {
                         Intent intent = new Intent(this, EditIngredientActivity.class);
                         intent.putExtra("recipeId", recipe.getKeyID());
+                        intent.putExtra("newRecipe", newRecipe);
                         startActivity(intent);
                     }
                 }
@@ -113,5 +119,25 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
                 toast.show();
             }
         }
+    }
+
+    /**
+     * Creates a new recipe object
+     */
+    private void addRecipe(){
+        recipe = new Recipe();
+    }
+
+    /**
+     * Fills in the EditTexts with the current reciepe's arrtibutes
+     */
+    private void editRecipe(){
+        recipeId = getIntent().getIntExtra("recipeId", -1);
+        recipe = database.getRecipe(recipeId);
+        editTitle.setText(recipe.getTitle());
+        editServings.setText(String.valueOf(recipe.getServings()));
+        editPrepTime.setText(String.valueOf(recipe.getPrep_time()));
+        editTotalTime.setText(String.valueOf(recipe.getTotal_time()));
+        recipeImage.setImageBitmap(recipe.getImage(this));
     }
 }

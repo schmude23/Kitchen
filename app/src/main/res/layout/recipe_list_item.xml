@@ -80,7 +80,7 @@
         android:layout_marginTop="16dp"
         android:text="x H x M"
         app:layout_constraintEnd_toStartOf="@+id/recipe_total_time"
-        app:layout_constraintHorizontal_bias="0.261"
+        app:layout_constraintHorizontal_bias="0.413"
         app:layout_constraintStart_toEndOf="@+id/recipe_servings"
         app:layout_constraintTop_toBottomOf="@+id/text_prep_time" />
 

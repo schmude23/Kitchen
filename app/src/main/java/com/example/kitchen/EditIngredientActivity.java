@@ -2,7 +2,7 @@ package com.example.kitchen;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,13 +14,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 
 import static java.lang.String.valueOf;
@@ -36,6 +36,7 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
     private ListView ingredientListView;
     private ArrayList<String> ingredientList = new ArrayList<String>();
     private ArrayAdapter<String> ingredientAdapter;
+    private boolean newRecipe;
 
     Dialog myDialog; // Dialog for popup window
 
@@ -47,11 +48,8 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_edit_ingredient);
 
         int recipeID = getIntent().getIntExtra("recipeId", -1);
+        newRecipe = getIntent().getBooleanExtra("newRecipe", true);
         recipe = database.getRecipe(recipeID);
-        recipe.setIngredientList(new ArrayList<RecipeIngredient>());
-        recipe.setDirectionsList(new ArrayList<RecipeDirection>());
-        recipe.setCategoryList(new ArrayList<RecipeCategory>());
-
 
         myDialog = new Dialog(this);
 
@@ -66,6 +64,10 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
         // set the ingredientListView variable to your ingredientList in the xml
         ingredientListView = (ListView) findViewById(R.id.ingredient_list);
         ingredientListView.setAdapter(ingredientAdapter);
+        if(newRecipe)
+            addRecipe();
+        else
+            editRecipe();
         ingredientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -73,6 +75,24 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
             }
         });
 
+
+    }
+    private void addRecipe() {
+        recipe.setIngredientList(new ArrayList<RecipeIngredient>());
+        recipe.setDirectionsList(new ArrayList<RecipeDirection>());
+        recipe.setCategoryList(new ArrayList<RecipeCategory>());
+    }
+    private void editRecipe() {
+        for(int i = 0; i < recipe.getIngredientList().size(); i++)
+        {
+            String quantity = String.valueOf(recipe.getIngredientList().get(i).getQuantity());
+            String unit = recipe.getIngredientList().get(i).getUnit();
+            int id = recipe.getIngredientList().get(i).getIngredientID();
+            Ingredient ingredient = database.getIngredient(id);
+            String name = ingredient.getName();
+            ingredientAdapter.add(name + " (" + quantity + " " + unit + ")");
+
+        }
     }
 
     public void onClick(View v) {
@@ -88,11 +108,14 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
                 break;
 
             case R.id.next_btn:
-                // Next Activity
-                database.editRecipe(recipe);
-                Intent intent = new Intent(this, EditDirectionActivity.class);
-                intent.putExtra("recipeId", recipe.getKeyID());
-                startActivity(intent);
+                if(recipe.getIngredientList().size() > 0) {
+                    // Next Activity
+                    database.editRecipe(recipe);
+                    Intent intent = new Intent(this, EditDirectionActivity.class);
+                    intent.putExtra("recipeId", recipe.getKeyID());
+                    intent.putExtra("newRecipe", newRecipe);
+                    startActivity(intent);
+                }
                 break;
 
             default:
@@ -183,6 +206,7 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
                         // add ingredient
                         ingredientAdapter.add(edit_name.getText().toString() + " (" + ingredient_quantity + " " + ingredient_unit + ")");
                         recipe.getIngredientList().add(recipeIngredient);
+                        editIngredient.getText().clear();
                     }
                     myDialog.dismiss();
                 }

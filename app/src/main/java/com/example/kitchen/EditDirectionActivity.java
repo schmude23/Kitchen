@@ -29,6 +29,7 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
     ArrayList<String> directionList = new ArrayList<String>();
     ArrayAdapter<String> directionAdapter;
     int dirNum; // direction number
+    boolean newRecipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,23 +37,28 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
         setContentView(R.layout.activity_edit_direction);
         // get recipe and create new RecipeDirection ArrayList
         int recipeID = getIntent().getIntExtra("recipeId", -1);
+        newRecipe = getIntent().getBooleanExtra("newRecipe", true);
         recipe = database.getRecipe(recipeID);
-        recipe.setDirectionsList(new ArrayList<RecipeDirection>());
-        recipe.setCategoryList(new ArrayList<RecipeCategory>());
 
 
         myDialog = new Dialog(this);
         dirNum = 0;
+
         btnAddDirection = (Button) findViewById(R.id.add_direction_btn);
         btnAddDirection.setOnClickListener(this);
         btnNext = (Button) findViewById(R.id.next_btn);
         btnNext.setOnClickListener(this);
         editDirection = (EditText) findViewById(R.id.edit_text_direction);
+
         directionAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, directionList);
 
         // set the ingredientListView variable to your ingredientList in the xml
         directionListView = (ListView) findViewById(R.id.direction_list);
         directionListView.setAdapter(directionAdapter);
+        if(newRecipe)
+            addRecipe();
+        else
+            editRecipe();
         directionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -60,6 +66,18 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
             }
         });
 
+    }
+
+    private void addRecipe() {
+        recipe.setDirectionsList(new ArrayList<RecipeDirection>());
+        recipe.setCategoryList(new ArrayList<RecipeCategory>());
+    }
+    private void editRecipe() {
+        for(int i = 0; i < recipe.getDirectionsList().size(); i++)
+        {
+            String text = recipe.getDirectionsList().get(i).getDirectionText();
+            directionAdapter.add(text);
+        }
     }
 
     /**
@@ -70,6 +88,7 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
         switch (v.getId()) {
             case R.id.add_direction_btn:
                 input = editDirection.getText().toString();
+                editDirection.getText().clear();
                 if (input.length() > 0) {
                     // add string to the categoryAdapter, not the listview
                     directionAdapter.add(input);
@@ -81,11 +100,14 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
                 }
                 break;
             case R.id.next_btn:
-                // Next Activity
-                database.editRecipe(recipe);
-                Intent intent = new Intent(this, EditCategoryActivity.class);
-                intent.putExtra("recipeId", recipe.getKeyID());
-                startActivity(intent);
+                if(recipe.getDirectionsList().size() > 0) {
+                    // Next Activity
+                    database.editRecipe(recipe);
+                    Intent intent = new Intent(this, EditCategoryActivity.class);
+                    intent.putExtra("recipeId", recipe.getKeyID());
+                    intent.putExtra("newRecipe", newRecipe);
+                    startActivity(intent);
+                }
                 break;
 
             default:

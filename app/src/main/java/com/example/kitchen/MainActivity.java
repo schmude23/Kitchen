@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         setContentView(R.layout.activity_recipe_list);
 
         // Display Toolbar
-        Toolbar toolbar = findViewById(R.id.recipe_toolbar);
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
         //TextView toolbarText = (TextView) findViewById(R.id.toolbar_text);
         setSupportActionBar(toolbar);
         //toolbarText.setText(getTitle());
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(layoutManager);
         recipes = database.getAllRecipes();
-        mRecyclerView.setAdapter(new RecipeAdapter(recipes, this));
+        mRecyclerView.setAdapter(new RecipeAdapter(recipes, this, this));
     }
 
 
@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                 return true;
             case R.id.action_add_recipe:
                 Intent addRecipe = new Intent(this, EditRecipeActivity.class);
+                addRecipe.putExtra("recipeId", -1); // New recipe
+                addRecipe.putExtra("newRecipe", true); // New recipe
                 startActivity(addRecipe);
             default:
                 return super.onOptionsItemSelected(item);
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     @Override
     public void onClick(int position) {
         Context context = getApplicationContext();
-        CharSequence text = "Hello toast!";
+        CharSequence text = "Retrieving recipe";
         int duration = Toast.LENGTH_SHORT;
 
         Toast toast = Toast.makeText(context, text, duration);

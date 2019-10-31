@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <include
-        android:id="@+id/recipe_toolbar"
+        android:id="@+id/main_toolbar"
         layout="@layout/main_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -21,7 +21,7 @@
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recipe_toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
         android:padding="5dp"
         android:scrollbars="vertical"
         tools:listitem="@layout/recipe_list_item"/>

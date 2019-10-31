@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FF2196F3"
-            android:text="directions"
+            android:text="Directions"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FF2196F3"
-            android:text="categories"
+            android:text="Categories"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,9 +49,10 @@
             android:id="@+id/recipe_image"
             android:layout_width="100dp"
             android:layout_height="108dp"
+            android:contentDescription="@android:string/untitled"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/recipe_toolbar"
-            app:srcCompat="@android:drawable/ic_menu_upload" />
+            app:srcCompat="@drawable/ic_default_image" />
 
         <ImageButton
             android:id="@+id/recipe_favorite_outline"
@@ -116,7 +119,7 @@
             android:layout_marginTop="16dp"
             android:text="x H x M"
             app:layout_constraintEnd_toStartOf="@+id/recipe_total_time"
-            app:layout_constraintHorizontal_bias="0.261"
+            app:layout_constraintHorizontal_bias="0.532"
             app:layout_constraintStart_toEndOf="@+id/recipe_servings"
             app:layout_constraintTop_toBottomOf="@+id/text_prep_time" />
 
@@ -152,6 +155,7 @@
             android:layout_height="wrap_content"
             android:background="#FF2196F3"
             android:text="Ingredients"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recipe_image" />

@@ -10,6 +10,7 @@
         <item>gallon</item>
         <item>pound</item>
         <item>pinch</item>
+        <item> </item>
     </string-array>
 
 </resources>

@@ -21,14 +21,15 @@ import java.util.ArrayList;
 
 
 public class EditCategoryActivity extends AppCompatActivity implements OnClickListener {
-    DatabaseHelper database = new DatabaseHelper(this);
-    Recipe recipe;
+    private DatabaseHelper database = new DatabaseHelper(this);
+    private Recipe recipe;
     Dialog myDialog;
     private Button btnAddCategory, btnNext;
     private EditText editCategory;
     private ListView categoryListView;
-    ArrayList<String> categoryList = new ArrayList<String>();
-    ArrayAdapter<String> categoryAdapter;
+    private ArrayList<String> categoryList = new ArrayList<String>();
+    private ArrayAdapter<String> categoryAdapter;
+    private boolean newRecipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +38,8 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
 
         // get recipe and create new RecipeDirection ArrayList
         int recipeID = getIntent().getIntExtra("recipeId", -1);
+        newRecipe = getIntent().getBooleanExtra("newRecipe", true);
         recipe = database.getRecipe(recipeID);
-        recipe.setCategoryList(new ArrayList<RecipeCategory>());
 
         myDialog = new Dialog(this);
         btnAddCategory = (Button) findViewById(R.id.btn_add_category);
@@ -51,6 +52,10 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
         // set the ingredientListView variable to your ingredientList in the xml
         categoryListView = (ListView) findViewById(R.id.category_list);
         categoryListView.setAdapter(categoryAdapter);
+        if(newRecipe)
+            addRecipe();
+        else
+            editRecipe();
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -60,6 +65,20 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
 
     }
 
+    private void addRecipe() {
+        recipe.setCategoryList(new ArrayList<RecipeCategory>());
+    }
+    private void editRecipe() {
+        for(int i = 0; i < recipe.getCategoryList().size(); i++)
+        {
+            int id = recipe.getCategoryList().get(i).getCategoryID();
+            Category category = database.getCategory(id);
+            String name = category.getName();
+            categoryAdapter.add(name);
+        }
+    }
+
+
     /**
      * @param v
      */
@@ -68,6 +87,7 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
         switch (v.getId()) {
             case R.id.btn_add_category:
                 input = editCategory.getText().toString();
+                editCategory.getText().clear();
                 if (input.length() > 0) {
                     // add string to the categoryAdapter, not the listview
                     categoryAdapter.add(input);
@@ -81,18 +101,20 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
                 }
                 break;
             case R.id.next_btn:
-                // Next Activity
-                database.editRecipe(recipe);
-                Context context = getApplicationContext();
-                CharSequence text = "Recipe Added!";
-                int duration = Toast.LENGTH_SHORT;
+                if(recipe.getCategoryList().size() > 0) {
+                    // Next Activity
+                    database.editRecipe(recipe);
+                    Context context = getApplicationContext();
+                    CharSequence text = "Recipe Added!";
+                    int duration = Toast.LENGTH_SHORT;
 
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
 
-                Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
-                intent.putExtra("recipeId", recipe.getKeyID());
-                startActivity(intent);
+                    Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
+                    intent.putExtra("recipeId", recipe.getKeyID());
+                    startActivity(intent);
+                }
                 break;
 
             default:

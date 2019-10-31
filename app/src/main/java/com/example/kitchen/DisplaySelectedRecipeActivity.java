@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
     private TextView servings;
     private TextView prep_time;
     private TextView total_time;
+    private ImageView image;
     Recipe recipe;
 
     // Ingredient ListView variables
@@ -63,6 +65,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
         servings = (TextView) findViewById(R.id.recipe_servings);
         prep_time = (TextView) findViewById(R.id.recipe_prep_time);
         total_time = (TextView) findViewById(R.id.recipe_total_time);
+        image = findViewById(R.id.recipe_image);
 
         recipe_title.setText(recipe.getTitle());
         servings.setText(String.valueOf(recipe.getServings()));
@@ -70,7 +73,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
         prep_time.setText(text);
         text = recipe.getTotal_time() + " min";
         total_time.setText(text);
-
+        image.setImageBitmap(recipe.getImage(this));
         getIngredients();
         getDirections();
         getCategories();
@@ -117,6 +120,10 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
         }
 
     }
+
+    /**
+     *
+     */
     private void getIngredients()
     {
         // setup Ingredient List
@@ -152,6 +159,10 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
             setListViewHeightBasedOnItems(ingredientListView);
         }
     }
+
+    /**
+     *
+     */
     private void getDirections(){
         directionAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,directionList){
             @NonNull
@@ -180,6 +191,9 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     */
     private void getCategories(){
         categoryAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,categoryList){
             @NonNull
@@ -222,6 +236,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
                 int recipeId = recipe.getKeyID();
                 Intent editRecipe = new Intent(this, EditRecipeActivity.class);
                 editRecipe.putExtra("recipeId", recipeId);
+                editRecipe.putExtra("newRecipe",false);
                 startActivity(editRecipe);
             default:
                 return super.onOptionsItemSelected(item);
