@@ -22,7 +22,6 @@ class Recipe {
     private List<RecipeIngredient> ingredientList;
     private List<RecipeDirection> directionsList;
     private List<RecipeCategory> categoryList;
-    private boolean pictureSet;
 
 
     public Recipe() {
@@ -34,7 +33,6 @@ class Recipe {
         ingredientList = new ArrayList<RecipeIngredient>();
         directionsList = new ArrayList<RecipeDirection>();
         categoryList = new ArrayList<RecipeCategory>();
-        pictureSet = false;
     }
 
     public int getKeyID() {
@@ -215,7 +213,6 @@ class Recipe {
             return false;
         }
 
-        pictureSet = true;
 
         return true;
 
@@ -229,9 +226,6 @@ class Recipe {
      */
     public Bitmap getImage(Context context) {
 
-        if(!pictureSet) {
-            return BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_default_image);
-        }
 
         Bitmap image = null;
 
@@ -244,6 +238,8 @@ class Recipe {
             //Set default image
             image = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_default_image);
         }
+
+
 
 
         return image;
