@@ -64,8 +64,7 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
                     recipe.setServings(Double.valueOf(inputServings));
                     recipe.setPrep_time(Integer.parseInt(inputPrepTime));
                     recipe.setTotal_time(Integer.parseInt(inputTotalTime));
-                    int ret = database.addRecipe(recipe);
-                    if(ret == -1) {
+                    if(!database.editRecipe(recipe)) {
                         Context context = getApplicationContext();
                         CharSequence text = "Error creating recipe";
                         int duration = Toast.LENGTH_SHORT;
@@ -126,6 +125,7 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
      */
     private void addRecipe(){
         recipe = new Recipe();
+        database.addRecipe(recipe);
     }
 
     /**

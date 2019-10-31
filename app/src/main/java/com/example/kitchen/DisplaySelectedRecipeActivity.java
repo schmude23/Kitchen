@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -28,6 +27,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
     private TextView prep_time;
     private TextView total_time;
     private ImageView image;
+    private ImageView favoriteIcon;
     Recipe recipe;
 
     // Ingredient ListView variables
@@ -66,6 +66,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
         prep_time = (TextView) findViewById(R.id.recipe_prep_time);
         total_time = (TextView) findViewById(R.id.recipe_total_time);
         image = findViewById(R.id.recipe_image);
+        favoriteIcon = findViewById(R.id.recipe_favorite_image);
 
         recipe_title.setText(recipe.getTitle());
         servings.setText(String.valueOf(recipe.getServings()));
@@ -77,6 +78,10 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
         getIngredients();
         getDirections();
         getCategories();
+        if(recipe.getFavorited()){
+            favoriteIcon.setImageResource(R.drawable.ic_favorite);
+
+        }
 
     }
 
@@ -98,7 +103,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
             for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
                 View item = listAdapter.getView(itemPos, null, listView);
                 float px = 500 * (listView.getResources().getDisplayMetrics().density);
-                item.measure(View.MeasureSpec.makeMeasureSpec((int)px, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                item.measure(View.MeasureSpec.makeMeasureSpec((int) px, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                 totalItemsHeight += item.getMeasuredHeight();
             }
 
@@ -124,11 +129,10 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
     /**
      *
      */
-    private void getIngredients()
-    {
+    private void getIngredients() {
         // setup Ingredient List
         //ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
-        ingredientAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,ingredientList){
+        ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientList) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -145,8 +149,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
         ingredientListView.setAdapter(ingredientAdapter);
 
         // Retrieve ingredients and add to ListView
-        for(int i = 0; i < recipe.getIngredientList().size(); i++)
-        {
+        for (int i = 0; i < recipe.getIngredientList().size(); i++) {
             int ingredientID = recipe.getIngredientList().get(i).getIngredientID();
             Ingredient ingredient = dbHandler.getIngredient(ingredientID);
             String name = ingredient.getName();
@@ -163,8 +166,8 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
     /**
      *
      */
-    private void getDirections(){
-        directionAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,directionList){
+    private void getDirections() {
+        directionAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, directionList) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -179,8 +182,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
         // set the directionListView variable to directionList in the xml
         directionListView = (ListView) findViewById(R.id.direction_list);
         directionListView.setAdapter(directionAdapter);
-        for(int i = 0; i < recipe.getDirectionsList().size(); i++)
-        {
+        for (int i = 0; i < recipe.getDirectionsList().size(); i++) {
             String text = recipe.getDirectionsList().get(i).getDirectionText();
             String number = String.valueOf(recipe.getDirectionsList().get(i).getDirectionNumber());
             // Add to ListView and update height
@@ -194,8 +196,8 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
     /**
      *
      */
-    private void getCategories(){
-        categoryAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,categoryList){
+    private void getCategories() {
+        categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categoryList) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -208,10 +210,9 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
             }
         };
         // set the directionListView variable to directionList in the xml
-        categoryListView= (ListView) findViewById(R.id.category_list);
+        categoryListView = (ListView) findViewById(R.id.category_list);
         categoryListView.setAdapter(categoryAdapter);
-        for(int i = 0; i < recipe.getCategoryList().size(); i++)
-        {
+        for (int i = 0; i < recipe.getCategoryList().size(); i++) {
             int categoryID = recipe.getCategoryList().get(i).getCategoryID();
             Category category = dbHandler.getCategory(categoryID);
             String text = category.getName();
@@ -222,12 +223,17 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
             setListViewHeightBasedOnItems(categoryListView);
         }
     }
+
     // Toolbar functions
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.recipe_menu, menu);
+        if(recipe.getFavorited()) {
+            menu.findItem(R.id.action_favorite).setTitle("Unfavorite Recipe");
+        }
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -236,8 +242,33 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
                 int recipeId = recipe.getKeyID();
                 Intent editRecipe = new Intent(this, EditRecipeActivity.class);
                 editRecipe.putExtra("recipeId", recipeId);
-                editRecipe.putExtra("newRecipe",false);
+                editRecipe.putExtra("newRecipe", false);
                 startActivity(editRecipe);
+                return true;
+            case R.id.action_delete_recipe:
+                dbHandler.deleteRecipe(recipe.getKeyID());
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_home:
+                Intent home = new Intent(this, MainActivity.class);
+                startActivity(home);
+                return true;
+            case R.id.action_favorite:
+                boolean favorited = recipe.getFavorited();
+                if(favorited){
+                    recipe.setFavorited(false);
+                    dbHandler.editRecipe(recipe);
+                    favoriteIcon.setImageResource(R.drawable.ic_favorite_outline);
+                    item.setTitle("Favorite Recipe");
+                }
+                else{
+                    recipe.setFavorited(true);
+                    dbHandler.editRecipe(recipe);
+                    favoriteIcon.setImageResource(R.drawable.ic_favorite);
+                    item.setTitle("Unfavorite Recipe");
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

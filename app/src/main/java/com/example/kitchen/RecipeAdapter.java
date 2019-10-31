@@ -53,6 +53,7 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
         private TextView total_time;
         OnClickListener listener;
         private ImageView image;
+        private ImageView favorite;
 
         public RecipeViewHolder(View view, OnClickListener listener) {
             super(view);
@@ -63,6 +64,7 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
             prep_time = (TextView) itemView.findViewById(R.id.recipe_prep_time);
             total_time = (TextView) itemView.findViewById(R.id.recipe_total_time);
             image = itemView.findViewById(R.id.recipe_image);
+            favorite = itemView.findViewById(R.id.recipe_favorite_image);
         }
 
         public void bind(Recipe recipe) {
@@ -73,6 +75,12 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
             text = recipe.getTotal_time() + " min";
             total_time.setText(text);
             image.setImageBitmap(recipe.getImage(context));
+            if(recipe.getFavorited()) {
+                favorite.setImageResource(R.drawable.ic_favorite);
+            }
+            else{
+                favorite.setImageResource(R.drawable.ic_favorite_outline);
+            }
 
         }
 

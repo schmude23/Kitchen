@@ -13,14 +13,14 @@
         android:layout_height="108dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_upload" />
+        app:srcCompat="@drawable/ic_default_image" />
 
     <ImageButton
-        android:id="@+id/recipe_favorite_outline"
+        android:id="@+id/recipe_favorite_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_favorite_outline" />
 
