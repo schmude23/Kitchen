@@ -253,17 +253,6 @@ public class It1_DatabaseTester {
     }
 
     /**
-     * This method checks that setImage(Bitmap, Context) returns false when an invalid image is passed in
-     * This method also checks that the invalid image was not saved i.e. the getImage is null
-     */
-    @Test
-    public void addPicture_ReturnsFalse(){
-        Bitmap image = BitmapFactory.decodeResource(appContext.getResources(),R.drawable.ic_default_image);
-        assertEquals("addPicture - Returns False Upon Invalid Pic", false, testRecipe.setImage(image, appContext));
-        assertEquals("addPicture - Image is Null Upon Invalid Pic", null, testRecipe.getImage(appContext));
-    }
-
-    /**
      * This method checks that setImage(Bitmap, Context) works when an image also exists for the given recipe
      */
     @Test
