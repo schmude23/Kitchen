@@ -109,14 +109,17 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
             case R.id.next_btn:
                 if (recipe.getCategoryList().size() > 0) {
                     // Next Activity
-                    database.editRecipe(recipe);
-                    Context context = getApplicationContext();
-                    CharSequence text = "Recipe Added!";
-                    int duration = Toast.LENGTH_SHORT;
+                    if(database.editRecipe(recipe)) {
+                        Context context = getApplicationContext();
 
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
+                        CharSequence text = "Recipe Added!";
+                        if (!newRecipe)
+                            text = "Recipe Updated!";
+                        int duration = Toast.LENGTH_SHORT;
 
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
                     Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
                     intent.putExtra("recipeId", recipe.getKeyID());
                     startActivity(intent);
@@ -142,7 +145,7 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
      */
     public void ShowPopup(View v, final int position) {
         final EditText edit_category;
-        Button btnOkay;
+        Button btnOkay, btnRemove;
 
         myDialog.setContentView(R.layout.edit_category_popup);
 
@@ -150,6 +153,10 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
         final int categoryID = recipe.getCategoryList().get(position).getCategoryID();
         edit_category.setText(database.getCategory(categoryID).getName());
         btnOkay = myDialog.findViewById(R.id.button_okay);
+        btnRemove = myDialog.findViewById(R.id.button_remove);
+        if(position != -1)
+            btnRemove.setVisibility(View.VISIBLE);
+
 
         btnOkay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,6 +176,16 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
                     recipe.getCategoryList().set(position, recipeCategory);
                     myDialog.dismiss();
                 }
+            }
+        });
+        btnRemove.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                database.deleteCategory(recipe.getCategoryList().get(position).getCategoryID());
+                recipe.getCategoryList().remove(position);
+                categoryList.remove(position);
+                categoryAdapter.notifyDataSetChanged();
+                myDialog.dismiss();
             }
         });
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
