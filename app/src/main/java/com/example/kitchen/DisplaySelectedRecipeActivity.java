@@ -188,7 +188,11 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
         directionListView.setAdapter(directionAdapter);
         for (int i = 0; i < recipe.getDirectionsList().size(); i++) {
             String text = recipe.getDirectionsList().get(i).getDirectionText();
-            String number = String.valueOf(recipe.getDirectionsList().get(i).getDirectionNumber());
+            int number = recipe.getDirectionsList().get(i).getDirectionNumber();
+            if(number != (i + 1)) {
+                number = i + 1;
+                recipe.getDirectionsList().get(i).setDirectionNumber(number);
+            }
             // Add to ListView and update height
             directionList.add(number + ") " + text);
             directionAdapter.notifyDataSetChanged();
