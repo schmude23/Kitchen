@@ -1,5 +1,27 @@
 <resources>
     <string name="app_name">Kitchen+</string>
+    <string name="ingredient">Ingredient</string>
+    <string name="recipe">Recipe</string>
+    <string name="direction">Direction</string>
+    <string name="category">Category</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="add_ingredient">Add Ingredient</string>
+    <string name="directions">Directions</string>
+    <string name="add_direction">Add Direction</string>
+    <string name="categories">Categories</string>
+    <string name="recipes">Recipes</string>
+    <string name="okay">Okay</string>
+    <string name="done">Done</string>
+    <string name="finish">Finish</string>
+    <string name="add_recipe">Add Recipe</string>
+    <string name="edit_recipe">Edit Recipe</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_recipe">Delete Recipe</string>
+    <string name="favorite_recipe">Favorite Recipe</string>
+    <string name="unfavorite_recipe">Unfavorite Recipe</string>
+    <string name="share_recipe">Share Recipe</string>
+    <string name="shopping_cart">Shopping Cart</string>
+    <string name="cart">Cart</string>
     <string-array name="units_array">
         <item>teaspoon(s)</item>
         <item>tablespoon(s)</item>

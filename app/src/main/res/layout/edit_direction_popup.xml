@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:layout_marginTop="5dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/light_slate_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_direction" />
@@ -45,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="okay"
+        android:background="@drawable/button_style"
         android:layout_marginRight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_direction" />

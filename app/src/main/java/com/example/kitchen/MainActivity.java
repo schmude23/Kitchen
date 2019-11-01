@@ -29,9 +29,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
 
         // Display Toolbar
         Toolbar toolbar = findViewById(R.id.main_toolbar);
-        //TextView toolbarText = (TextView) findViewById(R.id.toolbar_text);
         setSupportActionBar(toolbar);
-        //toolbarText.setText(getTitle());
 
         mRecyclerView = findViewById(R.id.recipe_list_recycler);
 

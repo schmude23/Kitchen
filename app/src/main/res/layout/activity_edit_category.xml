@@ -17,13 +17,15 @@
         android:id="@+id/btn_add_category"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Add Category" />
+        android:text="Add Category"
+        android:layout_marginBottom="3dp"
+        android:background="@drawable/button_style"/>
 
     <TextView
         android:id="@+id/category_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#5e5e5e"
+        android:background="@color/light_slate_gray"
         android:text="        Categories"
         android:textColor="#FFFFFF"
         android:textSize="14sp" />
@@ -45,16 +47,25 @@
         <Button
             android:id="@+id/cancel_btn"
             android:layout_width="wrap_content"
-            android:layout_weight="0.49"
+            android:layout_weight="0.25"
             android:layout_height="wrap_content"
+            android:background="@drawable/button_style"
             android:text="Cancel" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight=".5"/>
+
 
         <Button
             android:id="@+id/next_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.49"
-            android:text="NEXT" />
+
+            android:layout_weight="0.25"
+            android:gravity="center"
+            android:text="NEXT"
+            android:background="@drawable/button_style"/>
 
 
     </LinearLayout>

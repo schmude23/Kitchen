@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <EditText
         android:id="@+id/edit_text_direction"
         android:layout_width="fill_parent"
@@ -14,14 +16,16 @@
         android:id="@+id/add_direction_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:background="@drawable/button_style"
         android:text="Add Direction" />
 
     <TextView
         android:id="@+id/direction_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#5e5e5e"
-        android:text="        Direction"
+        android:background="@color/light_slate_gray"
+        android:text="              Directions"
         android:textColor="#FFFFFF"
         android:textSize="14sp" />
 
@@ -29,8 +33,8 @@
         android:id="@+id/direction_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="15dp"/>
+        android:layout_marginBottom="15dp"
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,15 +46,21 @@
         <Button
             android:id="@+id/cancel_btn"
             android:layout_width="wrap_content"
-            android:layout_weight="0.49"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:background="@drawable/button_style"
             android:text="Cancel" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight=".5"/>
 
         <Button
             android:id="@+id/next_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.49"
+            android:layout_weight="0.25"
+            android:background="@drawable/button_style"
             android:text="NEXT" />
 
 
