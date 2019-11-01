@@ -75,6 +75,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
         text = recipe.getTotal_time() + " min";
         total_time.setText(text);
         image.setImageBitmap(recipe.getImage(this));
+        //image.setRotation(90);
         getIngredients();
         getDirections();
         getCategories();
@@ -156,7 +157,10 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
             String quantity = String.valueOf(recipe.getIngredientList().get(i).getQuantity());
             String unit = recipe.getIngredientList().get(i).getUnit();
             // Add to ListView and update height
-            ingredientList.add(name + " (" + quantity + " " + unit + ")");
+            if(unit.compareTo("none") == 0)
+                ingredientList.add(name + " [ " + quantity + " ]");
+            else
+                ingredientList.add(name + " [ " + quantity + " " + unit + " ]");
             ingredientAdapter.notifyDataSetChanged();
             ingredientListView.setAdapter(ingredientAdapter);
             setListViewHeightBasedOnItems(ingredientListView);

@@ -1,16 +1,16 @@
 <resources>
     <string name="app_name">Kitchen+</string>
     <string-array name="units_array">
-        <item>teaspoon</item>
-        <item>tablespoon</item>
-        <item>cup</item>
-        <item>oz</item>
-        <item>pint</item>
-        <item>quart</item>
-        <item>gallon</item>
-        <item>pound</item>
-        <item>pinch</item>
-        <item> </item>
+        <item>teaspoon(s)</item>
+        <item>tablespoon(s)</item>
+        <item>cup(s)</item>
+        <item>ounce(s)</item>
+        <item>pint(s)</item>
+        <item>quart(s)</item>
+        <item>gallon(s)</item>
+        <item>pound(s)</item>
+        <item>pinch(es)</item>
+        <item>none</item>
     </string-array>
 
 </resources>

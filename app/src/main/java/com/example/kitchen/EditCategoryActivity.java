@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,7 +25,7 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
     private DatabaseHelper database = new DatabaseHelper(this);
     private Recipe recipe;
     Dialog myDialog;
-    private Button btnAddCategory, btnNext;
+    private Button btnAddCategory, btnNext, btnCancel;
     private EditText editCategory;
     private ListView categoryListView;
     private ArrayList<String> categoryList = new ArrayList<String>();
@@ -46,13 +47,15 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
         btnAddCategory.setOnClickListener(this);
         btnNext = (Button) findViewById(R.id.next_btn);
         btnNext.setOnClickListener(this);
+        btnCancel = findViewById(R.id.cancel_btn);
+
         editCategory = (EditText) findViewById(R.id.edit_category);
         categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, categoryList);
 
         // set the ingredientListView variable to your ingredientList in the xml
         categoryListView = (ListView) findViewById(R.id.category_list);
         categoryListView.setAdapter(categoryAdapter);
-        if(newRecipe)
+        if (newRecipe)
             addRecipe();
         else
             editRecipe();
@@ -67,10 +70,13 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
 
     private void addRecipe() {
         recipe.setCategoryList(new ArrayList<RecipeCategory>());
+        btnCancel.setOnClickListener(this);
+
     }
+
     private void editRecipe() {
-        for(int i = 0; i < recipe.getCategoryList().size(); i++)
-        {
+        btnCancel.setVisibility(View.INVISIBLE);
+        for (int i = 0; i < recipe.getCategoryList().size(); i++) {
             int id = recipe.getCategoryList().get(i).getCategoryID();
             Category category = database.getCategory(id);
             String name = category.getName();
@@ -101,7 +107,7 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
                 }
                 break;
             case R.id.next_btn:
-                if(recipe.getCategoryList().size() > 0) {
+                if (recipe.getCategoryList().size() > 0) {
                     // Next Activity
                     database.editRecipe(recipe);
                     Context context = getApplicationContext();
@@ -115,6 +121,11 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
                     intent.putExtra("recipeId", recipe.getKeyID());
                     startActivity(intent);
                 }
+                break;
+            case R.id.cancel_btn:
+                database.deleteRecipe(recipe.getKeyID());
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
 
             default:
@@ -163,4 +174,26 @@ public class EditCategoryActivity extends AppCompatActivity implements OnClickLi
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
     }
+    /**
+     * This method monitors android button keys, i.e. back button
+     * deletes the recipe and returns to RecipeList if recipe is new
+     * @param keyCode
+     * @param event
+     * @return
+     */ /*
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            // Log.d(this.getClass().getName(), "back button pressed");
+            if(newRecipe)
+            {
+                database.deleteRecipe(recipe.getKeyID());
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return false;
+                //return super.onKeyDown(keyCode, event);
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }*/
 }
