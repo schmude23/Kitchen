@@ -9,5 +9,5 @@ Once launched, mouse clicks and holds function as screen touches and holds to us
   
 How to build and run tests:
 
-In the iteration 1 branch under app/src/androidTest there is It1_DatabaseTester
+In the iteration 1 branch under app/src/androidTest there is the It1_DatabaseTester file
 Right click on the file and run to run automated tests
