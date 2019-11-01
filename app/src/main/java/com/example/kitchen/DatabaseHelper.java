@@ -479,7 +479,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cVals = new ContentValues();
         cVals.put(IT_NAME, ingredient.getName());
         int res = (int) sqLiteDatabase.insert(TABLE_INGREDIENT_LIST, null, cVals);
-        ingredient.setKeyID(res); //possibly dangerous cast?
+        ingredient.setKeyID(res);
 
         if (res == -1) {
             if (IS_IN_TESTING_MODE) {
