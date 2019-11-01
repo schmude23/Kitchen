@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -137,7 +138,15 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
                     startActivity(intent);
                 }
                 else{
-                    database.editRecipe(recipe);
+                    if(database.editRecipe(recipe)) {
+                        Context context = getApplicationContext();
+
+                        CharSequence text = "Recipe Updated!";
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
                     Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
                     intent.putExtra("recipeId", recipe.getKeyID());
                     startActivity(intent);
@@ -159,7 +168,7 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
      */
     public void ShowPopup(View v, final int position) {
         final EditText edit_name, edit_quantity;
-        Button btnOkay;
+        Button btnOkay, btnRemove;
 
         myDialog.setContentView(R.layout.edit_ingredient_popup);
         edit_name = myDialog.findViewById(R.id.ingredient_text);
@@ -176,6 +185,9 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
         }
 
         btnOkay = myDialog.findViewById(R.id.button_okay);
+        btnRemove = myDialog.findViewById(R.id.button_remove);
+        if(position != -1)
+            btnRemove.setVisibility(View.VISIBLE);
 
 
         Spinner spinner = myDialog.findViewById(R.id.spinner);
@@ -244,7 +256,18 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
                 }
             }
         });
+        btnRemove.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                database.deleteIngredient(recipe.getIngredientList().get(position).getIngredientID());
+                recipe.getIngredientList().remove(position);
+                ingredientList.remove(position);
+                ingredientAdapter.notifyDataSetChanged();
+                myDialog.dismiss();
+            }
+        });
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
         myDialog.show();
     }
 

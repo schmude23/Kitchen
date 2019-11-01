@@ -3,6 +3,7 @@ package com.example.kitchen;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -120,7 +122,15 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
                     startActivity(intent);
                 }
                 else{
-                    database.editRecipe(recipe);
+                    if(database.editRecipe(recipe)) {
+                        Context context = getApplicationContext();
+
+                        CharSequence text = "Recipe Updated!";
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
                     Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
                     intent.putExtra("recipeId", recipe.getKeyID());
                     startActivity(intent);
@@ -140,13 +150,16 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
      */
     public void ShowPopup(View v, final int position) {
         final EditText edit_direction;
-        Button btnOkay;
+        Button btnOkay, btnRemove;
 
         myDialog.setContentView(R.layout.edit_direction_popup);
 
         edit_direction = myDialog.findViewById(R.id.edit_direction);
         edit_direction.setText(recipe.getDirectionsList().get(position).getDirectionText());
         btnOkay = myDialog.findViewById(R.id.button_okay);
+        btnRemove = myDialog.findViewById(R.id.button_remove);
+        if(position != -1)
+            btnRemove.setVisibility(View.VISIBLE);
 
         btnOkay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,6 +176,15 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
                     recipe.getDirectionsList().set(position, recipeDirection);
                     myDialog.dismiss();
                 }
+            }
+        });
+        btnRemove.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                recipe.getDirectionsList().remove(position);
+                directionList.remove(position);
+                directionAdapter.notifyDataSetChanged();
+                myDialog.dismiss();
             }
         });
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
