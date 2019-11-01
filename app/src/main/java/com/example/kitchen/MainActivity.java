@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     RecyclerView mRecyclerView;
     List<Recipe> recipes;
     DatabaseHelper database = new DatabaseHelper(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(layoutManager);
         recipes = database.getAllRecipes();
+        checkRecipes();
         mRecyclerView.setAdapter(new RecipeAdapter(recipes, this, this));
     }
 
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -79,6 +82,21 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         //adding extra information from intent
         intent.putExtra("recipeId", recipeId);
         startActivity(intent);
+    }
+
+    /**
+     * Checks for any incomplete recipes and deletes them
+     */
+    private void checkRecipes() {
+        if (recipes != null) {
+            for (int i = 0; i < recipes.size(); i++) {
+                Recipe recipe = database.getRecipe(recipes.get(i).getKeyID());
+                if (recipe.getIngredientList() == null || recipe.getDirectionsList() == null || recipe.getCategoryList() == null) {
+                    database.deleteRecipe(recipe.getKeyID());
+                    recipes.remove(i);
+                }
+            }
         }
     }
+}
 

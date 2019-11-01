@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,14 +23,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 
-
 import static java.lang.String.valueOf;
 
 public class EditIngredientActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     DatabaseHelper database = new DatabaseHelper(this);
     Recipe recipe;
-    private Button btnAddIngredient, btnNext;
+    private Button btnAddIngredient, btnNext, btnCancel;
     private EditText editIngredient;
 
     // ListView variables
@@ -57,6 +57,7 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
         btnAddIngredient.setOnClickListener(this);
         btnNext = (Button) findViewById(R.id.next_btn);
         btnNext.setOnClickListener(this);
+        btnCancel = findViewById(R.id.cancel_btn);
 
         editIngredient = (EditText) findViewById(R.id.edit_text_ingredient);
         ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
@@ -64,10 +65,11 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
         // set the ingredientListView variable to your ingredientList in the xml
         ingredientListView = (ListView) findViewById(R.id.ingredient_list);
         ingredientListView.setAdapter(ingredientAdapter);
-        if(newRecipe)
+        if (newRecipe)
             addRecipe();
         else
             editRecipe();
+        btnCancel.setOnClickListener(this);
         ingredientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -77,20 +79,31 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
 
 
     }
+
+    /**
+     *
+     */
     private void addRecipe() {
         recipe.setIngredientList(new ArrayList<RecipeIngredient>());
         recipe.setDirectionsList(new ArrayList<RecipeDirection>());
         recipe.setCategoryList(new ArrayList<RecipeCategory>());
     }
+
+    /**
+     *
+     */
     private void editRecipe() {
-        for(int i = 0; i < recipe.getIngredientList().size(); i++)
-        {
+        btnCancel.setText("Finish");
+        for (int i = 0; i < recipe.getIngredientList().size(); i++) {
             String quantity = String.valueOf(recipe.getIngredientList().get(i).getQuantity());
             String unit = recipe.getIngredientList().get(i).getUnit();
             int id = recipe.getIngredientList().get(i).getIngredientID();
             Ingredient ingredient = database.getIngredient(id);
             String name = ingredient.getName();
-            ingredientAdapter.add(name + " (" + quantity + " " + unit + ")");
+            if (unit.compareTo("none") == 0)
+                ingredientAdapter.add(name + " [ " + quantity + " ]");
+            else
+                ingredientAdapter.add(name + " [ " + quantity + " " + unit + " ]");
 
         }
     }
@@ -108,12 +121,25 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
                 break;
 
             case R.id.next_btn:
-                if(recipe.getIngredientList().size() > 0) {
+                if (recipe.getIngredientList().size() > 0) {
                     // Next Activity
                     database.editRecipe(recipe);
                     Intent intent = new Intent(this, EditDirectionActivity.class);
                     intent.putExtra("recipeId", recipe.getKeyID());
                     intent.putExtra("newRecipe", newRecipe);
+                    startActivity(intent);
+                }
+                break;
+            case R.id.cancel_btn:
+                if(newRecipe) {
+                    database.deleteRecipe(recipe.getKeyID());
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    database.editRecipe(recipe);
+                    Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
+                    intent.putExtra("recipeId", recipe.getKeyID());
                     startActivity(intent);
                 }
                 break;
@@ -172,7 +198,10 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
 
                     if (position != -1) {
                         // edit (position) recipe ingredient
-                        ingredientList.set(position, edit_name.getText().toString() + " (" + ingredient_quantity + " " + ingredient_unit + ")");
+                        if (ingredient_unit.compareTo("none") == 0)
+                            ingredientList.set(position, edit_name.getText().toString() + " [ " + ingredient_quantity + " ]");
+                        else
+                            ingredientList.set(position, edit_name.getText().toString() + " [ " + ingredient_quantity + " " + ingredient_unit + " ]");
                         ingredientAdapter.notifyDataSetChanged();
 
                         Ingredient i = database.getIngredient(recipe.getIngredientList().get(position).getIngredientID());
@@ -195,7 +224,7 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
 
                         recipeIngredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, Double.valueOf(ingredient_quantity), ingredient_unit, null);
                         int ret = database.addRecipeIngredient(recipeIngredient);
-                        if(ret == -1) {
+                        if (ret == -1) {
                             Context context = getApplicationContext();
                             CharSequence text = "Error adding ingredient";
                             int duration = Toast.LENGTH_SHORT;
@@ -204,7 +233,10 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
                             toast.show();
                         }
                         // add ingredient
-                        ingredientAdapter.add(edit_name.getText().toString() + " (" + ingredient_quantity + " " + ingredient_unit + ")");
+                        if (ingredient_unit.compareTo("none") == 0)
+                            ingredientAdapter.add(edit_name.getText().toString() + " [ " + ingredient_quantity + " ]");
+                        else
+                            ingredientAdapter.add(edit_name.getText().toString() + " [ " + ingredient_quantity + " " + ingredient_unit + " ]");
                         recipe.getIngredientList().add(recipeIngredient);
                         editIngredient.getText().clear();
                     }
@@ -227,6 +259,27 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
+    /**
+     * This method monitors android button keys, i.e. back button
+     * deletes the recipe and returns to RecipeList if recipe is new
+     * @param keyCode
+     * @param event
+     * @return
+     */ /*
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            // Log.d(this.getClass().getName(), "back button pressed");
+            if(newRecipe)
+            {
+                database.deleteRecipe(recipe.getKeyID());
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return false;
+                //return super.onKeyDown(keyCode, event);
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    } */
 
 }

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 public class EditRecipeActivity extends AppCompatActivity implements OnClickListener {
     DatabaseHelper database = new DatabaseHelper(this);
     public Recipe recipe;// = new Recipe();
-    private Button btnNext;
+    private Button btnNext, btnCancel;
     private EditText editTitle, editServings, editPrepTime, editTotalTime;
     private ImageView recipeImage;
     private static final int RESULT_LOAD_IMAGE = 1;
@@ -35,6 +36,8 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
 
         btnNext = (Button) findViewById(R.id.next_btn);
         btnNext.setOnClickListener(this);
+        btnCancel = findViewById(R.id.cancel_btn);
+        btnCancel.setOnClickListener(this);
         editTitle = (EditText) findViewById(R.id.edit_title);
         editServings = (EditText) findViewById(R.id.edit_servings);
         editPrepTime = (EditText) findViewById(R.id.edit_prep_time);
@@ -84,6 +87,14 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
                 break;
+            case R.id.cancel_btn:
+                if(newRecipe)
+                {
+                    database.deleteRecipe(recipe.getKeyID());
+                }
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                break;
         }
 
 
@@ -99,6 +110,7 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
                 Bitmap imageBitMap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                 //recipeImage.setImageURI(selectedImage);
                 recipeImage.setImageBitmap(imageBitMap);
+                //recipeImage.setRotation(90);
                 // add image to recipe
                 if(!recipe.setImage(imageBitMap, this))
                 {
@@ -139,5 +151,24 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
         editPrepTime.setText(String.valueOf(recipe.getPrep_time()));
         editTotalTime.setText(String.valueOf(recipe.getTotal_time()));
         recipeImage.setImageBitmap(recipe.getImage(this));
+    }
+    /**
+     * This method monitors android button keys, i.e. back button
+     * deletes the recipe and returns to RecipeList if recipe is new
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+           // Log.d(this.getClass().getName(), "back button pressed");
+            if(newRecipe)
+            {
+                database.deleteRecipe(recipe.getKeyID());
+                return super.onKeyDown(keyCode, event);
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

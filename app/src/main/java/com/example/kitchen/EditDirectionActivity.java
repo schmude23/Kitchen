@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,12 +19,11 @@ import android.view.View.OnClickListener;
 import java.util.ArrayList;
 
 
-
 public class EditDirectionActivity extends AppCompatActivity implements OnClickListener {
     DatabaseHelper database = new DatabaseHelper(this);
     Recipe recipe;
     Dialog myDialog;
-    private Button btnAddDirection, btnNext;
+    private Button btnAddDirection, btnNext, btnCancel;
     private EditText editDirection;
     private ListView directionListView;
     ArrayList<String> directionList = new ArrayList<String>();
@@ -48,6 +48,7 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
         btnAddDirection.setOnClickListener(this);
         btnNext = (Button) findViewById(R.id.next_btn);
         btnNext.setOnClickListener(this);
+        btnCancel = findViewById(R.id.cancel_btn);
         editDirection = (EditText) findViewById(R.id.edit_text_direction);
 
         directionAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, directionList);
@@ -55,10 +56,12 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
         // set the ingredientListView variable to your ingredientList in the xml
         directionListView = (ListView) findViewById(R.id.direction_list);
         directionListView.setAdapter(directionAdapter);
-        if(newRecipe)
+        if (newRecipe)
             addRecipe();
         else
             editRecipe();
+        btnCancel.setOnClickListener(this);
+
         directionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -72,9 +75,10 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
         recipe.setDirectionsList(new ArrayList<RecipeDirection>());
         recipe.setCategoryList(new ArrayList<RecipeCategory>());
     }
+
     private void editRecipe() {
-        for(int i = 0; i < recipe.getDirectionsList().size(); i++)
-        {
+        btnCancel.setText("Finish");
+        for (int i = 0; i < recipe.getDirectionsList().size(); i++) {
             String text = recipe.getDirectionsList().get(i).getDirectionText();
             directionAdapter.add(text);
         }
@@ -100,7 +104,7 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
                 }
                 break;
             case R.id.next_btn:
-                if(recipe.getDirectionsList().size() > 0) {
+                if (recipe.getDirectionsList().size() > 0) {
                     // Next Activity
                     database.editRecipe(recipe);
                     Intent intent = new Intent(this, EditCategoryActivity.class);
@@ -109,7 +113,19 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
                     startActivity(intent);
                 }
                 break;
-
+            case R.id.cancel_btn:
+                if(newRecipe) {
+                    database.deleteRecipe(recipe.getKeyID());
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    database.editRecipe(recipe);
+                    Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
+                    intent.putExtra("recipeId", recipe.getKeyID());
+                    startActivity(intent);
+                }
+                break;
             default:
                 break;
         }
@@ -152,4 +168,28 @@ public class EditDirectionActivity extends AppCompatActivity implements OnClickL
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
     }
+
+    /**
+     * This method monitors android button keys, i.e. back button
+     * deletes the recipe and returns to RecipeList if recipe is new
+     * @param keyCode
+     * @param event
+     * @return
+     */ /*
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            // Log.d(this.getClass().getName(), "back button pressed");
+            if(newRecipe)
+            {
+                database.deleteRecipe(recipe.getKeyID());
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return false;
+                //return super.onKeyDown(keyCode, event);
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    } */
+
 }

@@ -16,11 +16,14 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
     private List<Recipe> recipes;
     private OnClickListener listener;
     private Context context;
+    DatabaseHelper database;
+
     public RecipeAdapter(List<Recipe> recipes, OnClickListener listener, Context context) {
         super();
         this.recipes = recipes;
         this.listener = listener;
         this.context = context;
+        database = new DatabaseHelper(context);
     }
 
     @NonNull
@@ -39,7 +42,7 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
     public int getItemCount() {
 
         try{
-          return  this.recipes.size();
+          return this.recipes.size();
         }catch (NullPointerException e){
             return 0;
         }
@@ -75,6 +78,7 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
             text = recipe.getTotal_time() + " min";
             total_time.setText(text);
             image.setImageBitmap(recipe.getImage(context));
+            //image.setRotation(90);
             if(recipe.getFavorited()) {
                 favorite.setImageResource(R.drawable.ic_favorite);
             }

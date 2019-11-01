@@ -12,17 +12,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/recipe_toolbar"
-            layout="@layout/main_toolbar" />
-
 
         <EditText
             android:id="@+id/edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Title"
             android:ems="10"
+            android:hint="Title"
+            android:textCursorDrawable="@null"
             android:inputType="textPersonName" />
 
         <View
@@ -35,24 +32,27 @@
             android:id="@+id/edit_servings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Servings"
             android:ems="10"
+            android:hint="Servings"
+            android:textCursorDrawable="@null"
             android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/edit_prep_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Prep Time (minutes)"
             android:ems="10"
+            android:textCursorDrawable="@null"
+            android:hint="Prep Time (minutes)"
             android:inputType="time" />
 
         <EditText
             android:id="@+id/edit_total_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Total Time (minutes)"
             android:ems="10"
+            android:textCursorDrawable="@null"
+            android:hint="Total Time (minutes)"
             android:inputType="time" />
 
         <TextView
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:text="Upload Image"
             android:textAlignment="center"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/recipe_image"
@@ -70,12 +70,29 @@
             android:contentDescription="@android:string/untitled"
             app:srcCompat="@drawable/ic_default_image" />
 
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/next_btn"
-            android:text="NEXT" />
+            android:orientation="horizontal"
+            android:weightSum="1">
 
+
+                <Button
+                    android:id="@+id/cancel_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.49"
+                    android:layout_height="wrap_content"
+                    android:text="Cancel" />
+
+                <Button
+                    android:id="@+id/next_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.49"
+                    android:text="NEXT" />
+
+
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
