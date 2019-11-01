@@ -1,4 +1,4 @@
-# Kitchen
+# Kitchen+
 
 How to build and run application:
 
