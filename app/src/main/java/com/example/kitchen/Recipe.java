@@ -12,6 +12,9 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class models a Recipe
+ */
 class Recipe {
     private int keyID;
     private String title;
@@ -24,6 +27,9 @@ class Recipe {
     private List<RecipeCategory> categoryList;
 
 
+    /**
+     * This is the default constructor which sets all numerical values at -1 and prepares the class for use
+     */
     public Recipe() {
         keyID = -1;
         servings = -1;
@@ -35,14 +41,33 @@ class Recipe {
         categoryList = new ArrayList<RecipeCategory>();
     }
 
+    /**
+     * Getter method for KeyId
+     *
+     * @return the keyID
+     */
     public int getKeyID() {
         return keyID;
     }
 
+    /**
+     * Setter method for keyID
+     *
+     * @param keyID the new keyID
+     */
     public void setKeyID(int keyID) {
         this.keyID = keyID;
     }
 
+    /**
+     * This constructor for Recipe enables setting everything but the lists.
+     *
+     * @param title the title of the recipe
+     * @param servings the number of servings in the recipe
+     * @param prep_time the prep time for the recipe
+     * @param total_time the total time for the recipe
+     * @param favorited the favorited status for the recipe
+     */
     public Recipe(String title, double servings, int prep_time, int total_time, boolean favorited) {
         this(); //Call default constructor
         this.title = title;
@@ -52,6 +77,18 @@ class Recipe {
         this.favorited = favorited;
     }
 
+    /**
+     * This constructor enables setting everything but the id field in the Recipe class
+     *
+     * @param title the title of the recipe
+     * @param servings the number of servings that the recipe makes
+     * @param prep_time the prep time for the recipe
+     * @param total_time the total time needed for the recipe
+     * @param favorited the favorited status of the recipe
+     * @param ingredients the list of ingredients in the recipe
+     * @param directions the list of directions in the recipe
+     * @param categories the list of categories for the recipe
+     */
     public Recipe(String title, double servings, int prep_time, int total_time, boolean favorited, List<RecipeIngredient> ingredients, List<RecipeDirection> directions, List<RecipeCategory> categories) {
         this(); //Call default constructor
         this.title = title;
@@ -64,6 +101,19 @@ class Recipe {
         this.categoryList = categories;
     }
 
+    /**
+     * This constructor enables setting everything in the Recipe class
+     *
+     * @param keyID the id of the recipe
+     * @param title the title of the recipe
+     * @param servings the number of servings that the recipe makes
+     * @param prep_time the prep time for the recipe
+     * @param total_time the total time needed for the recipe
+     * @param favorited the favorited status of the recipe
+     * @param ingredients the list of ingredients in the recipe
+     * @param directions the list of directions in the recipe
+     * @param categories the list of categories for the recipe
+     */
     public Recipe(int keyID, String title, double servings, int prep_time, int total_time, boolean favorited, List<RecipeIngredient> ingredients, List<RecipeDirection> directions, List<RecipeCategory> categories) {
         this(); //Call default constructor
         this.keyID = keyID;
@@ -77,75 +127,164 @@ class Recipe {
         this.categoryList = categories;
     }
 
+    /**
+     * This method is a renamed copy of setTitle. I am not sure why this exists.
+     *
+     * @param name the new title of the recipe
+     */
     public void createRecipe(String name) {
         this.title = name;
     }
 
+    /**
+     * Getter method for title
+     *
+     * @return the title of the recipe
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Setter method for the title
+     *
+     * @param title the new title
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Getter method for the servings
+     *
+     * @return the number of servings that the recipe makes
+     */
     public Double getServings() {
         return servings;
     }
 
+    /**
+     * Setter method for the servings
+     *
+     * @param servings the new number of servings
+     */
     public void setServings(Double servings) {
         this.servings = servings;
     }
 
+    /**
+     * Getter method for preptime
+     *
+     * @return the prep time for the recipe
+     */
     public int getPrep_time() {
         return prep_time;
     }
 
+    /**
+     * Setter method for prep_time
+     *
+     * @param prep_time the new prep_time
+     */
     public void setPrep_time(int prep_time) {
         this.prep_time = prep_time;
     }
 
+    /**
+     * Getter method for total_time
+     *
+     * @return the total time needed to make the recipe
+     */
     public int getTotal_time() {
         return total_time;
     }
 
+    /**
+     * Setter method for total_time
+     *
+     * @param total_time the new total_time
+     */
     public void setTotal_time(int total_time) {
         this.total_time = total_time;
     }
 
+    /**
+     * Getter method for the favoriteed status
+     *
+     * @return the favorited status
+     */
     public Boolean getFavorited() {
         return favorited;
     }
 
-    //also updates favorite int for TABLE_Recipe
+    /**
+     * Setter method for the favorited status
+     *
+     * @param favorited
+     */
     public void setFavorited(Boolean favorited) {
         this.favorited = favorited;
     }
 
+    /**
+     * Getter method for the ingredientList
+     *
+     * @return the list of all RecipeIngredients in the recipe
+     */
     public List<RecipeIngredient> getIngredientList() {
         return ingredientList;
     }
 
+    /**
+     * Setter method for the ingredientList
+     *
+     * @param ingredientList the new ingredientList
+     */
     public void setIngredientList(List<RecipeIngredient> ingredientList) {
         this.ingredientList = ingredientList;
     }
 
+    /**
+     * this method gets the directions list
+     *
+     * @return the list of directions for the recipe
+     */
     public List<RecipeDirection> getDirectionsList() {
         return directionsList;
     }
 
+    /**
+     * setter method for the directions list
+     *
+     * @param directionsList the new directions list
+     */
     public void setDirectionsList(List<RecipeDirection> directionsList) {
         this.directionsList = directionsList;
     }
 
+    /**
+     * Getter method for the category list
+     *
+     * @return a list of categories for the recipe
+     */
     public List<RecipeCategory> getCategoryList() {
         return categoryList;
     }
 
+    /**
+     * setter method for the category list
+     *
+     * @param categoryList the new list of categories
+     */
     public void setCategoryList(List<RecipeCategory> categoryList) {
         this.categoryList = categoryList;
     }
 
+    /**
+     * This method converts the recipe to a string format for debugging
+     *
+     * @return a string representation of all the data in the class
+     */
     @Override
     public String toString() {
         int ingList = ingredientList.size();

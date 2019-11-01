@@ -12,12 +12,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+/**
+ * This class is the Adapter used for displaying Recipes in a Recycler view
+ */
 class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
     private List<Recipe> recipes;
     private OnClickListener listener;
     private Context context;
     DatabaseHelper database;
 
+    /**
+     * This constructor sets up the recipe adapter with everything it needs.
+     *
+     * @param recipes The set of recipes for the adapter
+     * @param listener The onClickListener to be used when a recipe is clicked on
+     * @param context the application contxt
+     */
     public RecipeAdapter(List<Recipe> recipes, OnClickListener listener, Context context) {
         super();
         this.recipes = recipes;
@@ -26,6 +36,13 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
         database = new DatabaseHelper(context);
     }
 
+    /**
+     * This method is run when the viewHolder for each cell is created
+     *
+     * @param parent the parent view
+     * @param viewType an int referencing the type of view
+     * @return
+     */
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,11 +50,22 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
         return new RecipeViewHolder(view, listener);
     }
 
+    /**
+     * This method is run when the view holder is bound to the recycler view
+     *
+     * @param holder the view holder
+     * @param position it's position in the dataset
+     */
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         holder.bind(this.recipes.get(position));
     }
 
+    /**
+     * This method gets the size of the dataset
+     *
+     * @return the size of the dataset
+     */
     @Override
     public int getItemCount() {
 
@@ -49,6 +77,9 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
 
     }
 
+    /**
+     * This class is the controller for an individual viewHolder in the RecipeAdapter
+     */
     public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView recipe;
         private TextView servings;
@@ -58,6 +89,12 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
         private ImageView image;
         private ImageView favorite;
 
+        /**
+         * This method is the constructor. Setup of the viewHolder takes place here.
+         *
+         * @param view
+         * @param listener
+         */
         public RecipeViewHolder(View view, OnClickListener listener) {
             super(view);
             recipe = (TextView) itemView.findViewById(R.id.text_recipe_name);
@@ -70,6 +107,11 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
             favorite = itemView.findViewById(R.id.recipe_favorite_image);
         }
 
+        /**
+         * This method fills the data of the viewholder based on the recipe. Used when binding the viewholder
+         *
+         * @param recipe
+         */
         public void bind(Recipe recipe) {
             this.recipe.setText(recipe.getTitle());
             servings.setText(String.valueOf(recipe.getServings()));
@@ -88,12 +130,20 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
 
         }
 
+        /**
+         * This method runs when the adapter is clicked on.
+         *
+         * @param v the view clicked on
+         */
         @Override
         public void onClick(View v) {
             listener.onClick(getAdapterPosition());
         }
     }
 
+    /**
+     * This interface defines the type of onClickListener the recipeViewHolder needs.
+     */
     public interface OnClickListener {
         void onClick(int position);
     }

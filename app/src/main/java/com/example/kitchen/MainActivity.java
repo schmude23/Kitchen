@@ -17,11 +17,19 @@ import android.widget.Toast;
 
 import java.util.List;
 
+/**
+ * This Class is the controller class for the recipe list activity
+ */
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnClickListener {
     RecyclerView mRecyclerView;
     List<Recipe> recipes;
     DatabaseHelper database = new DatabaseHelper(this);
 
+    /**
+     * This method is run when the activity is created and sets up the activity
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +52,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     }
 
 
+    /**
+     * This method is run when the options menu is being created and is where the menu is set.
+     *
+     * @param menu the menu that was created
+     */
     // Toolbar functions
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -51,6 +64,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         return true;
     }
 
+    /**
+     * This method is run when an item from the options menu is selected
+     *
+     * @param item the item that was selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -67,6 +85,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         }
     }
 
+    /**
+     * This is the onclick method for the recipe adapter.
+     *
+     * @param position the position of the item clicked on within the dataset
+     */
     @Override
     public void onClick(int position) {
         Context context = getApplicationContext();
