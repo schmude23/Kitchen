@@ -60,6 +60,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String RC_RECIPE_ID = "RECIPE_ID";
     public static final String RC_CATEGORY_ID = "CATEGORY_ID";
 
+    //Shopping Cart Table (Uses prefix SC)
+    private static final String TABLE_SHOPPING_CART_LIST = "SHOPPING_CART_LIST";
+    public static final String SC_KEY_ID = "ID";
+    public static final String SC_INGREDIENT_ID = "INGREDIENT_ID";
+    public static final String SC_RECIPE_ID = "RECIPE_ID";
+    public static final String SC_QUANTITY = "QUANTITY";
+    public static final String SC_UNIT = "UNIT";
+
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION_NUMBER);
@@ -120,6 +129,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + RC_CATEGORY_ID + " INTEGER" + ")";
         sqLiteDatabase.execSQL(CREATE_RECIPE_CATEGORY_TABLE);
 
+        //Recipe Category Table
+        String CREATE_SHOPPING_CART_TABLE = "CREATE TABLE " + TABLE_SHOPPING_CART_LIST + "("
+                + SC_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + SC_RECIPE_ID + " INTEGER, "
+                + SC_INGREDIENT_ID + " INTEGER, "
+                + SC_QUANTITY + " INTEGER,"
+                + SC_UNIT + " TEXT" +")";
+        sqLiteDatabase.execSQL(CREATE_SHOPPING_CART_TABLE);
 
     }
 
@@ -142,6 +159,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY_LIST);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPE_CATEGORY_LIST);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPE_DIRECTIONS_LIST);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_SHOPPING_CART_LIST);
 
         //rebuild the database
         onCreate(sqLiteDatabase);
@@ -289,6 +307,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method retrieves the recipe for the given ingredient id
+     *
+     * @param ingredientId
+     * @return The recipe corresponding to the provided ingredient id, or null if one is not found.
+     */
+    public Recipe getRecipeByIngredientId(int ingredientId) {
+        //TODO: implement
+        return null;
+    }
+
+    /**
+     * This method retrieves the recipe for the given ingredient id
+     *
+     * @param ingredientIdList
+     * @return The recipe corresponding to the provided ingredient id, or null if one is not found.
+     */
+    public Recipe getRecipeByIngredientIdList(int[] ingredientIdList) {
+        //TODO: implement
+        return null;
+    }
+
+    /**
+     * This method retrieves the recipe for the given category id
+     *
+     * @param categoryId
+     * @return The recipe corresponding to the provided category id, or null if one is not found.
+     */
+    public Recipe getRecipeByCategoryId(int categoryId) {
+        //TODO: implement
+        return null;
+    }
+
+    /**
      * This method returns a list of all recipes
      *
      * @return If successful in fetching the recipes this method will return an Array list of
@@ -414,6 +465,91 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method adds the recipe information to the shopping cart
+     *
+     * @param recipeId
+     * @return true if the operation was successful, false otherwise
+     */
+    public boolean addRecipeToCart(int recipeId){
+        //TODO: Test
+        Recipe recipe = getRecipe(recipeId);
+        List<RecipeIngredient> recipeIngredientList = recipe.getIngredientList();
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        for(int i =0; i < recipeIngredientList.size(); i++) {
+            RecipeIngredient ingredient = recipeIngredientList.get(i);
+
+            //Create a new map of values, where column names are the keys
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(SC_RECIPE_ID, recipeId);
+            contentValues.put(SC_INGREDIENT_ID, ingredient.getIngredientID());
+            contentValues.put(SC_QUANTITY, ingredient.getQuantity());
+            contentValues.put(RI_UNIT, ingredient.getUnit());
+
+            // Insert the new row, returning the primary key value of the new row
+            int newRowId = (int) sqLiteDatabase.insert(TABLE_RECIPE_INGREDIENT_LIST, null, contentValues);
+
+            //check to make sure properly inserted
+            if(newRowId == -1){
+                //delete all things aready created
+
+                deleteShoppingCartRecipe(recipeId);
+                return false;
+            }
+        }
+
+        sqLiteDatabase.close();
+        return true;
+    }
+
+    /**
+     * This method adds the recipe information to the shopping cart
+     *
+     * @return true if the operation was successful, false otherwise
+     */
+    public boolean getShoppingCartRecipes(){
+        //TODO: implement
+        return false;
+    }
+
+    /**
+     * This method adds the recipe information to the shopping cart
+     *
+     * @return true if the operation was successful, false otherwise
+     */
+    public boolean getShoppingCartIngredients(){
+        //TODO: implement
+        return false;
+    }
+
+    /**
+     * This method adds the recipe information to the shopping cart
+     *
+     * @return true if the operation was successful, false otherwise
+     */
+    public boolean updateShoppingCartRecipe(){
+        //TODO: implement not sure if needed or if update is the scaling
+        return false;
+
+    }
+
+    /**
+     * This method adds the recipe information to the shopping cart
+     *
+     * @param recipeId
+     * @return true if the operation was successful, false otherwise
+     */
+    public boolean deleteShoppingCartRecipe(int recipeId){
+        //TODO: Test
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        long returned = sqLiteDatabase.delete(TABLE_SHOPPING_CART_LIST, SC_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
+        if (returned == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * This method creates a new row in the Recipe Ingredient table using the provided recipeIngredient
      *
      * @param recipeIngredient
@@ -474,7 +610,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public int addIngredient(Ingredient ingredient) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-
+        //TODO: TEST: if ingredient already exists
+        if(getIngredient(ingredient.getName()) != -1){
+            return getIngredient(ingredient.getName());
+        }
         //adding ingredients
         ContentValues cVals = new ContentValues();
         cVals.put(IT_NAME, ingredient.getName());
@@ -511,6 +650,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return ingredient;
+    }
+
+    /**
+     * This method retrieves the ingredinet for the given ingredient Title
+     *
+     * @param ingredientTitle
+     * @return The recipe corresponding to the provided ingredient Title, or -1 if one is not found.
+     */
+    public int getIngredient(String ingredientTitle) {
+        //TODO:Test
+        Ingredient ingredient = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_INGREDIENT_LIST + "  WHERE " + IT_NAME + " = ? ", new String[]{String.valueOf(ingredientTitle)});
+        if (cursor != null) {
+            cursor.moveToFirst();
+            ingredient = mapIngredient(cursor);
+            cursor.moveToNext();
+            cursor.close();
+            return ingredient.getKeyID();
+        }
+
+        return -1;
     }
 
     /**
@@ -694,6 +856,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Get the Data Repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
 
+        //TODO: TEST: if category already exists
+        if(getCategory(category.getName()) != -1){
+            return getCategory(category.getName());
+        }
         //Create a new map of values, where column names are the keys
         ContentValues contentValues = new ContentValues();
         contentValues.put(CT_NAME, category.getName());
@@ -731,6 +897,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method retrieves the category for the given category Title
+     *
+     * @param categoryTitle
+     * @return The recipe corresponding to the provided category Title, or -1 if one is not found.
+     */
+    public int getCategory(String categoryTitle) {
+        //TODO:Test
+        Category category = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CATEGORY_LIST + "  WHERE " + CT_NAME + " = ? ", new String[]{String.valueOf(categoryTitle)});
+        if (cursor != null) {
+            cursor.moveToFirst();
+            category = mapCategory(cursor);
+            cursor.moveToNext();
+            cursor.close();
+            return category.getKeyID();
+        }
+
+        return -1;
+    }
+
+    /**
      * This method deletes the recipe category list in the recipe category table using the recipeId
      *
      * @param recipeId
@@ -759,6 +948,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
         }
         return true;
+    }
+
+    /**
+     * This method returns a new quantity based on the initial unit and the desired unit
+     * first the measurement is brought to a base unit. then rescaled.
+     *
+     * @param unit1, unit2, quantity
+     * @return If successful, will return a value of the quantity in the new unit
+     */
+    public int convertMeasurements(String unit1, int quantity, String unit2) {
+        //TODO: implement
+        return -1;
+    }
+
+    /**
+     * This method updates the needed quantities of a recipe.
+     *
+     * @param currentServing, desiredServing
+     * @return If successful, will return true
+     */
+    public boolean scaleRecipe(int currentServing, int desiredServing) {
+        //TODO: implement should recipe scaler be within a recipe?
+        return false;
     }
 
     /**
