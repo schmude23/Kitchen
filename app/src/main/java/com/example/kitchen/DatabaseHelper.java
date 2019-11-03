@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //create read update delete
@@ -307,15 +308,55 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method retrieves the recipe for the given ingredient id
+     * This method retrieves all recipes which contain this ingredient id
      *
      * @param ingredientId
-     * @return The recipe corresponding to the provided ingredient id, or null if one is not found.
+     * @return The recipes corresponding to the provided ingredient id, or null if one is not found.
      */
-    public Recipe getRecipeByIngredientId(int ingredientId) {
-        //TODO: implement
-        return null;
+    public ArrayList<Recipe> getRecipeByIngredientId(int ingredientId) {
+        //TODO: TEST
+        RecipeIngredient recipeIngredient;
+        ArrayList<RecipeIngredient> recipeIngredientList = new ArrayList<RecipeIngredient>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //pulling all recipe ingredients pertaining to ingredient id
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_INGREDIENT_LIST + "  WHERE " + RI_KEY_ID + " = ? ", new String[]{String.valueOf(ingredientId)});
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                recipeIngredient = mapRecipeIngredient(cursor);
+                recipeIngredientList.add(recipeIngredient);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        if (recipeIngredientList.size() == 0) {
+            return null;
+        }
+
+        //finding and creating list of all found recipes
+            //recipeIds in type String to utilize contains
+        String[] recipeIds = new String[recipeIngredientList.size()];
+        int count = 0; //used to store recipe at proper location
+
+        for(int i = 0; i < recipeIngredientList.size(); i++){
+            int tempId = recipeIngredientList.get(i).getRecipeID();
+            //if string is NOT contained then add to array list
+            if(!Arrays.asList(recipeIds).contains(toString().valueOf(tempId))){
+                recipeIds[count] = toString().valueOf(tempId);
+                count++;
+            }
+        }
+
+        //create list of all found recipes (full recipe built)
+        ArrayList<Recipe> recipeList = new ArrayList<>();
+        for(int j = 0; j <= recipeIds.length; j++ ){
+            recipeList.add(getRecipe(Integer.parseInt(recipeIds[j])));
+        }
+
+        return recipeList;
     }
+
 
     /**
      * This method retrieves the recipe for the given ingredient id
@@ -323,9 +364,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param ingredientIdList
      * @return The recipe corresponding to the provided ingredient id, or null if one is not found.
      */
-    public Recipe getRecipeByIngredientIdList(int[] ingredientIdList) {
-        //TODO: implement
-        return null;
+    public ArrayList<Recipe> getRecipeByIngredientIdList(int[] ingredientIdList) {
+        //TODO: TEST
+        //could this be possible by just reusing getRecipeByIngredientId() and returning the
+        //recipes that had matched through all of the tests?
+        ArrayList<Recipe> recipeList = getRecipeByIngredientId(ingredientIdList[0]);
+        if(recipeList == null){
+            return null;
+        }
+        //cycle through all ingredient ids
+        for(int i =1; i <= ingredientIdList.length; i++){
+            ArrayList<Recipe> tmpList = getRecipeByIngredientId(ingredientIdList[i]);
+            ArrayList<Recipe> containsList = new ArrayList<>();
+            if(tmpList != null) {
+                //cycle through all recipes which contain ingredient i
+                for (int j = 1; j < tmpList.size(); j++) {
+                    containsList = new ArrayList<>();
+                    //cycle through all found recipes so far
+                    for(int k = 0; k < recipeList.size(); k++) {
+                        if (String.valueOf(tmpList.get(j).getKeyID()).contains(String.valueOf(recipeList.get(k).getKeyID()))) {
+                                containsList.add(recipeList.get(k));
+                        }
+                    }
+                }
+            }
+            else{
+                return null;
+            }
+            recipeList = containsList;
+        }
+
+        return recipeList;
     }
 
     /**
@@ -334,9 +403,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param categoryId
      * @return The recipe corresponding to the provided category id, or null if one is not found.
      */
-    public Recipe getRecipeByCategoryId(int categoryId) {
-        //TODO: implement
-        return null;
+    public ArrayList<Recipe> getRecipeByCategoryId(int categoryId) {
+        //TODO: Test
+        RecipeCategory recipeCategory;
+        ArrayList<RecipeCategory> recipeCategoryList = new ArrayList<RecipeCategory>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //pulling all recipe categories pertaining to ingredient id
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_CATEGORY_LIST + "  WHERE " + RC_KEY_ID + " = ? ", new String[]{String.valueOf(categoryId)});
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                recipeCategory = mapRecipeCategory(cursor);
+                recipeCategoryList.add(recipeCategory);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        if (recipeCategoryList.size() == 0) {
+            return null;
+        }
+
+        //finding and creating list of all found recipes
+        //recipeIds in type String to utilize contains
+        String[] recipeIds = new String[recipeCategoryList.size()];
+        int count = 0; //used to store recipe at proper location
+
+        for(int i = 0; i < recipeCategoryList.size(); i++){
+            int tempId = recipeCategoryList.get(i).getRecipeID();
+            //if string is NOT contained then add to array list
+            if(!Arrays.asList(recipeIds).contains(toString().valueOf(tempId))){
+                recipeIds[count] = toString().valueOf(tempId);
+                count++;
+            }
+        }
+
+        //create list of all found recipes (full recipe built)
+        ArrayList<Recipe> recipeList = new ArrayList<>();
+        for(int j = 0; j <= recipeIds.length; j++ ){
+            recipeList.add(getRecipe(Integer.parseInt(recipeIds[j])));
+        }
+
+        return recipeList;
     }
 
     /**
