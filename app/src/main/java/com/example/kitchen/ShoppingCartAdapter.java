@@ -4,31 +4,33 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 /**
  * This class is the Adapter used for displaying Recipes in a Recycler view
  */
-class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
-    private List<RecipeListItem> recipes;
+class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapter.ShoppingCartViewHolder> {
+    private List<ShoppingCartItem> shoppingCart;
     private OnClickListener listener;
 
     /**
      * This constructor sets up the recipe adapter with everything it needs.
      *
-     * @param recipes The set of recipes for the adapter
+     * @param shoppingCart The set of recipes for the adapter
      * @param listener The onClickListener to be used when a recipe is clicked on
-     * @param context the application contxt
      */
-    public RecipeAdapter(List<RecipeListItem> recipes, OnClickListener listener) {
+    public ShoppingCartAdapter(List<ShoppingCartItem> shoppingCart, OnClickListener listener) {
         super();
-        this.recipes = recipes;
+        this.shoppingCart = shoppingCart;
         this.listener = listener;
     }
 
@@ -41,9 +43,9 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
      */
     @NonNull
     @Override
-    public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_list_item, parent, false);
-        return new RecipeViewHolder(view, listener);
+    public ShoppingCartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.shopping_cart_list_item, parent, false);
+        return new ShoppingCartViewHolder(view, listener);
     }
 
     /**
@@ -53,8 +55,8 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
      * @param position it's position in the dataset
      */
     @Override
-    public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
-        holder.bind(this.recipes.get(position));
+    public void onBindViewHolder(@NonNull ShoppingCartViewHolder holder, int position) {
+        holder.bind(this.shoppingCart.get(position));
     }
 
     /**
@@ -66,7 +68,7 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
     public int getItemCount() {
 
         try{
-          return this.recipes.size();
+            return this.shoppingCart.size();
         }catch (NullPointerException e){
             return 0;
         }
@@ -76,50 +78,33 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
     /**
      * This class is the controller for an individual viewHolder in the RecipeAdapter
      */
-    public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView recipe_name;
-        private TextView servings;
-        private TextView prep_time;
-        private TextView total_time;
-        OnClickListener listener;
-        public ImageView image;
-        private ImageView favorite;
-
+    public class ShoppingCartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        CheckBox ingredient;
+        TextView quantity;
+        TextView unit;
         /**
          * This method is the constructor. Setup of the viewHolder takes place here.
          *
          * @param view
          * @param listener
          */
-        public RecipeViewHolder(View view, OnClickListener listener) {
+        public ShoppingCartViewHolder(View view, OnClickListener listener) {
             super(view);
-            recipe_name = (TextView) itemView.findViewById(R.id.text_recipe_name);
-            this.listener = listener;
+            ingredient = itemView.findViewById(R.id.ingredient_check_box);
+            quantity = itemView.findViewById(R.id.ingredient_quantity_text);
+            unit = itemView.findViewById(R.id.ingredient_unit_text);
             view.setOnClickListener(this);
-            servings = (TextView) itemView.findViewById(R.id.recipe_servings);
-            prep_time = (TextView) itemView.findViewById(R.id.recipe_prep_time);
-            total_time = (TextView) itemView.findViewById(R.id.recipe_total_time);
-            image = itemView.findViewById(R.id.recipe_image);
-            favorite = itemView.findViewById(R.id.recipe_favorite_image);
         }
 
         /**
          * This method fills the data of the viewholder based on the recipe. Used when binding the viewholder
          *
-         * @param recipe
+         * @param shoppingCartItem
          */
-        public void bind(RecipeListItem recipe) {
-            recipe_name.setText(recipe.getRecipeName());
-            servings.setText(recipe.getServings());
-            prep_time.setText(recipe.getPrepTime());
-            total_time.setText(recipe.getTotalTime());
-            image.setImageBitmap(recipe.getImage());
-            if(recipe.getFavorited()) {
-                favorite.setImageResource(R.drawable.ic_favorite);
-            }
-            else{
-                favorite.setImageResource(R.drawable.ic_favorite_outline);
-            }
+        public void bind(ShoppingCartItem shoppingCartItem) {
+            ingredient.setText(shoppingCartItem.getName());
+            quantity.setText(String.valueOf(shoppingCartItem.getQuantity()));
+            unit.setText(shoppingCartItem.getUnit());
 
         }
 
@@ -128,7 +113,7 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
          *
          * @param v the view clicked on
          */
-        @Override
+       @Override
         public void onClick(View v) {
             listener.onClick(getAdapterPosition());
         }

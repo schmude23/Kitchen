@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 
+import android.graphics.Bitmap;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +25,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnClickListener {
     RecyclerView mRecyclerView;
     List<Recipe> recipes;
+    List<RecipeListItem> recipeListItems;
     DatabaseHelper database = new DatabaseHelper(this);
 
     /**
@@ -43,10 +46,19 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setItemViewCacheSize(20);
+        mRecyclerView.setDrawingCacheEnabled(true);
         mRecyclerView.setLayoutManager(layoutManager);
         recipes = database.getAllRecipes();
         checkRecipes();
-        mRecyclerView.setAdapter(new RecipeAdapter(recipes, this, this));
+        getRecipeListItems();
+        RecipeAdapter recipeAdapter = new RecipeAdapter(recipeListItems, this);
+        mRecyclerView.setAdapter(recipeAdapter);
+       /* for (int i = 0; i < recipeAdapter.getItemCount(); i++) {
+            recipeAdapter.getItemId(i);
+            mRecyclerView.getChildAt(i).image
+
+        }*/
     }
 
 
@@ -116,6 +128,20 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                     database.deleteRecipe(recipe.getKeyID());
                     recipes.remove(i);
                 }
+            }
+        }
+    }
+
+    private void getRecipeListItems() {
+        if (recipes != null) {
+            recipeListItems = new ArrayList<RecipeListItem>();
+            for (int i = 0; i < recipes.size(); i++) {
+                String recipe_name = recipes.get(i).getTitle();
+                double servings = recipes.get(i).getServings();
+                int prep_time = recipes.get(i).getPrep_time();
+                int total_time = recipes.get(i).getTotal_time();
+                Bitmap image = recipes.get(i).getImage(this);
+                recipeListItems.add(new RecipeListItem(recipe_name, servings, prep_time, total_time, image, recipes.get(i).getFavorited()));
             }
         }
     }

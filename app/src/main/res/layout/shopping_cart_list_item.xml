@@ -24,12 +24,24 @@
         app:layout_constraintStart_toEndOf="@+id/ingredient_check_box"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/ingredient_unit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:gravity="center_vertical"
+        android:text="unit"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/ingredient_quantity_text"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <View
         android:id="@+id/divider"
         android:layout_width="338dp"
         android:layout_height="1dp"
         android:layout_marginTop="9dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/light_slate_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ingredient_quantity_text" />
