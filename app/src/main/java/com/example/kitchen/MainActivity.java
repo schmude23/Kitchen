@@ -54,11 +54,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         getRecipeListItems();
         RecipeAdapter recipeAdapter = new RecipeAdapter(recipeListItems, this);
         mRecyclerView.setAdapter(recipeAdapter);
-       /* for (int i = 0; i < recipeAdapter.getItemCount(); i++) {
-            recipeAdapter.getItemId(i);
-            mRecyclerView.getChildAt(i).image
-
-        }*/
     }
 
 
@@ -84,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.advanced_search_item:
+                Intent advancedSearch = new Intent(this, AdvancedSearchActivity.class);
+                startActivity(advancedSearch);
                 return true;
             case R.id.action_add_recipe:
                 Intent addRecipe = new Intent(this, EditRecipeActivity.class);

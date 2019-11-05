@@ -189,6 +189,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
         for (int i = 0; i < recipe.getDirectionsList().size(); i++) {
             String text = recipe.getDirectionsList().get(i).getDirectionText();
             int number = recipe.getDirectionsList().get(i).getDirectionNumber();
+            // fix incorrect numbers from removed directions
             if(number != (i + 1)) {
                 number = i + 1;
                 recipe.getDirectionsList().get(i).setDirectionNumber(number);

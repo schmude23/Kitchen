@@ -1,16 +1,241 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".AdvancedSearchActivity">
 
-    <include
-        android:id="@+id/recipe_toolbar"
-        layout="@layout/main_toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <SearchView
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/sort_by_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_slate_gray"
+            android:text="@string/sort_by"
+            android:textColor="@color/white" />
+
+        <RadioGroup
+            android:id="@+id/radio_group_recipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checkedButton="@id/radio_recipe_name"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_recipe_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/dark_orange"
+                android:text="@string/name" />
+
+            <RadioButton
+                android:id="@+id/radio_prep_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/dark_orange"
+                android:text="@string/prep_time" />
+
+            <RadioButton
+                android:id="@+id/radio_total_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/dark_orange"
+                android:text="@string/total_time" />
+
+            <RadioButton
+                android:id="@+id/radio_servings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/dark_orange"
+                android:text="@string/servings" />
+
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/radio_group_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:checkedButton="@id/radio_ascending">
+
+            <RadioButton
+                android:id="@+id/radio_ascending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ascending"
+                android:buttonTint="@color/dark_orange"/>
+
+            <RadioButton
+                android:id="@+id/radio_descending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/descending"
+                android:buttonTint="@color/dark_orange"/>
+
+            <RadioButton
+                android:id="@+id/radio_random"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/random"
+                android:buttonTint="@color/dark_orange"/>
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/limit_to_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_slate_gray"
+            android:text="@string/limit_to"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/ingredients_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ingredients" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <EditText
+                android:id="@+id/edit_ingredient"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textCursorDrawable="@null"
+                android:layout_weight="0.75"/>
+            <Button
+                android:id="@+id/button_add_ingredient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="@drawable/button_style"
+                android:text="@string/add"/>
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/ingredient_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/categories_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/categories" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <EditText
+                android:id="@+id/edit_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textCursorDrawable="@null"
+                android:layout_weight="0.75"/>
+            <Button
+                android:id="@+id/button_add_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="@drawable/button_style"
+                android:text="@string/add"/>
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/category_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/exclude_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_slate_gray"
+            android:text="@string/exclude"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/exclude_ingredients_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ingredients" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <EditText
+                android:id="@+id/exclude_edit_ingredient"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textCursorDrawable="@null"
+                android:layout_weight="0.75"/>
+            <Button
+                android:id="@+id/exclude_button_add_ingredient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="@drawable/button_style"
+                android:text="@string/add"/>
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/exclude_ingredient_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/exclude_categories_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/categories" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <EditText
+                android:id="@+id/exclude_edit_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textCursorDrawable="@null"
+                android:layout_weight="0.75"/>
+            <Button
+                android:id="@+id/exclude_button_add_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="@drawable/button_style"
+                android:text="@string/add"/>
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/exclude_category_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>

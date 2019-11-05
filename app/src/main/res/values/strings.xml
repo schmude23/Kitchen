@@ -22,6 +22,19 @@
     <string name="share_recipe">Share Recipe</string>
     <string name="shopping_cart">Shopping Cart</string>
     <string name="cart">Cart</string>
+    <string name="filter_by">Filter By</string>
+    <string name="sort_by">Sort By</string>
+    <string name="servings">Servings</string>
+    <string name="prep_time">Prep Time</string>
+    <string name="total_time">Total Time</string>
+    <string name="name">Name</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="random">Random</string>
+    <string name="limit_to">Limit To</string>
+    <string name="exclude">Exclude</string>
+    <string name="add">Add</string>
+
     <string-array name="units_array">
         <item>teaspoon(s)</item>
         <item>tablespoon(s)</item>
