@@ -761,7 +761,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method retrieves the ingredinet for the given ingredient Title
+     * This method retrieves the ingredient for the given ingredient Title
      *
      * @param ingredientTitle
      * @return The recipe corresponding to the provided ingredient Title, or -1 if one is not found.
