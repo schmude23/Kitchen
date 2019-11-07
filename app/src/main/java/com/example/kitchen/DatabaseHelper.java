@@ -714,13 +714,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * This method adds an ingredient to the ingredients table.
      *
      * @param ingredient The ingredient to be inserted. (id is ignored)
-     * @return The ingredient
+     * @return The id of the added ingredient
      */
-    public Ingredient addIngredient(Ingredient ingredient) {
+    public int addIngredient(Ingredient ingredient) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         //TODO: TEST: if ingredient already exists
         if(getIngredient(ingredient.getName()) != -1){
-            return getIngredient(ingredient.getKeyID());
+            return getIngredient(ingredient.getName());
        }
         //adding ingredients
         ContentValues cVals = new ContentValues();
@@ -732,10 +732,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (IS_IN_TESTING_MODE) {
                 System.out.println("updating ingredient table failed");
             }
-            return null;
+            return -1;
         }
 
-        return ingredient;
+        return res;
     }
 
     /**
