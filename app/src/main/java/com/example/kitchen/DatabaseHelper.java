@@ -719,9 +719,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int addIngredient(Ingredient ingredient) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         //TODO: TEST: if ingredient already exists
-        if(getIngredient(ingredient.getName()) != -1){
-            return getIngredient(ingredient.getName());
-        }
+       // if(getIngredient(ingredient.getName()) != -1){
+        //    return getIngredient(ingredient.getName());
+       // }
         //adding ingredients
         ContentValues cVals = new ContentValues();
         cVals.put(IT_NAME, ingredient.getName());
@@ -965,9 +965,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         //TODO: TEST: if category already exists
-        if(getCategory(category.getName()) != -1){
-            return getCategory(category.getName());
-        }
+//        if(getCategory(category.getName()) != -1){
+  //          return getCategory(category.getName());
+    //    }
         //Create a new map of values, where column names are the keys
         ContentValues contentValues = new ContentValues();
         contentValues.put(CT_NAME, category.getName());
