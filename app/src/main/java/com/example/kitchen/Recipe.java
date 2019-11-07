@@ -42,6 +42,18 @@ class Recipe {
     }
 
     /**
+     * This constructor will attempt to read the contents of a recipe from the string provided.
+     * if that fails it will just call the default constructor.
+     *
+     * DON'T USE THIS FOR NOW. NOT IMPLEMENTED!!
+     *
+     * @param string the string representation of the Recipe
+     */
+    public Recipe(String string) {
+        this(); //TODO: Implement this method.
+    }
+
+    /**
      * Getter method for KeyId
      *
      * @return the keyID
@@ -378,9 +390,7 @@ class Recipe {
             image = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_default_image);
         }
 
-
-
-
         return image;
     }
+
 }

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 
-jacoco{
+jacoco {
     toolVersion = '0.7.6.201602180812'
 }
 
@@ -23,15 +23,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             testCoverageEnabled true
         }
-        debug{
+        debug {
             testCoverageEnabled true
         }
     }
-    testOptions{
-      //  execution 'ANDROID_TEST_ORCHESTRATOR'
+    testOptions {
+        //  execution 'ANDROID_TEST_ORCHESTRATOR'
         animationsDisabled true
 
-        unitTests{
+        unitTests {
             includeAndroidResources = true
         }
 
