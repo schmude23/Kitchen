@@ -22,6 +22,7 @@ class Recipe {
     private int prep_time;
     private int total_time;
     private boolean favorited;
+    private Bitmap image;
     private List<RecipeIngredient> ingredientList;
     private List<RecipeDirection> directionsList;
     private List<RecipeCategory> categoryList;
@@ -364,6 +365,8 @@ class Recipe {
             return false;
         }
 
+        this.image = image;
+
 
         return true;
 
@@ -377,8 +380,10 @@ class Recipe {
      */
     public Bitmap getImage(Context context) {
 
+        if (image != null) {
+            return image;
+        }
 
-        Bitmap image = null;
 
         try {
             ContextWrapper cw = new ContextWrapper(context);
