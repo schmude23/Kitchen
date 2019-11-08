@@ -719,9 +719,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int addIngredient(Ingredient ingredient) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         //TODO: TEST: if ingredient already exists
-       // if(getIngredient(ingredient.getName()) != -1){
-        //    return getIngredient(ingredient.getName());
-       // }
+        if(getIngredient(ingredient.getName()) != -1){
+            return getIngredient(ingredient.getName());
+       }
         //adding ingredients
         ContentValues cVals = new ContentValues();
         cVals.put(IT_NAME, ingredient.getName());
