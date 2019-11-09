@@ -5,32 +5,33 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/edit_text_direction"
+        android:id="@+id/edit_direction_direction_edit_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter direction"
+        android:hint="@string/enter_direction"
         android:textCursorDrawable="@null"
         android:textSize="24sp" />
 
     <Button
-        android:id="@+id/add_direction_btn"
+        android:id="@+id/edit_direction_add_direction_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
         android:background="@drawable/button_style"
-        android:text="Add Direction" />
+        android:text="@string/add_direction"
+        android:onClick="onEditDirectionAddDirectionButtonPressed"/>
 
     <TextView
-        android:id="@+id/direction_header"
+        android:id="@+id/edit_direction_direction_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/light_slate_gray"
-        android:text="              Directions"
+        android:text="@string/directions"
         android:textColor="#FFFFFF"
         android:textSize="14sp" />
 
     <ListView
-        android:id="@+id/direction_list"
+        android:id="@+id/edit_direction_direction_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="15dp"
@@ -44,24 +45,26 @@
 
 
         <Button
-            android:id="@+id/cancel_btn"
+            android:id="@+id/edit_direction_finish_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
             android:background="@drawable/button_style"
-            android:text="Cancel" />
+            android:text="@string/cancel"
+            android:onClick="onEditDirectionFinishButtonPressed"/>
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight=".5"/>
 
         <Button
-            android:id="@+id/next_btn"
+            android:id="@+id/edit_direction_next_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
             android:background="@drawable/button_style"
-            android:text="NEXT" />
+            android:text="@string/next"
+            android:onClick="onEditDirectionNextButtonPressed"/>
 
 
     </LinearLayout>

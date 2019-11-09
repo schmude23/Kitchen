@@ -24,22 +24,24 @@ import java.util.ArrayList;
 
 import static java.lang.String.valueOf;
 
-public class EditIngredientActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
-
+public class EditIngredientActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    //TODO: Implement Ingredient Details
     DatabaseHelper database = new DatabaseHelper(this);
     Recipe recipe;
-    private Button btnAddIngredient, btnNext, btnCancel;
-    private EditText editIngredient;
+    private Button finishButton;
+    private EditText editIngredientIngredientEditText,
+            editIngredientPopupIngredientEditText,
+            editIngredientPopupQuantityEditText;
 
     // ListView variables
     private ListView ingredientListView;
     private ArrayList<String> ingredientList = new ArrayList<String>();
     private ArrayAdapter<String> ingredientAdapter;
     private boolean newRecipe;
-
+    private int position = -1;
     Dialog myDialog; // Dialog for popup window
 
-    String ingredient_name, ingredient_quantity, ingredient_unit;
+    String ingredientName, ingredientQuantity, ingredientUnit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,23 +54,19 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
 
         myDialog = new Dialog(this);
 
-        btnAddIngredient = (Button) findViewById(R.id.add_ingredient_btn);
-        btnAddIngredient.setOnClickListener(this);
-        btnNext = (Button) findViewById(R.id.next_btn);
-        btnNext.setOnClickListener(this);
-        btnCancel = findViewById(R.id.cancel_btn);
+        finishButton = findViewById(R.id.edit_ingredient_finish_button);
 
-        editIngredient = (EditText) findViewById(R.id.edit_text_ingredient);
+        editIngredientIngredientEditText = (EditText) findViewById(R.id.edit_ingredient_ingredient_edit_text);
         ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
 
         // set the ingredientListView variable to your ingredientList in the xml
-        ingredientListView = (ListView) findViewById(R.id.ingredient_list);
+        ingredientListView = (ListView) findViewById(R.id.edit_ingredient_ingredient_list);
         ingredientListView.setAdapter(ingredientAdapter);
         if (newRecipe)
             addRecipe();
         else
             editRecipe();
-        btnCancel.setOnClickListener(this);
+        //finishButton.setOnClickListener(this);
         ingredientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -92,7 +90,7 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
      *
      */
     private void editRecipe() {
-        btnCancel.setText("Finish");
+        finishButton.setText("Finish");
         for (int i = 0; i < recipe.getIngredientList().size(); i++) {
             String quantity = String.valueOf(recipe.getIngredientList().get(i).getQuantity());
             String unit = recipe.getIngredientList().get(i).getUnit();
@@ -107,54 +105,79 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
         }
     }
 
-    public void onClick(View v) {
-        String input;
-        switch (v.getId()) {
-
-            case R.id.add_ingredient_btn:
-                // Show popup if valid ingredient to select quantity and units
-                input = editIngredient.getText().toString();
-                if (input.length() > 0) {
-                    ShowPopup(v, -1);
-                }
-                break;
-
-            case R.id.next_btn:
-                if (recipe.getIngredientList().size() > 0) {
-                    // Next Activity
-                    database.editRecipe(recipe);
-                    Intent intent = new Intent(this, EditDirectionActivity.class);
-                    intent.putExtra("recipeId", recipe.getKeyID());
-                    intent.putExtra("newRecipe", newRecipe);
-                    startActivity(intent);
-                }
-                break;
-            case R.id.cancel_btn:
-                if(newRecipe) {
-                    database.deleteRecipe(recipe.getKeyID());
-                    Intent intent = new Intent(this, MainActivity.class);
-                    startActivity(intent);
-                }
-                else{
-                    if(database.editRecipe(recipe)) {
-                        Context context = getApplicationContext();
-
-                        CharSequence text = "Recipe Updated!";
-                        int duration = Toast.LENGTH_SHORT;
-
-                        Toast toast = Toast.makeText(context, text, duration);
-                        toast.show();
-                    }
-                    Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
-                    intent.putExtra("recipeId", recipe.getKeyID());
-                    startActivity(intent);
-                }
-                break;
-
-            default:
-                break;
+    /**
+     * @param v
+     */
+    public void onEditIngredientAddIngredientButtonPressed(View v) {
+        // Show popup if valid ingredient to select quantity and units
+        String input = editIngredientIngredientEditText.getText().toString();
+        if (input.length() > 0) {
+            ShowPopup(v, -1);
         }
+    }
 
+    /**
+     * @param v
+     */
+    public void onEditIngredientNextButtonPressed(View v) {
+        if (recipe.getIngredientList().size() > 0) {
+            // Next Activity
+            database.editRecipe(recipe);
+            Intent intent = new Intent(this, EditDirectionActivity.class);
+            intent.putExtra("recipeId", recipe.getKeyID());
+            intent.putExtra("newRecipe", newRecipe);
+            startActivity(intent);
+        }
+    }
+
+    /**
+     * @param v
+     */
+    public void onEditIngredientFinishButtonPressed(View v) {
+        if (newRecipe) {
+            database.deleteRecipe(recipe.getKeyID());
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        } else {
+            if (database.editRecipe(recipe)) {
+                Context context = getApplicationContext();
+
+                CharSequence text = "Recipe Updated!";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+            Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
+            intent.putExtra("recipeId", recipe.getKeyID());
+            startActivity(intent);
+        }
+    }
+
+    /**
+     *
+     * @param v
+     */
+    public void onEditIngredientPopupOkayButtonPressed(View v) {
+        ingredientName = editIngredientPopupIngredientEditText.getText().toString();
+        ingredientQuantity = editIngredientPopupQuantityEditText.getText().toString();
+        if (ingredientName.length() > 0 && ingredientQuantity.length() > 0) {
+
+            if (position != -1) {
+                // edit (position) recipe ingredient
+                editIngredient(position);
+            } else {
+                newIngredient();
+            }
+            myDialog.dismiss();
+        }
+    }
+    public void onEditIngredientPopupRemoveButtonPressed(View v){
+        database.deleteIngredient(recipe.getIngredientList().get(position).getIngredientID());
+        recipe.getIngredientList().remove(position);
+        ingredientList.remove(position);
+        ingredientAdapter.notifyDataSetChanged();
+        myDialog.dismiss();
     }
 
     /**
@@ -165,30 +188,28 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
      * @param position position of ingredient to be modified, -1 if new ingredient
      */
     public void ShowPopup(View v, final int position) {
-        final EditText edit_name, edit_quantity;
-        Button btnOkay, btnRemove;
-
+        Button popupRemoveButton;
+        this.position = position;
         myDialog.setContentView(R.layout.edit_ingredient_popup);
-        edit_name = myDialog.findViewById(R.id.ingredient_text);
-        edit_quantity = myDialog.findViewById(R.id.ingredient_quantity_text);
+        editIngredientPopupIngredientEditText = myDialog.findViewById(R.id.edit_ingredient_popup_ingredient_edit_text);
+        editIngredientPopupQuantityEditText = myDialog.findViewById(R.id.edit_ingredient_popup_ingredient_quantity_edit_text);
 
         if (position != -1) {
             // update ingredient --> get current ingredient ingredient
             Ingredient i = database.getIngredient(recipe.getIngredientList().get(position).getIngredientID());
-            edit_name.setText(i.getName());
-            edit_quantity.setText(valueOf(recipe.getIngredientList().get(position).getQuantity()));
+            editIngredientPopupIngredientEditText.setText(i.getName());
+            editIngredientPopupQuantityEditText.setText(valueOf(recipe.getIngredientList().get(position).getQuantity()));
         } else {
-            edit_name.setText(editIngredient.getText().toString());
-            edit_quantity.setText(edit_quantity.getText().toString());
+            editIngredientPopupIngredientEditText.setText(editIngredientIngredientEditText.getText().toString());
+            //editIngredientPopupQuantityEditText.setText(editIngredientQuantity.getText().toString());
         }
 
-        btnOkay = myDialog.findViewById(R.id.button_okay);
-        btnRemove = myDialog.findViewById(R.id.button_remove);
-        if(position != -1)
-            btnRemove.setVisibility(View.VISIBLE);
+        popupRemoveButton = myDialog.findViewById(R.id.edit_ingredient_popup_remove_button);
+        if (position != -1)
+            popupRemoveButton.setVisibility(View.VISIBLE);
 
 
-        Spinner spinner = myDialog.findViewById(R.id.spinner);
+        Spinner spinner = myDialog.findViewById(R.id.edit_ingredient_popup_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.units_array, android.R.layout.simple_spinner_item);
@@ -198,82 +219,69 @@ public class EditIngredientActivity extends AppCompatActivity implements View.On
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-        btnOkay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ingredient_name = edit_name.getText().toString();
-                ingredient_quantity = edit_quantity.getText().toString();
-                RecipeIngredient recipeIngredient;
-                if (ingredient_name.length() > 0 && ingredient_quantity.length() > 0) {
-
-                    if (position != -1) {
-                        // edit (position) recipe ingredient
-                        if (ingredient_unit.compareTo("none") == 0)
-                            ingredientList.set(position, edit_name.getText().toString() + " [ " + ingredient_quantity + " ]");
-                        else
-                            ingredientList.set(position, edit_name.getText().toString() + " [ " + ingredient_quantity + " " + ingredient_unit + " ]");
-                        ingredientAdapter.notifyDataSetChanged();
-
-                        Ingredient i = database.getIngredient(recipe.getIngredientList().get(position).getIngredientID());
-                        // change name of ingredient
-                        i.setName(ingredient_name);
-                        database.editIngredient(i);
-
-                        // create new RecipeIngredient object for updated Ingredient
-                        recipeIngredient = recipe.getIngredientList().get(position);
-                        //recipeIngredient.setDetails(edit_name.getText().toString());
-                        recipeIngredient.setQuantity(Double.valueOf(ingredient_quantity));
-                        recipeIngredient.setUnit(ingredient_unit);
-
-                        // update ingredient list
-                        recipe.getIngredientList().set(position, recipeIngredient);
-                    } else {
-                        // new ingredient
-                        Ingredient ingredient = new Ingredient(-1, ingredient_name);
-                        int ingredientID = database.addIngredient(ingredient);
-
-                        recipeIngredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, Double.valueOf(ingredient_quantity), ingredient_unit, null);
-                        int ret = database.addRecipeIngredient(recipeIngredient);
-                        if (ret == -1) {
-                            Context context = getApplicationContext();
-                            CharSequence text = "Error adding ingredient";
-                            int duration = Toast.LENGTH_SHORT;
-
-                            Toast toast = Toast.makeText(context, text, duration);
-                            toast.show();
-                        }
-                        // add ingredient
-                        if (ingredient_unit.compareTo("none") == 0)
-                            ingredientAdapter.add(edit_name.getText().toString() + " [ " + ingredient_quantity + " ]");
-                        else
-                            ingredientAdapter.add(edit_name.getText().toString() + " [ " + ingredient_quantity + " " + ingredient_unit + " ]");
-                        recipe.getIngredientList().add(recipeIngredient);
-                        editIngredient.getText().clear();
-                    }
-                    myDialog.dismiss();
-                }
-            }
-        });
-        btnRemove.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                database.deleteIngredient(recipe.getIngredientList().get(position).getIngredientID());
-                recipe.getIngredientList().remove(position);
-                ingredientList.remove(position);
-                ingredientAdapter.notifyDataSetChanged();
-                myDialog.dismiss();
-            }
-        });
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
         myDialog.show();
+    }
+
+    /**
+     *
+     */
+    public void newIngredient() {
+        // new ingredient
+        Ingredient ingredient = new Ingredient(-1, ingredientName);
+        int ingredientID = database.addIngredient(ingredient);
+
+        RecipeIngredient recipeIngredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, Double.valueOf(ingredientQuantity), ingredientUnit, null);
+        int ret = database.addRecipeIngredient(recipeIngredient);
+        if (ret == -1) {
+            Context context = getApplicationContext();
+            CharSequence text = "Error adding ingredient";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
+        // add ingredient
+        if (ingredientUnit.compareTo("none") == 0)
+            ingredientAdapter.add(editIngredientPopupIngredientEditText.getText().toString() + " [ " + ingredientQuantity + " ]");
+        else
+            ingredientAdapter.add(editIngredientIngredientEditText.getText().toString() + " [ " + ingredientQuantity + " " + ingredientUnit + " ]");
+        recipe.getIngredientList().add(recipeIngredient);
+        editIngredientIngredientEditText.getText().clear();
+    }
+
+    /**
+     *
+     * @param position
+     */
+    public void editIngredient(int position) {
+        if (ingredientUnit.compareTo("none") == 0)
+            ingredientList.set(position, editIngredientPopupIngredientEditText.getText().toString() + " [ " + ingredientQuantity + " ]");
+        else
+            ingredientList.set(position, editIngredientPopupIngredientEditText.getText().toString() + " [ " + ingredientQuantity + " " + ingredientUnit + " ]");
+        ingredientAdapter.notifyDataSetChanged();
+
+        Ingredient i = database.getIngredient(recipe.getIngredientList().get(position).getIngredientID());
+        // change name of ingredient
+        i.setName(ingredientName);
+        database.editIngredient(i);
+
+        // create new RecipeIngredient object for updated Ingredient
+        RecipeIngredient recipeIngredient = recipe.getIngredientList().get(position);
+        //recipeIngredient.setDetails(edit_name.getText().toString());
+        recipeIngredient.setQuantity(Double.valueOf(ingredientQuantity));
+        recipeIngredient.setUnit(ingredientUnit);
+
+        // update ingredient list
+        recipe.getIngredientList().set(position, recipeIngredient);
     }
 
     // Spinner Methods
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // A unit was selected, assign to String
-        ingredient_unit = parent.getItemAtPosition(position).toString();
+        ingredientUnit = parent.getItemAtPosition(position).toString();
     }
 
     @Override

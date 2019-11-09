@@ -392,7 +392,7 @@ class Recipe {
             image = BitmapFactory.decodeStream(new FileInputStream(f));
         } catch (FileNotFoundException e) {
             //Set default image
-            image = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_default_image);
+            image = BitmapFactory.decodeResource(context.getResources(), R.drawable.plate);
         }
 
         return image;

@@ -23,10 +23,10 @@ import java.util.List;
  * This Class is the controller class for the recipe list activity
  */
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnClickListener {
-    RecyclerView mRecyclerView;
-    List<Recipe> recipes;
-    List<RecipeListItem> recipeListItems;
-    DatabaseHelper database = new DatabaseHelper(this);
+    private RecyclerView recyclerView;
+    private List<Recipe> recipes;
+    private List<RecipeListItem> recipeListItems;
+    private DatabaseHelper database = new DatabaseHelper(this);
 
     /**
      * This method is run when the activity is created and sets up the activity
@@ -42,18 +42,18 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
-        mRecyclerView = findViewById(R.id.recipe_list_recycler);
+        recyclerView = findViewById(R.id.recipe_list_recycler);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setItemViewCacheSize(20);
-        mRecyclerView.setDrawingCacheEnabled(true);
-        mRecyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setLayoutManager(layoutManager);
         recipes = database.getAllRecipes();
         checkRecipes();
         getRecipeListItems();
         RecipeAdapter recipeAdapter = new RecipeAdapter(recipeListItems, this);
-        mRecyclerView.setAdapter(recipeAdapter);
+        recyclerView.setAdapter(recipeAdapter);
     }
 
 
@@ -129,6 +129,9 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         }
     }
 
+    /**
+     *
+     */
     private void getRecipeListItems() {
         if (recipes != null) {
             recipeListItems = new ArrayList<RecipeListItem>();

@@ -10,21 +10,15 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.Toast;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
-public class EditRecipeActivity extends AppCompatActivity implements OnClickListener {
+//TODO: Dealing with long recipe titles
+public class EditRecipeActivity extends AppCompatActivity {
     DatabaseHelper database = new DatabaseHelper(this);
     public Recipe recipe;// = new Recipe();
-    private Button btnNext, btnCancel;
-    private EditText editTitle, editServings, editPrepTime, editTotalTime;
+    private EditText recipeNameEditText, servingsEditText, prepTimeEditText, totalTimeEditText;
     private ImageView recipeImage;
     private static final int RESULT_LOAD_IMAGE = 1;
     private int recipeId;
@@ -33,17 +27,11 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_recipe);
-
-        btnNext = (Button) findViewById(R.id.next_btn);
-        btnNext.setOnClickListener(this);
-        btnCancel = findViewById(R.id.cancel_btn);
-        btnCancel.setOnClickListener(this);
-        editTitle = (EditText) findViewById(R.id.edit_title);
-        editServings = (EditText) findViewById(R.id.edit_servings);
-        editPrepTime = (EditText) findViewById(R.id.edit_prep_time);
-        editTotalTime = (EditText) findViewById(R.id.edit_total_time);
-        recipeImage = (ImageView) findViewById(R.id.recipe_image);
-        recipeImage.setOnClickListener(this);
+        recipeNameEditText = (EditText) findViewById(R.id.edit_recipe_recipe_name_edit_text);
+        servingsEditText = (EditText) findViewById(R.id.edit_recipe_servings_edit_text);
+        prepTimeEditText = (EditText) findViewById(R.id.edit_recipe_prep_time_edit_text);
+        totalTimeEditText = (EditText) findViewById(R.id.edit_recipe_total_time_edit_text);
+        recipeImage = (ImageView) findViewById(R.id.edit_recipe_image);
         //retrieving the extra infromation from intent
         newRecipe = getIntent().getBooleanExtra("newRecipe", true);
         if(newRecipe) {
@@ -54,52 +42,55 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
         }
     }
 
-    public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.next_btn:
-                String inputTitle = editTitle.getText().toString();
-                String inputServings = editServings.getText().toString();
-                String inputPrepTime = editPrepTime.getText().toString();
-                String inputTotalTime = editTotalTime.getText().toString();
-                if (inputTitle.length() > 0 && inputServings.length() > 0 && inputPrepTime.length() > 0 && inputTotalTime.length() > 0) {
+    /**
+     *
+     * @param v
+     */
+    public void onEditRecipeNextButtonPressed(View v){
+        String inputTitle = recipeNameEditText.getText().toString();
+        String inputServings = servingsEditText.getText().toString();
+        String inputPrepTime = prepTimeEditText.getText().toString();
+        String inputTotalTime = totalTimeEditText.getText().toString();
+        if (inputTitle.length() > 0 && inputServings.length() > 0 && inputPrepTime.length() > 0 && inputTotalTime.length() > 0) {
 
-                    recipe.setTitle(inputTitle);
-                    recipe.setServings(Double.valueOf(inputServings));
-                    recipe.setPrep_time(Integer.parseInt(inputPrepTime));
-                    recipe.setTotal_time(Integer.parseInt(inputTotalTime));
-                    if(!database.editRecipe(recipe)) {
-                        Context context = getApplicationContext();
-                        CharSequence text = "Error creating recipe";
-                        int duration = Toast.LENGTH_SHORT;
+            recipe.setTitle(inputTitle);
+            recipe.setServings(Double.valueOf(inputServings));
+            recipe.setPrep_time(Integer.parseInt(inputPrepTime));
+            recipe.setTotal_time(Integer.parseInt(inputTotalTime));
+            if(!database.editRecipe(recipe)) {
+                Context context = getApplicationContext();
+                CharSequence text = "Error creating recipe";
+                int duration = Toast.LENGTH_SHORT;
 
-                        Toast toast = Toast.makeText(context, text, duration);
-                        toast.show();
-                    }
-                    else {
-                        Intent intent = new Intent(this, EditIngredientActivity.class);
-                        intent.putExtra("recipeId", recipe.getKeyID());
-                        intent.putExtra("newRecipe", newRecipe);
-                        startActivity(intent);
-                    }
-                }
-                break;
-            case R.id.recipe_image:
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
-                break;
-            case R.id.cancel_btn:
-                if(newRecipe)
-                {
-                    database.deleteRecipe(recipe.getKeyID());
-                }
-                Intent intent = new Intent(this, MainActivity.class);
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+            else {
+                Intent intent = new Intent(this, EditIngredientActivity.class);
+                intent.putExtra("recipeId", recipe.getKeyID());
+                intent.putExtra("newRecipe", newRecipe);
                 startActivity(intent);
-                break;
+            }
         }
-
-
-
     }
+
+    /**
+     *
+     * @param v
+     */
+    public void onEditRecipeImagePressed(View v){
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+    }
+    public void onEditRecipeCancelButtonPressed(View v){
+        if(newRecipe)
+        {
+            database.deleteRecipe(recipe.getKeyID());
+        }
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     // add image
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -146,10 +137,10 @@ public class EditRecipeActivity extends AppCompatActivity implements OnClickList
     private void editRecipe(){
         recipeId = getIntent().getIntExtra("recipeId", -1);
         recipe = database.getRecipe(recipeId);
-        editTitle.setText(recipe.getTitle());
-        editServings.setText(String.valueOf(recipe.getServings()));
-        editPrepTime.setText(String.valueOf(recipe.getPrep_time()));
-        editTotalTime.setText(String.valueOf(recipe.getTotal_time()));
+        recipeNameEditText.setText(recipe.getTitle());
+        servingsEditText.setText(String.valueOf(recipe.getServings()));
+        prepTimeEditText.setText(String.valueOf(recipe.getPrep_time()));
+        totalTimeEditText.setText(String.valueOf(recipe.getTotal_time()));
         recipeImage.setImageBitmap(recipe.getImage(this));
     }
     /**

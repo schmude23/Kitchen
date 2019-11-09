@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:layout_width="fill_parent"
+<LinearLayout android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".EditIngredientActivity">
     <EditText
-        android:id="@+id/edit_text_ingredient"
+        android:id="@+id/edit_ingredient_ingredient_edit_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter ingredient"
+        android:hint="@string/enter_ingredient"
         android:textCursorDrawable="@null"
         android:textSize="24sp" />
 
     <Button
-        android:id="@+id/add_ingredient_btn"
+        android:id="@+id/edit_ingredient_add_ingredient_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Add Ingredient"
+        android:text="@string/add_ingredient"
+        android:onClick="onEditIngredientAddIngredientButtonPressed"
         android:layout_marginBottom="3dp"
         android:background="@drawable/button_style"/>
 
     <TextView
-        android:id="@+id/ingredient_header"
+        android:id="@+id/edit_ingredient_ingredient_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/light_slate_gray"
-        android:text="        Ingredients"
-        android:textColor="#FFFFFF"
+        android:text="@string/ingredients"
+        android:textColor="@color/white"
         android:textSize="14sp" />
 
     <ListView
-        android:id="@+id/ingredient_list"
+        android:id="@+id/edit_ingredient_ingredient_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -43,11 +45,12 @@
 
 
         <Button
-            android:id="@+id/cancel_btn"
+            android:id="@+id/edit_ingredient_finish_button"
             android:layout_width="wrap_content"
             android:layout_weight="0.25"
             android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:text="@string/cancel"
+            android:onClick="onEditIngredientFinishButtonPressed"
             android:background="@drawable/button_style"/>
         <View
             android:layout_width="0dp"
@@ -55,13 +58,14 @@
             android:layout_weight=".5"/>
 
         <Button
-            android:id="@+id/next_btn"
+            android:id="@+id/edit_ingredient_next_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
             android:textColor="@color/black"
+            android:onClick="onEditIngredientNextButtonPressed"
             android:background="@drawable/button_style"
-            android:text="NEXT" />
+            android:text="@string/next" />
 
 
     </LinearLayout>

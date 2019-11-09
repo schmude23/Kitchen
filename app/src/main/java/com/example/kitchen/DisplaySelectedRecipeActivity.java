@@ -18,6 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+//TODO: Dealing with long recipe titles
+// TODO: back button pressed go to recipe list
 
 public class DisplaySelectedRecipeActivity extends AppCompatActivity {
 
