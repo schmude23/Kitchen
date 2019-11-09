@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +25,6 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
      *
      * @param recipes The set of recipes for the adapter
      * @param listener The onClickListener to be used when a recipe is clicked on
-     * @param context the application contxt
      */
     public RecipeAdapter(List<RecipeListItem> recipes, OnClickListener listener) {
         super();
@@ -71,6 +71,11 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
             return 0;
         }
 
+    }
+    public void setFilter(List<RecipeListItem> filteredRecipeList) {
+        recipes = new ArrayList<>();
+        recipes.addAll(filteredRecipeList);
+        notifyDataSetChanged();
     }
 
     /**

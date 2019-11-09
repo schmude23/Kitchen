@@ -1,6 +1,7 @@
 package com.example.kitchen;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     private List<Recipe> recipes;
     private List<RecipeListItem> recipeListItems;
     private DatabaseHelper database = new DatabaseHelper(this);
+    private SearchView searchView;
+    private RecipeAdapter recipeAdapter;
 
     /**
      * This method is run when the activity is created and sets up the activity
@@ -52,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         recipes = database.getAllRecipes();
         checkRecipes();
         getRecipeListItems();
-        RecipeAdapter recipeAdapter = new RecipeAdapter(recipeListItems, this);
+        recipeAdapter = new RecipeAdapter(recipeListItems, this);
         recyclerView.setAdapter(recipeAdapter);
     }
 
@@ -66,6 +69,24 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        final MenuItem menuItem = menu.findItem(R.id.search);
+        searchView = (SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if(!searchView.isIconified())
+                    searchView.setIconified(true);
+                menuItem.collapseActionView();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                final List<RecipeListItem> filteredRecipeList = filter(recipeListItems, newText);
+                recipeAdapter.setFilter(filteredRecipeList);
+                return true;
+            }
+        });
         return true;
     }
 
@@ -134,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
      */
     private void getRecipeListItems() {
         if (recipes != null) {
-            recipeListItems = new ArrayList<RecipeListItem>();
+            recipeListItems = new ArrayList<>();
             for (int i = 0; i < recipes.size(); i++) {
                 String recipe_name = recipes.get(i).getTitle();
                 double servings = recipes.get(i).getServings();
@@ -144,6 +165,23 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                 recipeListItems.add(new RecipeListItem(recipe_name, servings, prep_time, total_time, image, recipes.get(i).getFavorited()));
             }
         }
+    }
+
+    /**
+     *
+     * @param list
+     * @param query
+     * @return
+     */
+    private List<RecipeListItem> filter(List<RecipeListItem> list, String query){
+        query=query.toLowerCase();
+        final List<RecipeListItem> filteredList = new ArrayList<>();
+        for(RecipeListItem recipe: list){
+            final String text = recipe.getRecipeName().toLowerCase();
+            if(text.contains(query))
+                filteredList.add(recipe);
+        }
+        return filteredList;
     }
 }
 

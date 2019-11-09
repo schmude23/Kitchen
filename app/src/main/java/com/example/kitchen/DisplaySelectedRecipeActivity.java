@@ -280,6 +280,10 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
                     item.setTitle("Unfavorite Recipe");
                 }
                 return true;
+            case R.id.action_share_recipe:
+                Intent shareRecipe = new Intent(this, ShareRecipeActivity.class);
+                shareRecipe.putExtra("recipeId", recipe.getKeyID());
+                startActivity(shareRecipe);
             default:
                 return super.onOptionsItemSelected(item);
         }
