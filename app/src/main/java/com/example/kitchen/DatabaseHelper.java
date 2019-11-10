@@ -65,7 +65,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_SHOPPING_CART_LIST = "SHOPPING_CART_LIST";
     public static final String SC_KEY_ID = "ID";
     public static final String SC_INGREDIENT_ID = "INGREDIENT_ID";
-    public static final String SC_RECIPE_ID = "RECIPE_ID";
     public static final String SC_QUANTITY = "QUANTITY";
     public static final String SC_UNIT = "UNIT";
 
@@ -133,7 +132,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Recipe Category Table
         String CREATE_SHOPPING_CART_TABLE = "CREATE TABLE " + TABLE_SHOPPING_CART_LIST + "("
                 + SC_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + SC_RECIPE_ID + " INTEGER, "
                 + SC_INGREDIENT_ID + " INTEGER, "
                 + SC_QUANTITY + " INTEGER,"
                 + SC_UNIT + " TEXT" +")";
@@ -243,14 +241,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Recipe getRecipe(int recipeId) {
         Recipe recipe = null;
         SQLiteDatabase db = this.getReadableDatabase();
-            Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_KEY_ID + " = ? ", new String[]{String.valueOf(recipeId)});
-            if (cursor != null) {
-                cursor.moveToFirst();
-                recipe = mapRecipe(cursor);
-                cursor.moveToNext();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_KEY_ID + " = ? ", new String[]{String.valueOf(recipeId)});
+        if (cursor != null) {
+            cursor.moveToFirst();
+            recipe = mapRecipe(cursor);
+            cursor.moveToNext();
 
-                cursor.close();
-            }
+            cursor.close();
+        }
 
         if(recipe != null) {
             //Getting Ingredient List
@@ -308,6 +306,66 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method retrieves all recipes equal to or below the specified prep time
+     *
+     * @param prepTime
+     * @return The recipe corresponding to the provided recipe Title, or null if one is not found.
+     */
+    public ArrayList<Recipe> getRecipeByPrepTime(int prepTime) {
+        //TODO: TEST
+        Recipe recipe = null;
+        ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_PREP_TIME + " <= ? ", new String[]{String.valueOf(prepTime)});
+        if (cursor != null) {
+            while (!cursor.isAfterLast()) {
+                cursor.moveToFirst();
+                recipe = mapRecipe(cursor);
+                recipeList.add(recipe);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+
+        if (recipeList.size() == 0) {
+            return null;
+        }
+
+        return recipeList;
+    }
+
+    /**
+     * This method retrieves all recipes equal to or below the specified total time
+     *
+     * @param totalTime
+     * @return The recipe corresponding to the provided recipe Title, or null if one is not found.
+     */
+    public ArrayList<Recipe> getRecipeByTotalTime(int totalTime) {
+        //TODO: TEST
+        Recipe recipe = null;
+        ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_TOTAL_TIME + " <= ? ", new String[]{String.valueOf(totalTime)});
+        if (cursor != null) {
+            while (!cursor.isAfterLast()) {
+                cursor.moveToFirst();
+                recipe = mapRecipe(cursor);
+                recipeList.add(recipe);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+
+        if (recipeList.size() == 0) {
+            return null;
+        }
+
+        return recipeList;
+    }
+
+    /**
      * This method retrieves all recipes which contain this ingredient id
      *
      * @param ingredientId
@@ -335,7 +393,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         //finding and creating list of all found recipes
-            //recipeIds in type String to utilize contains
+        //recipeIds in type String to utilize contains
         String[] recipeIds = new String[recipeIngredientList.size()];
         int count = 0; //used to store recipe at proper location
 
@@ -383,7 +441,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     //cycle through all found recipes so far
                     for(int k = 0; k < recipeList.size(); k++) {
                         if (String.valueOf(tmpList.get(j).getKeyID()).contains(String.valueOf(recipeList.get(k).getKeyID()))) {
-                                containsList.add(recipeList.get(k));
+                            containsList.add(recipeList.get(k));
                         }
                     }
                 }
@@ -424,6 +482,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return null;
         }
 
+
         //finding and creating list of all found recipes
         //recipeIds in type String to utilize contains
         String[] recipeIds = new String[recipeCategoryList.size()];
@@ -440,12 +499,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //create list of all found recipes (full recipe built)
         ArrayList<Recipe> recipeList = new ArrayList<>();
-        for(int j = 0; j <= recipeIds.length; j++ ){
+        for(int j = 0; j < recipeIds.length; j++ ){
             recipeList.add(getRecipe(Integer.parseInt(recipeIds[j])));
         }
 
         return recipeList;
     }
+
 
     /**
      * This method returns a list of all recipes
@@ -589,10 +649,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             //Create a new map of values, where column names are the keys
             ContentValues contentValues = new ContentValues();
-            contentValues.put(SC_RECIPE_ID, recipeId);
             contentValues.put(SC_INGREDIENT_ID, ingredient.getIngredientID());
             contentValues.put(SC_QUANTITY, ingredient.getQuantity());
-            contentValues.put(RI_UNIT, ingredient.getUnit());
+            contentValues.put(SC_UNIT, ingredient.getUnit());
 
             // Insert the new row, returning the primary key value of the new row
             int newRowId = (int) sqLiteDatabase.insert(TABLE_RECIPE_INGREDIENT_LIST, null, contentValues);
@@ -600,8 +659,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             //check to make sure properly inserted
             if(newRowId == -1){
                 //delete all things aready created
-
-                deleteShoppingCartRecipe(recipeId);
+                //TODO: if failure you need to delete ALL added ingredients using int[]
+                deleteShoppingCartIngredient(newRowId);
                 return false;
             }
         }
@@ -615,9 +674,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @return true if the operation was successful, false otherwise
      */
-    public boolean getShoppingCartRecipes(){
-        //TODO: implement
-        return false;
+    public ArrayList<RecipeIngredient> getShoppingCartIngredients(){
+        //TODO: CORRECT/TEST
+        RecipeIngredient recipeIngredient;
+        ArrayList<RecipeIngredient> shoppingCartList = new ArrayList<RecipeIngredient>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SHOPPING_CART_LIST, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                recipeIngredient = mapShoppingCartIngredient(cursor);
+                shoppingCartList.add(recipeIngredient);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        if (shoppingCartList.size() == 0) {
+            return null;
+        }
+        return shoppingCartList;
     }
 
     /**
@@ -625,32 +701,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @return true if the operation was successful, false otherwise
      */
-    public boolean getShoppingCartIngredients(){
-        //TODO: implement
-        return false;
-    }
-
-    /**
-     * This method adds the recipe information to the shopping cart
-     *
-     * @return true if the operation was successful, false otherwise
-     */
-    public boolean updateShoppingCartRecipe(){
-        //TODO: implement not sure if needed or if update is the scaling
-        return false;
-
-    }
-
-    /**
-     * This method adds the recipe information to the shopping cart
-     *
-     * @param recipeId
-     * @return true if the operation was successful, false otherwise
-     */
-    public boolean deleteShoppingCartRecipe(int recipeId){
-        //TODO: Test
+    public boolean updateShoppingCartIngredient(RecipeIngredient ingredient){
+        //TODO: Correct/Test
+        int id = ingredient.getKeyID();
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        long returned = sqLiteDatabase.delete(TABLE_SHOPPING_CART_LIST, SC_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
+
+        ContentValues cVals = new ContentValues();
+        cVals.put(SC_INGREDIENT_ID, ingredient.getIngredientID());
+        cVals.put(SC_QUANTITY, ingredient.getQuantity());
+        cVals.put(SC_UNIT, ingredient.getUnit());
+
+        long returned = sqLiteDatabase.update(TABLE_INGREDIENT_LIST, cVals, IT_KEY_ID + " = ?", new String[]{String.valueOf(id)});
+        if (returned == -1) {
+            return false;
+        }
+        return true;
+
+    }
+
+    /**
+     * This method adds the recipe information to the shopping cart
+     *
+     * @param ingredientId
+     * @return true if the operation was successful, false otherwise
+     */
+    public boolean deleteShoppingCartIngredient(int ingredientId){
+        //TODO: Correct/Test
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        long returned = sqLiteDatabase.delete(TABLE_SHOPPING_CART_LIST, SC_INGREDIENT_ID + " = ?", new String[]{String.valueOf(ingredientId)});
         if (returned == 0) {
             return false;
         }
@@ -718,10 +796,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public int addIngredient(Ingredient ingredient) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        //TODO: TEST: if ingredient already exists
+
         if(getIngredient(ingredient.getName()) != -1){
             return getIngredient(ingredient.getName());
-       }
+        }
         //adding ingredients
         ContentValues cVals = new ContentValues();
         cVals.put(IT_NAME, ingredient.getName());
@@ -949,6 +1027,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Insert the new row, returning the primary key value of the new row
         int newRowId = (int) db.insert(TABLE_RECIPE_CATEGORY_LIST, null, contentValues);
+        recipeCategory.setKeyID(newRowId);
 
         db.close();
         return newRowId;
@@ -964,10 +1043,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Get the Data Repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
 
-        //TODO: TEST: if category already exists
-//        if(getCategory(category.getName()) != -1){
-  //          return getCategory(category.getName());
-    //    }
+        if(getCategory(category.getName()) != -1){
+            return getCategory(category.getName());
+        }
         //Create a new map of values, where column names are the keys
         ContentValues contentValues = new ContentValues();
         contentValues.put(CT_NAME, category.getName());
@@ -1059,26 +1137,114 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method returns a new quantity based on the initial unit and the desired unit
-     * first the measurement is brought to a base unit. then rescaled.
+     * This method returns the recipe based on the initial unit and the desired unit
      *
-     * @param unit1, unit2, quantity
+     * @param recipe, unit1, unit2
      * @return If successful, will return a value of the quantity in the new unit
      */
-    public int convertMeasurements(String unit1, int quantity, String unit2) {
-        //TODO: implement
-        return -1;
+    public Recipe convertRecipeIngredientUnits(Recipe recipe, String origUnit, String reqUnit) {
+        //TODO: Correct/Test
+        List<RecipeIngredient> ingredientList = recipe.getIngredientList();
+        for(int i = 0; i < ingredientList.size(); i++){
+            if(ingredientList.get(i).getUnit().contentEquals(origUnit)){
+                double tempQuant = convertUnit(origUnit, reqUnit,ingredientList.get(i).getQuantity());
+                if(tempQuant != -1){
+                    ingredientList.get(i).setQuantity(tempQuant);
+                    ingredientList.get(i).setUnit(reqUnit);
+                }
+            }
+        }
+        recipe.setIngredientList(ingredientList);
+        return recipe;
     }
 
     /**
-     * This method updates the needed quantities of a recipe.
+     * This method returns the updated quantity. First, the measurement is reduced
+     * to the base unit of cups. Then rescaled back to the requested unit.
      *
-     * @param currentServing, desiredServing
+     * @param origUnit, reqUnit, quantity
+     * @return If successful, will return a value of the quantity in the new unit
+     */
+    private double convertUnit(String origUnit, String reqUnit, double quantity){
+        //converting all values to cups
+        if(origUnit.contentEquals("tablespoon(s)")){
+            quantity = quantity*0.0625;
+        }
+        if(origUnit.contentEquals("teaspoon(s)")){
+            quantity = quantity*0.0208333;
+        }
+        if(origUnit.contentEquals("cup(s)")){
+            quantity = quantity*0.125;
+        }
+        if(origUnit.contentEquals("pint(s)")){
+            quantity = quantity*2;
+        }
+        if(origUnit.contentEquals("quart(s)")){
+            quantity = quantity*4;
+        }
+        if(origUnit.contentEquals("gallon(s)")){
+            quantity = quantity*16;
+        }
+        if(origUnit.contentEquals("pound(s)")){
+            quantity = quantity*1.917222837;
+        }
+        if(origUnit.contentEquals("pinch(es)")){
+            quantity = quantity/768;
+        }
+        if(origUnit.contentEquals("none")){
+            return -1;
+        }
+
+        //converting quantity to desired unit.
+        if(reqUnit.contentEquals("tablespoon(s)")){
+            quantity = quantity/0.0625;
+        }
+        if(reqUnit.contentEquals("teaspoon(s)")){
+            quantity = quantity/0.0208333;
+        }
+        if(reqUnit.contentEquals("cup(s)")){
+            quantity = quantity/0.125;
+        }
+        if(reqUnit.contentEquals("pint(s)")){
+            quantity = quantity/2;
+        }
+        if(reqUnit.contentEquals("quart(s)")){
+            quantity = quantity/4;
+        }
+        if(reqUnit.contentEquals("gallon(s)")){
+            quantity = quantity/16;
+        }
+        if(reqUnit.contentEquals("pound(s)")){
+            quantity = quantity/1.917222837;
+        }
+        if(reqUnit.contentEquals("pinch(es)")){
+            quantity = quantity*768;
+        }
+        if(reqUnit.contentEquals("none")){
+            return -1;
+        }
+        //converts the Double to have 2 decimal places
+        return Double.parseDouble(String.format("%.2f", quantity));
+    }
+
+
+    /**
+     * This method scales and updates all ingredients as well as the recipe objects serving size.
+     * This method does NOT update the database
+     *
+     * @param recipe, desiredServing
      * @return If successful, will return true
      */
-    public boolean scaleRecipe(int currentServing, int desiredServing) {
+    public Recipe scaleRecipe(Recipe recipe, double desiredServing) {
         //TODO: implement should recipe scaler be within a recipe?
-        return false;
+        double scalar = desiredServing/recipe.getServings();
+        List<RecipeIngredient> ingredientList = recipe.getIngredientList();
+        for(int i = 0; i < ingredientList.size(); i++){
+            ingredientList.get(i).setQuantity(ingredientList.get(i).getQuantity()*scalar);
+        }
+        recipe.setIngredientList(ingredientList);
+        recipe.setServings(desiredServing);
+        return recipe;
     }
 
     /**
@@ -1305,4 +1471,44 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return ingredient;
     }
 
+    /**
+     * This method returns a built Recipe Ingredient object
+     *
+     * @return If successful in fetching the cursor and building the recipe ingredient, it will
+     * return an Recipe Ingredient Object, if not the method will return null.
+     */
+    private RecipeIngredient mapShoppingCartIngredient(Cursor cursor) {
+        RecipeIngredient recipeIngredient = new RecipeIngredient();
+        //had to take this out so ingredient can set name
+        int idIndex = -1;
+        try {
+            if (cursor != null) {
+                if (cursor.getColumnIndex(SC_KEY_ID) != -1) {
+                    idIndex = cursor.getColumnIndexOrThrow(SC_KEY_ID);
+                    recipeIngredient.setKeyID((cursor.getInt(idIndex)));
+                }
+                if (cursor.getColumnIndex(SC_INGREDIENT_ID) != -1) {
+                    int ingredientIdIndex = cursor.getColumnIndexOrThrow(SC_INGREDIENT_ID);
+                    recipeIngredient.setIngredientID(cursor.getInt(ingredientIdIndex));
+                }
+                if (cursor.getColumnIndex(SC_QUANTITY) != -1) {
+                    int quantityIndex = cursor.getColumnIndexOrThrow(SC_QUANTITY);
+                    recipeIngredient.setQuantity(cursor.getDouble(quantityIndex));
+                }
+                if (cursor.getColumnIndex(SC_UNIT) != -1) {
+                    int unitIndex = cursor.getColumnIndexOrThrow(SC_UNIT);
+                    recipeIngredient.setUnit(cursor.getString(unitIndex));
+                }
+            }
+        } catch (CursorIndexOutOfBoundsException ex) {
+            return null;
+        }
+        if (recipeIngredient.getKeyID() == -1) {
+            return null;
+        }
+        return recipeIngredient;
+
+    }
 }
+
+
