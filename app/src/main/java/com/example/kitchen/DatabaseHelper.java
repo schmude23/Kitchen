@@ -440,7 +440,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //create list of all found recipes (full recipe built)
         ArrayList<Recipe> recipeList = new ArrayList<>();
-        for(int j = 0; j <= recipeIds.length; j++ ){
+        for(int j = 0; j < recipeIds.length; j++ ){
             recipeList.add(getRecipe(Integer.parseInt(recipeIds[j])));
         }
 
@@ -718,7 +718,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public int addIngredient(Ingredient ingredient) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        //TODO: TEST: if ingredient already exists
+
         if(getIngredient(ingredient.getName()) != -1){
             return getIngredient(ingredient.getName());
        }
@@ -949,6 +949,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Insert the new row, returning the primary key value of the new row
         int newRowId = (int) db.insert(TABLE_RECIPE_CATEGORY_LIST, null, contentValues);
+        recipeCategory.setKeyID(newRowId);
 
         db.close();
         return newRowId;
@@ -964,10 +965,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Get the Data Repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
 
-        //TODO: TEST: if category already exists
-//        if(getCategory(category.getName()) != -1){
-  //          return getCategory(category.getName());
-    //    }
+        if(getCategory(category.getName()) != -1){
+            return getCategory(category.getName());
+        }
         //Create a new map of values, where column names are the keys
         ContentValues contentValues = new ContentValues();
         contentValues.put(CT_NAME, category.getName());
