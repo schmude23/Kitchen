@@ -14,11 +14,11 @@
 
 
         <EditText
-            android:id="@+id/edit_title"
+            android:id="@+id/edit_recipe_recipe_name_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Title"
+            android:hint="@string/name"
             android:textCursorDrawable="@null"
             android:inputType="textPersonName" />
 
@@ -29,45 +29,45 @@
             android:background="@color/light_slate_gray" />
 
         <EditText
-            android:id="@+id/edit_servings"
+            android:id="@+id/edit_recipe_servings_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Servings"
+            android:hint="@string/servings"
             android:textCursorDrawable="@null"
             android:inputType="numberDecimal" />
 
         <EditText
-            android:id="@+id/edit_prep_time"
+            android:id="@+id/edit_recipe_prep_time_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:textCursorDrawable="@null"
-            android:hint="Prep Time (minutes)"
+            android:hint="@string/prep_time_min"
             android:inputType="time" />
 
         <EditText
-            android:id="@+id/edit_total_time"
+            android:id="@+id/edit_recipe_total_time_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:textCursorDrawable="@null"
-            android:hint="Total Time (minutes)"
+            android:hint="@string/total_time_min"
             android:inputType="time" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Upload Image"
+            android:text="@string/upload_image"
             android:textAlignment="center"
             android:textSize="20sp" />
 
         <ImageView
-            android:id="@+id/recipe_image"
+            android:id="@+id/edit_recipe_image"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="@android:string/untitled"
+            android:onClick="onEditRecipeImagePressed"
             app:srcCompat="@drawable/ic_default_image" />
 
         <LinearLayout
@@ -78,24 +78,26 @@
 
 
                 <Button
-                    android:id="@+id/cancel_btn"
+                    android:id="@+id/edit_recipe_cancel_button"
                     android:layout_width="wrap_content"
                     android:layout_weight="0.25"
                     android:layout_height="wrap_content"
-                    android:text="Cancel"
-                    android:background="@drawable/button_style"/>
+                    android:text="@string/cancel"
+                    android:background="@drawable/button_style"
+                    android:onClick="onEditRecipeCancelButtonPressed"/>
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight=".5"/>
 
                 <Button
-                    android:id="@+id/next_btn"
+                    android:id="@+id/edit_recipe_next_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
-                    android:text="NEXT"
-                    android:background="@drawable/button_style"/>
+                    android:text="@string/next"
+                    android:background="@drawable/button_style"
+                    android:onClick="onEditRecipeNextButtonPressed"/>
 
 
         </LinearLayout>

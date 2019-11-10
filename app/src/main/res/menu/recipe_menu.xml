@@ -6,23 +6,26 @@
     <item
         android:id="@+id/action_view_cart"
         android:icon="@drawable/ic_cart"
-        android:title="Cart"
+        android:title="@string/cart"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_home"
         android:icon="@drawable/ic_home"
-        android:title="Cart"
+        android:title="home"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_add_to_cart"
         android:title="Add to Cart"/>
     <item
         android:id="@+id/action_edit_recipe"
-        android:title="Edit Recipe"/>
+        android:title="@string/edit_recipe"/>
     <item
         android:id="@+id/action_favorite"
-        android:title="Favorite Recipe"/>
+        android:title="@string/favorite_recipe"/>
+    <item
+        android:id="@+id/action_share_recipe"
+        android:title="@string/share_recipe"/>
     <item
         android:id="@+id/action_delete_recipe"
-        android:title="Delete Recipe"/>
+        android:title="@string/delete_recipe"/>
 </menu>

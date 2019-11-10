@@ -6,9 +6,12 @@
     <string name="category">Category</string>
     <string name="ingredients">Ingredients</string>
     <string name="add_ingredient">Add Ingredient</string>
+    <string name="enter_ingredient">Enter Ingredient</string>
     <string name="directions">Directions</string>
     <string name="add_direction">Add Direction</string>
     <string name="categories">Categories</string>
+    <string name="add_category">Add Category</string>
+    <string name="enter_category">Enter Category</string>
     <string name="recipes">Recipes</string>
     <string name="okay">Okay</string>
     <string name="done">Done</string>
@@ -34,6 +37,13 @@
     <string name="limit_to">Limit To</string>
     <string name="exclude">Exclude</string>
     <string name="add">Add</string>
+    <string name="remove">Remove</string>
+    <string name="quantity">Quantity</string>
+    <string name="next">Next</string>
+    <string name="enter_direction">Enter Direction</string>
+    <string name="prep_time_min">Prep Time (minutes)</string>
+    <string name="total_time_min">Total Time (minutes)</string>
+    <string name="upload_image">Upload Image</string>
 
     <string-array name="units_array">
         <item>teaspoon(s)</item>

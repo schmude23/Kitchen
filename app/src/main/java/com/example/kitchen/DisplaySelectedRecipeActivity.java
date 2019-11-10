@@ -18,6 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+//TODO: Dealing with long recipe titles
+// TODO: back button pressed go to recipe list
 
 public class DisplaySelectedRecipeActivity extends AppCompatActivity {
 
@@ -278,6 +280,10 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
                     item.setTitle("Unfavorite Recipe");
                 }
                 return true;
+            case R.id.action_share_recipe:
+                Intent shareRecipe = new Intent(this, ShareRecipeActivity.class);
+                shareRecipe.putExtra("recipeId", recipe.getKeyID());
+                startActivity(shareRecipe);
             default:
                 return super.onOptionsItemSelected(item);
         }

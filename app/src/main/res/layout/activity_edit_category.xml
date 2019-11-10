@@ -5,33 +5,34 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <EditText
-        android:id="@+id/edit_category"
+        android:id="@+id/edit_category_category_edit_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter category"
+        android:hint="@string/enter_category"
         android:textCursorDrawable="@null"
         android:inputType="textPersonName"
         android:textSize="24sp" />
 
     <Button
-        android:id="@+id/btn_add_category"
+        android:id="@+id/edit_category_add_category_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Add Category"
+        android:text="@string/add_category"
         android:layout_marginBottom="3dp"
-        android:background="@drawable/button_style"/>
+        android:background="@drawable/button_style"
+        android:onClick="onEditCategoryAddCategoryButtonPressed"/>
 
     <TextView
-        android:id="@+id/category_header"
+        android:id="@+id/edit_category_category_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/light_slate_gray"
-        android:text="        Categories"
+        android:text="@string/categories"
         android:textColor="#FFFFFF"
         android:textSize="14sp" />
 
     <ListView
-        android:id="@+id/category_list"
+        android:id="@+id/edit_category_category_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -45,12 +46,13 @@
 
 
         <Button
-            android:id="@+id/cancel_btn"
+            android:id="@+id/edit_category_cancel_button"
             android:layout_width="wrap_content"
             android:layout_weight="0.25"
             android:layout_height="wrap_content"
             android:background="@drawable/button_style"
-            android:text="Cancel" />
+            android:text="@string/cancel"
+            android:onClick="onEditCategoryCancelButtonPressed"/>
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -58,13 +60,13 @@
 
 
         <Button
-            android:id="@+id/next_btn"
+            android:id="@+id/edit_category_next_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:onClick="onEditCategoryNextButtonPressed"
             android:layout_weight="0.25"
             android:gravity="center"
-            android:text="NEXT"
+            android:text="@string/next"
             android:background="@drawable/button_style"/>
 
 

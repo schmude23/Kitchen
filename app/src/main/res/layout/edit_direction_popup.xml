@@ -9,7 +9,7 @@
     android:outlineSpotShadowColor="@color/colorPrimary">
 
     <EditText
-        android:id="@+id/edit_direction"
+        android:id="@+id/edit_direction_popup_direction_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -18,7 +18,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
-        android:hint="Direction"
+        android:hint="@string/direction"
         android:textCursorDrawable="@null"
         android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -37,28 +37,30 @@
         android:background="@color/light_slate_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_direction" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_direction_popup_direction_edit_text" />
 
     <Button
-        android:id="@+id/button_okay"
+        android:id="@+id/edit_direction_popup_okay_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="okay"
+        android:text="@string/okay"
         android:background="@drawable/button_style"
         android:layout_marginRight="20dp"
+        android:onClick="onEditDirectionPopupOkayButtonPressed"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_direction" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_direction_popup_direction_edit_text" />
 
     <Button
-        android:id="@+id/button_remove"
+        android:id="@+id/edit_direction_popup_remove_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
         android:layout_marginTop="24dp"
         android:layout_marginLeft="20dp"
-        android:text="remove"
+        android:text="@string/remove"
+        android:onClick="onEditDirectionPopupRemoveButtonPressed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_direction" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_direction_popup_direction_edit_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

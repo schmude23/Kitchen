@@ -9,7 +9,7 @@
     android:outlineSpotShadowColor="@color/colorPrimary">
 
     <EditText
-        android:id="@+id/edit_category"
+        android:id="@+id/edit_category_popup_category_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -18,7 +18,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
-        android:hint="Category"
+        android:hint="@string/category"
         android:inputType="textPersonName"
         android:textCursorDrawable="@null"
         android:textSize="22sp"
@@ -36,29 +36,31 @@
         android:background="@color/light_slate_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_category" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_category_popup_category_edit_text" />
 
     <Button
-        android:id="@+id/button_okay"
+        android:id="@+id/edit_category_popup_okay_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="okay"
+        android:text="@string/okay"
         android:layout_marginRight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_category"
-        android:background="@drawable/button_style"/>
+        app:layout_constraintTop_toBottomOf="@+id/edit_category_popup_category_edit_text"
+        android:background="@drawable/button_style"
+        android:onClick="onEditCategoryPopupOkayButtonPressed"/>
 
     <Button
-        android:id="@+id/button_remove"
+        android:id="@+id/edit_category_popup_remove_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="remove"
+        android:text="@string/remove"
         android:layout_marginLeft="20dp"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_category"
-        android:background="@drawable/button_style"/>
+        app:layout_constraintTop_toBottomOf="@+id/edit_category_popup_category_edit_text"
+        android:background="@drawable/button_style"
+        android:onClick="onEditCategoryPopupRemoveButtonPressed"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
