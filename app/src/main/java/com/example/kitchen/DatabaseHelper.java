@@ -242,7 +242,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Recipe recipe = null;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_KEY_ID + " = ? ", new String[]{String.valueOf(recipeId)});
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             recipe = mapRecipe(cursor);
             cursor.moveToNext();
@@ -277,7 +277,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_TITLE + " = ? ", new String[]{String.valueOf(recipeTitle)});
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             recipe = mapRecipe(cursor);
             cursor.moveToNext();
@@ -318,7 +318,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_PREP_TIME + " <= ? ", new String[]{String.valueOf(prepTime)});
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             while (!cursor.isAfterLast()) {
                 cursor.moveToFirst();
                 recipe = mapRecipe(cursor);
@@ -348,7 +348,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_TOTAL_TIME + " <= ? ", new String[]{String.valueOf(totalTime)});
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             while (!cursor.isAfterLast()) {
                 cursor.moveToFirst();
                 recipe = mapRecipe(cursor);
@@ -379,7 +379,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //pulling all recipe ingredients pertaining to ingredient id
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_INGREDIENT_LIST + "  WHERE " + RI_KEY_ID + " = ? ", new String[]{String.valueOf(ingredientId)});
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 recipeIngredient = mapRecipeIngredient(cursor);
@@ -408,7 +408,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //create list of all found recipes (full recipe built)
         ArrayList<Recipe> recipeList = new ArrayList<>();
-        for(int j = 0; j <= recipeIds.length; j++ ){
+        for(int j = 0; j < recipeIds.length; j++ ){
             recipeList.add(getRecipe(Integer.parseInt(recipeIds[j])));
         }
 
@@ -469,7 +469,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //pulling all recipe categories pertaining to ingredient id
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_CATEGORY_LIST + "  WHERE " + RC_KEY_ID + " = ? ", new String[]{String.valueOf(categoryId)});
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 recipeCategory = mapRecipeCategory(cursor);
@@ -519,7 +519,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST, null);
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 recipe = mapRecipe(cursor);
@@ -641,6 +641,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean addRecipeToCart(int recipeId){
         //TODO: Test
         Recipe recipe = getRecipe(recipeId);
+        if(recipe == null){
+            return false;
+        }
         List<RecipeIngredient> recipeIngredientList = recipe.getIngredientList();
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
@@ -681,7 +684,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SHOPPING_CART_LIST, null);
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 recipeIngredient = mapShoppingCartIngredient(cursor);
@@ -755,6 +758,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Insert the new row, returning the primary key value of the new row
         int newRowId = (int) db.insert(TABLE_RECIPE_INGREDIENT_LIST, null, contentValues);
+        recipeIngredient.setKeyID(newRowId);
 
         db.close();
         return newRowId;
@@ -773,7 +777,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_INGREDIENT_LIST + "  WHERE " + RI_RECIPE_ID + " = ? ", new String[]{String.valueOf(recipeId)});
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 recipeIngredient = mapRecipeIngredient(cursor);
@@ -827,7 +831,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_INGREDIENT_LIST + "  WHERE " + IT_KEY_ID + " = ? ", new String[]{String.valueOf(ingredientID)});
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             ingredient = mapIngredient(cursor);
             cursor.moveToNext();
@@ -840,7 +844,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * This method retrieves the ingredient for the given ingredient Title
+     *        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_TITLE + " = ? ", new String[]{String.valueOf(recipeTitle)});
+     *         if (cursor != null) {
+     *             cursor.moveToFirst();
+     *             recipe = mapRecipe(cursor);
+     *             cursor.moveToNext();
      *
+     *             cursor.close();
+     *         }
      * @param ingredientTitle
      * @return The recipe corresponding to the provided ingredient Title, or -1 if one is not found.
      */
@@ -850,7 +861,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_INGREDIENT_LIST + "  WHERE " + IT_NAME + " = ? ", new String[]{String.valueOf(ingredientTitle)});
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             ingredient = mapIngredient(cursor);
             cursor.moveToNext();
@@ -951,7 +962,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_DIRECTIONS_LIST + "  WHERE " + RD_RECIPE_ID + " = ? ", new String[]{String.valueOf(recipeId)});
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 recipeDirection = mapRecipeDirection(cursor);
@@ -994,7 +1005,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_CATEGORY_LIST + "  WHERE " + RC_RECIPE_ID + " = ? ", new String[]{String.valueOf(recipeId)});
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 recipeCategory = mapRecipeCategory(cursor);
@@ -1071,7 +1082,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CATEGORY_LIST + "  WHERE " + IT_KEY_ID + " = ? ", new String[]{String.valueOf(categoryID)});
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             category = mapCategory(cursor);
             cursor.moveToNext();
@@ -1094,7 +1105,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CATEGORY_LIST + "  WHERE " + CT_NAME + " = ? ", new String[]{String.valueOf(categoryTitle)});
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             category = mapCategory(cursor);
             cursor.moveToNext();
@@ -1195,7 +1206,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return -1;
         }
 
-        //converting quantity to desired unit.
+        //converting quantity to desired unit
         if(reqUnit.contentEquals("tablespoon(s)")){
             quantity = quantity/0.0625;
         }
@@ -1256,7 +1267,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Recipe mapRecipe(Cursor cursor) {
         Recipe recipe = new Recipe();
         try {
-            if (cursor != null) {
+            if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
                     int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
                     recipe.setKeyID((cursor.getInt(idIndex)));
@@ -1308,7 +1319,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //had to take this out so ingredient can set name
         int idIndex = -1;
         try {
-            if (cursor != null) {
+            if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
                     idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
                     recipeIngredient.setKeyID((cursor.getInt(idIndex)));
@@ -1353,7 +1364,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private RecipeDirection mapRecipeDirection(Cursor cursor) {
         RecipeDirection recipeDirection = new RecipeDirection();
         try {
-            if (cursor != null) {
+            if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.getColumnIndex(RD_KEY_ID) != -1) {
                     int idIndex = cursor.getColumnIndexOrThrow(RD_KEY_ID);
                     recipeDirection.setKeyID((cursor.getInt(idIndex)));
@@ -1390,7 +1401,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private RecipeCategory mapRecipeCategory(Cursor cursor) {
         RecipeCategory recipeCategory = new RecipeCategory();
         try {
-            if (cursor != null) {
+            if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
                     int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
                     recipeCategory.setKeyID((cursor.getInt(idIndex)));
@@ -1422,7 +1433,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Category mapCategory(Cursor cursor) {
         Category category = new Category();
         try {
-            if (cursor != null) {
+            if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
                     int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
                     category.setKeyID((cursor.getInt(idIndex)));
@@ -1451,7 +1462,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Ingredient mapIngredient(Cursor cursor) {
         Ingredient ingredient = new Ingredient();
         try {
-            if (cursor != null) {
+            if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
                     int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
                     ingredient.setKeyID((cursor.getInt(idIndex)));
@@ -1482,7 +1493,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //had to take this out so ingredient can set name
         int idIndex = -1;
         try {
-            if (cursor != null) {
+            if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.getColumnIndex(SC_KEY_ID) != -1) {
                     idIndex = cursor.getColumnIndexOrThrow(SC_KEY_ID);
                     recipeIngredient.setKeyID((cursor.getInt(idIndex)));
@@ -1510,5 +1521,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 }
-
 
