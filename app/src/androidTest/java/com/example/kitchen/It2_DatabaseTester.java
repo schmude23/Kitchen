@@ -635,14 +635,13 @@ public class It2_DatabaseTester {
     @Test
     public void addRecipeToCart_CorrectInformation() {
         setUp();
-        //TODO: FIX DATABASE
+        ArrayList<RecipeIngredient> prevShoppingCart = testDatabase.getShoppingCartIngredients();
         testDatabase.addRecipeToCart(recipeID);
-        ArrayList<RecipeIngredient> shoppingCart = testDatabase.getShoppingCartIngredients();
-        assertEquals("addRecipeToCart - Adds one ingredient", 1, shoppingCart.size());
-        assertEquals("addRecipeToCart - Correct ingredientID", ingredientID, shoppingCart.get(0).getIngredientID());
-        assertEquals("addRecipeToCart - Correct Quantity", 2, shoppingCart.get(0).getQuantity(), 0);
-        assertEquals("addRecipeToCart - Correct Unit", "cup(s)", shoppingCart.get(0).getUnit());
-        assertEquals("addRecipeToCart - Correct Details", "White Flour", shoppingCart.get(0).getDetails());
+        ArrayList<RecipeIngredient> newShoppingCart = testDatabase.getShoppingCartIngredients();
+        assertEquals("addRecipeToCart - Adds one ingredient", 1, (newShoppingCart.size()-prevShoppingCart.size()));
+        assertEquals("addRecipeToCart - Correct ingredientID", ingredientID, newShoppingCart.get(newShoppingCart.size()-1).getIngredientID());
+        assertEquals("addRecipeToCart - Correct Quantity", 2, newShoppingCart.get(newShoppingCart.size()-1).getQuantity(), 0);
+        assertEquals("addRecipeToCart - Correct Unit", "cup(s)", newShoppingCart.get(newShoppingCart.size()-1).getUnit());
         tearDown();
     }
 
@@ -685,13 +684,11 @@ public class It2_DatabaseTester {
     @Test
     public void getShoppingCartIngredients_OneInstanceCorrect() {
         setUp();
-        //TODO: FIX DATABASE
         testDatabase.addRecipeToCart(recipeID);
-        ArrayList<RecipeIngredient> shoppingCart = testDatabase.getShoppingCartIngredients();
-        assertEquals("getShoppingCartIngredients - Correct ingredientID", ingredientID, shoppingCart.get(0).getIngredientID());
-        assertEquals("getShoppingCartIngredients - Correct Quantity", 2, shoppingCart.get(0).getQuantity(), 0);
-        assertEquals("getShoppingCartIngredients - Correct Unit", "cup(s)", shoppingCart.get(0).getUnit());
-        assertEquals("getShoppingCartIngredients - Correct Details", "White Flour", shoppingCart.get(0).getDetails());
+        ArrayList<RecipeIngredient> newShoppingCart = testDatabase.getShoppingCartIngredients();
+        assertEquals("getShoppingCartIngredients - Correct ingredientID", ingredientID, newShoppingCart.get(newShoppingCart.size()-1).getIngredientID());
+        assertEquals("getShoppingCartIngredients - Correct Quantity", 2, newShoppingCart.get(newShoppingCart.size()-1).getQuantity(), 0);
+        assertEquals("getShoppingCartIngredients - Correct Unit", "cup(s)", newShoppingCart.get(newShoppingCart.size()-1).getUnit());
         tearDown();
     }
 
@@ -702,8 +699,8 @@ public class It2_DatabaseTester {
     @Test
     public void getShoppingCartIngredients_MultipleInstancesCorrect() {
         setUp();
-        //TODO: FIX DATABASE
-        // Add a second recipe with the same category
+        //TODO: FIX TEST
+        // Add a second recipe
         Category category2 = new Category(-1, "Lunch");
         int categoryID2 = testDatabase.addCategory(category);
 
@@ -711,10 +708,10 @@ public class It2_DatabaseTester {
         List<RecipeCategory> listOfCategories = new ArrayList<RecipeCategory>();
         listOfCategories.add(recipeCategory2);
 
-        Ingredient ingredient2 = new Ingredient(-1, "Flour");
+        Ingredient ingredient2 = new Ingredient(-1, "Sugar");
         int ingredientID2 = testDatabase.addIngredient(ingredient2);
 
-        RecipeIngredient recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientID, 1, "cup(s)", "");
+        RecipeIngredient recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientID, 2, "cup(s)", "");
         List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
         listOfIngredients.add(recipeIngredient2);
 
@@ -725,13 +722,18 @@ public class It2_DatabaseTester {
         Recipe testRecipe2 = new Recipe("TestRecipe2", 4, 5, 15, false, listOfIngredients, listOfDirections, listOfCategories);
         int recipeID2 = testDatabase.addRecipe(testRecipe2);
 
+        testDatabase.addRecipeToCart(recipeID);
+        ArrayList<RecipeIngredient> prevShoppingCart = testDatabase.getShoppingCartIngredients();
+        int prevSize = prevShoppingCart.size();
         testDatabase.addRecipeToCart(recipeID2);
-        ArrayList<RecipeIngredient> shoppingCart = testDatabase.getShoppingCartIngredients();
-        assertEquals("getShoppingCartIngredients - Correct ingredientID", ingredientID, shoppingCart.get(0).getIngredientID());
-        assertEquals("getShoppingCartIngredients - Correct Quantity", 3, shoppingCart.get(0).getQuantity(), 0);
-        assertEquals("getShoppingCartIngredients - Correct Unit", "cup(s)", shoppingCart.get(0).getUnit());
-        //TODO: What will details be for the same ingredient that has two different details
-        //assertEquals("getShoppingCartIngredients - Correct Details", "White Flour", shoppingCart.get(0).getDetails());
+        ArrayList<RecipeIngredient> newShoppingCart = testDatabase.getShoppingCartIngredients();
+        assertEquals("getShoppingCartIngredients1 - Correct ingredientID", ingredientID, newShoppingCart.get(prevSize-1).getIngredientID());
+        assertEquals("getShoppingCartIngredients1 - Correct Quantity", 1, newShoppingCart.get(prevSize-1).getQuantity(), 0);
+        assertEquals("getShoppingCartIngredients1 - Correct Unit", "cup(s)", newShoppingCart.get(prevSize-1).getUnit());
+
+        assertEquals("getShoppingCartIngredients2 - Correct ingredientID", ingredientID2, newShoppingCart.get(prevSize).getIngredientID());
+        assertEquals("getShoppingCartIngredients2 - Correct Quantity", 2, newShoppingCart.get(prevSize).getQuantity(), 0);
+        assertEquals("getShoppingCartIngredients2 - Correct Unit", "cup(s)", newShoppingCart.get(prevSize).getUnit());
         tearDown();
     }
 

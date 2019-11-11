@@ -359,9 +359,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         if (recipeList.size() == 0) {
+            cursor.close();
             return null;
         }
 
+        cursor.close();
         return recipeList;
     }
 
@@ -657,7 +659,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(SC_UNIT, ingredient.getUnit());
 
             // Insert the new row, returning the primary key value of the new row
-            int newRowId = (int) sqLiteDatabase.insert(TABLE_RECIPE_INGREDIENT_LIST, null, contentValues);
+            int newRowId = (int) sqLiteDatabase.insert(TABLE_SHOPPING_CART_LIST, null, contentValues);
 
             //check to make sure properly inserted
             if(newRowId == -1){
