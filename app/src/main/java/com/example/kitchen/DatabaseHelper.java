@@ -408,7 +408,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //create list of all found recipes (full recipe built)
         ArrayList<Recipe> recipeList = new ArrayList<>();
-        for(int j = 0; j <= recipeIds.length; j++ ){
+        for(int j = 0; j < recipeIds.length; j++ ){
             recipeList.add(getRecipe(Integer.parseInt(recipeIds[j])));
         }
 
@@ -758,6 +758,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Insert the new row, returning the primary key value of the new row
         int newRowId = (int) db.insert(TABLE_RECIPE_INGREDIENT_LIST, null, contentValues);
+        recipeIngredient.setKeyID(newRowId);
 
         db.close();
         return newRowId;
