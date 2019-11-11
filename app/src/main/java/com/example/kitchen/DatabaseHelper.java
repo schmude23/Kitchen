@@ -1206,7 +1206,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return -1;
         }
 
-        //converting quantity to desired unit.
+        //converting quantity to desired unit
         if(reqUnit.contentEquals("tablespoon(s)")){
             quantity = quantity/0.0625;
         }
