@@ -433,7 +433,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return null;
         }
         //cycle through all ingredient ids
-        for(int i =1; i <= ingredientIdList.length; i++){
+        for(int i =1; i < ingredientIdList.length; i++){
             ArrayList<Recipe> tmpList = getRecipeByIngredientId(ingredientIdList[i]);
             ArrayList<Recipe> containsList = new ArrayList<>();
             if(tmpList != null) {

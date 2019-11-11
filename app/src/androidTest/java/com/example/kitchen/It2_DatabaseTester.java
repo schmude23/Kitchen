@@ -25,7 +25,7 @@ public class It2_DatabaseTester {
     Category category;
     Ingredient ingredient;
     RecipeCategory recipeCategory;
-    RecipeIngredient recipeIngredient;
+    RecipeIngredient recipeIngredient, recipeIngredient2, recipeIngredient3;
 
     int ingredientIDM1, ingredientIDM2;
 
@@ -255,20 +255,10 @@ public class It2_DatabaseTester {
     @Test
     public void getRecipeByIngredientIdList_NoErrors() {
         setUp();
-        //TODO: FIX (Test or Database?)
         createRecipe_TwoIngredients();
-        int[] ingredientIDs = {ingredientIDM1, ingredientIDM2};
+        int[] ingredientIDs = {recipeIngredient2.getKeyID(), recipeIngredient3.getKeyID()};
         ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientIdList(ingredientIDs);
         assertNotEquals("getRecipeByIngredientIdList returns a list", null, returned);
-        tearDown();
-    }
-
-    @Test
-    public void HELP() {
-        setUp();
-        createRecipe_TwoIngredients();
-        ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientId(ingredientIDM1);
-        assertNotEquals("HELP", null, returned);
         tearDown();
     }
 
@@ -278,7 +268,24 @@ public class It2_DatabaseTester {
     @Test
     public void getRecipeByIngredientIdList_OneRecipe() {
         setUp();
-        //TODO: Implement
+        //TODO: FIX
+        createRecipe_TwoIngredients();
+        int[] ingredientIDs = {recipeIngredient2.getKeyID(), recipeIngredient3.getKeyID()};
+        ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientIdList(ingredientIDs);
+        assertEquals("getRecipeByIngredientIdList - One Recipe", 1, returned.size());
+        assertEquals("getRecipeByIngredientIdList - Recipe Title", "TestRecipe2", returned.get(0).getTitle());
+        assertEquals("getRecipeByIngredientIdList - Recipe Servings", 4, returned.get(0).getServings(), 0);
+        assertEquals("getRecipeByIngredientIdList - Recipe Prep_Time", 5, returned.get(0).getPrep_time(), 0);
+        assertEquals("getRecipeByIngredientIdList - Recipe Total_Time", 15, returned.get(0).getTotal_time(), 0);
+        assertEquals("getRecipeByIngredientIdList - Recipe Favorited", false, returned.get(0).getFavorited());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient Units", "cup(s)", returned.get(0).getIngredientList().get(0).getUnit());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient Quantity", 1, returned.get(0).getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient Details", "", returned.get(0).getIngredientList().get(0).getDetails());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient Units", "cup(s)", returned.get(1).getIngredientList().get(0).getUnit());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient Quantity", 3.0, returned.get(1).getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient Details", "White Flour", returned.get(1).getIngredientList().get(0).getDetails());
+        assertEquals("getRecipeByIngredientIdList - RecipeDirection Number", 1, returned.get(0).getDirectionsList().get(0).getDirectionNumber());
+        assertEquals("getRecipeByIngredientIdList - RecipeDirection Text", "TestDirection", returned.get(0).getDirectionsList().get(0).getDirectionText());
         tearDown();
     }
 
@@ -1047,8 +1054,8 @@ public class It2_DatabaseTester {
         Ingredient ingredient3 = new Ingredient(-1, "Oil");
         ingredientIDM2 = testDatabase.addIngredient(ingredient3);
 
-        RecipeIngredient recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientIDM1, 1, "cup(s)", "");
-        RecipeIngredient recipeIngredient3 = new RecipeIngredient(-1, -1, ingredientIDM2, 3.0, "cup(s)", "White Flour");
+        recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientIDM1, 1, "cup(s)", "");
+        recipeIngredient3 = new RecipeIngredient(-1, -1, ingredientIDM2, 3.0, "cup(s)", "White Flour");
         List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
         listOfIngredients.add(recipeIngredient2);
         listOfIngredients.add(recipeIngredient3);
