@@ -52,6 +52,7 @@ class Recipe {
      */
     public Recipe(String string) {
         this(); //TODO: Implement this method.
+        System.out.println(string);
     }
 
     /**
