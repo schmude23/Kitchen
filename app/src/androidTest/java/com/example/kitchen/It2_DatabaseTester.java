@@ -60,7 +60,10 @@ public class It2_DatabaseTester {
         // Delete all database parts
         testDatabase.deleteCategory(categoryID);
         testDatabase.deleteIngredient(ingredientID);
-        testDatabase.deleteRecipe(recipeID);
+        ArrayList<Recipe> allRecipes = testDatabase.getAllRecipes();
+        for(int i = 0; i < allRecipes.size(); i++){
+            testDatabase.deleteRecipe(allRecipes.get(i).getKeyID());
+        }
     }
 
 
@@ -180,7 +183,6 @@ public class It2_DatabaseTester {
     @Test
     public void getRecipeByIngredientId_Multiple() {
         setUp();
-        //TODO: Fix Database - Returning null
         // Add a second recipe with the same ingredient
         Category category2 = new Category(-1, "Lunch");
         int categoryID2 = testDatabase.addCategory(category);
@@ -315,7 +317,7 @@ public class It2_DatabaseTester {
     @Test
     public void getRecipeByCategoryId_OneRecipe() {
         setUp();
-        ArrayList<Recipe> returned = testDatabase.getRecipeByCategoryId(recipeCategory.getKeyID());
+        ArrayList<Recipe> returned = testDatabase.getRecipeByCategoryId(recipeCategory.getCategoryID());
         assertEquals("getRecipeByCategoryId returns one recipe", 1, returned.size());
         assertEquals("getRecipeByCategoryId - Correct Recipe Title", recipeTitle, returned.get(0).getTitle());
         assertEquals("getRecipeByCategoryId - Correct Recipe Servings", 1, returned.get(0).getServings(), 0);
@@ -338,7 +340,6 @@ public class It2_DatabaseTester {
      */
     @Test
     public void getRecipeByCategoryId_MultipleRecipes() {
-        //TODO: Fix Database
         setUp();
         // Add a second recipe with the same category
         Category category2 = new Category(-1, "Lunch");
@@ -774,7 +775,7 @@ public class It2_DatabaseTester {
     @Test
     public void deleteShoppingCartIngredient_ReturnsTrue() {
         setUp();
-        //TODO: Implement
+        assertEquals("deleteShoppingCartIngredeint - Returns true", true, testDatabase.deleteShoppingCartIngredient(ingredientID));
         tearDown();
     }
 
@@ -782,9 +783,10 @@ public class It2_DatabaseTester {
      * This method checks that deleteShoppingCartIngredient returns false upon failure
      */
     @Test
-    public void deleteShoppingCartIngredient_ReturnsTrue_ReturnsFalse() {
+    public void deleteShoppingCartIngredient_ReturnsFalse() {
         setUp();
-        //TODO: Implement
+        //TODO: Zander fixing
+        assertEquals("deleteShoppingCartIngredient - Returns true", true, testDatabase.deleteShoppingCartIngredient(Integer.MAX_VALUE));
         tearDown();
     }
 
@@ -795,7 +797,16 @@ public class It2_DatabaseTester {
     @Test
     public void deleteShoppingCartIngredient_Deletes() {
         setUp();
-        //TODO: Implement
+        ArrayList<RecipeIngredient> prevShoppingCart = testDatabase.getShoppingCartIngredients();
+        testDatabase.deleteShoppingCartIngredient(ingredientID);
+        ArrayList<RecipeIngredient> newShoppingCart = testDatabase.getShoppingCartIngredients();
+        boolean deleted = true;
+        for(int i = 0; i < newShoppingCart.size(); i++){
+            if(newShoppingCart.get(i).getIngredientID() == ingredientID){
+                deleted = false;
+            }
+        }
+        assertEquals("deleteShoppingCartIngredient - Deletes Ingredient", true, deleted);
         tearDown();
     }
 
@@ -829,7 +840,20 @@ public class It2_DatabaseTester {
     @Test
     public void convertRecipeIngredientUnits_RecipeChanged() {
         setUp();
-        //TODO: Implement
+        //TODO: Do we want this?
+        createRecipe_DifferentUnits("teaspoon(s)");
+        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "teaspoon(s)", "tablespoon(s)");
+        Recipe updated = testDatabase.getRecipe(testRecipe2.getKeyID());
+        assertEquals("getRecipeByPrepTime - Correct Recipe Title", "TestRecipe2", updated.getTitle());
+        assertEquals("getRecipeByPrepTime - Correct Recipe Servings", 4, updated.getServings(), 0);
+        assertEquals("getRecipeByPrepTime - Correct Recipe Prep_Time", 5, updated.getPrep_time(), 0);
+        assertEquals("getRecipeByPrepTime - Correct Recipe Total_Time", 15, updated.getTotal_time(), 0);
+        assertEquals("getRecipeByPrepTime - Correct Recipe Favorited", false, updated.getFavorited());
+        assertEquals("getRecipeByPrepTime - Correct RecipeIngredient Units", "tablespoon(s)", updated.getIngredientList().get(0).getUnit());
+        assertEquals("getRecipeByPrepTime - Correct RecipeIngredient Quantity", 2, updated.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("getRecipeByPrepTime - Correct RecipeIngredient Details", "", updated.getIngredientList().get(0).getDetails());
+        assertEquals("getRecipeByPrepTime - Correct RecipeDirection Number", 1, updated.getDirectionsList().get(0).getDirectionNumber());
+        assertEquals("getRecipeByPrepTime - Correct RecipeDirection Text", "TestDirection", updated.getDirectionsList().get(0).getDirectionText());
         tearDown();
     }
 
@@ -840,12 +864,11 @@ public class It2_DatabaseTester {
     @Test
     public void convertRecipeIngredientUnits_MultipleIngredients() {
         setUp();
-        //TODO: Fix calculations
         createRecipe_TwoIngredients();
         Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "cup(s)", "tablespoon(s)");
-        assertEquals("convertRecipeIngredientUnits - Correct Flour Quantity", 32, returned.getIngredientList().get(0).getQuantity(), 0);
-        assertEquals("convertRecipeIngredientUnits - Correct Flour Unit", "tablespoon(s)", returned.getIngredientList().get(0).getUnit());
-        assertEquals("convertRecipeIngredientUnits - Correct Oil Quantity", 48, returned.getIngredientList().get(1).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits - Correct Sugar Quantity", 16, returned.getIngredientList().get(0).getQuantity(), 0); //1 cup
+        assertEquals("convertRecipeIngredientUnits - Correct Sugar Unit", "tablespoon(s)", returned.getIngredientList().get(0).getUnit());
+        assertEquals("convertRecipeIngredientUnits - Correct Oil Quantity", 48, returned.getIngredientList().get(1).getQuantity(), 0); //3 cups
         assertEquals("convertRecipeIngredientUnits - Correct Oil Unit", "tablespoon(s)", returned.getIngredientList().get(1).getUnit());
         tearDown();
     }
@@ -889,7 +912,6 @@ public class It2_DatabaseTester {
     public void convertRecipeIngredientUnits_CupsToPint() {
         setUp();
         createRecipe_DifferentUnits("cup(s)");
-        //TODO: Fix calculations
         Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "cup(s)", "pint(s)");
         assertEquals("convertRecipeIngredientUnits_CupsToPint - Quantity", 3, returned.getIngredientList().get(0).getQuantity(), 0);
         assertEquals("convertRecipeIngredientUnits_CupsToPint - Unit", "pint(s)", returned.getIngredientList().get(0).getUnit());
@@ -905,7 +927,6 @@ public class It2_DatabaseTester {
     public void convertRecipeIngredientUnits_PintToCups() {
         setUp();
         createRecipe_DifferentUnits("pint(s)");
-        //TODO: Fix calculations
         Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "pint(s)", "cup(s)");
         assertEquals("convertRecipeIngredientUnits_PintToCups - Quantity", 12, returned.getIngredientList().get(0).getQuantity(), 0);
         assertEquals("convertRecipeIngredientUnits_PintToCups - Unit", "cup(s)", returned.getIngredientList().get(0).getUnit());
@@ -997,6 +1018,7 @@ public class It2_DatabaseTester {
     }
 
     //TODO: Add tests for scaling a Recipe
+
 
     //TODO: ADD MORE TESTS?
 

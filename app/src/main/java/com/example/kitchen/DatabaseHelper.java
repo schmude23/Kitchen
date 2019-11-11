@@ -470,7 +470,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         //pulling all recipe categories pertaining to ingredient id
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_CATEGORY_LIST + "  WHERE " + RC_KEY_ID + " = ? ", new String[]{String.valueOf(categoryId)});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_CATEGORY_LIST + "  WHERE " + RC_CATEGORY_ID + " = ? ", new String[]{String.valueOf(categoryId)});
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -734,7 +734,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //TODO: Correct/Test
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         long returned = sqLiteDatabase.delete(TABLE_SHOPPING_CART_LIST, SC_INGREDIENT_ID + " = ?", new String[]{String.valueOf(ingredientId)});
-        if (returned == 0) {
+        if (returned == -1) {
             return false;
         }
         return true;
@@ -1186,9 +1186,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(origUnit.contentEquals("teaspoon(s)")){
             quantity = quantity*0.0208333;
         }
-        if(origUnit.contentEquals("cup(s)")){
-            quantity = quantity*0.125;
-        }
         if(origUnit.contentEquals("pint(s)")){
             quantity = quantity*2;
         }
@@ -1214,9 +1211,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         if(reqUnit.contentEquals("teaspoon(s)")){
             quantity = quantity/0.0208333;
-        }
-        if(reqUnit.contentEquals("cup(s)")){
-            quantity = quantity/0.125;
         }
         if(reqUnit.contentEquals("pint(s)")){
             quantity = quantity/2;
