@@ -31,6 +31,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
     private Button finishButton;
     private EditText editIngredientIngredientEditText,
             editIngredientPopupIngredientEditText,
+            editIngredientPopupIngredientDetailsEditText,
             editIngredientPopupQuantityEditText;
 
     // ListView variables
@@ -41,7 +42,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
     private int position = -1;
     Dialog myDialog; // Dialog for popup window
 
-    String ingredientName, ingredientQuantity, ingredientUnit;
+    String ingredientName, ingredientDetails, ingredientQuantity, ingredientUnit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,6 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
             addRecipe();
         else
             editRecipe();
-        //finishButton.setOnClickListener(this);
         ingredientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -160,6 +160,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
      */
     public void onEditIngredientPopupOkayButtonPressed(View v) {
         ingredientName = editIngredientPopupIngredientEditText.getText().toString();
+        ingredientDetails = editIngredientPopupIngredientDetailsEditText.getText().toString();
         ingredientQuantity = editIngredientPopupQuantityEditText.getText().toString();
         if (ingredientName.length() > 0 && ingredientQuantity.length() > 0) {
 
@@ -192,12 +193,16 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
         this.position = position;
         myDialog.setContentView(R.layout.edit_ingredient_popup);
         editIngredientPopupIngredientEditText = myDialog.findViewById(R.id.edit_ingredient_popup_ingredient_edit_text);
+        editIngredientPopupIngredientDetailsEditText = myDialog.findViewById(R.id.edit_ingredient_popup_ingredient_details_edit_text);
         editIngredientPopupQuantityEditText = myDialog.findViewById(R.id.edit_ingredient_popup_ingredient_quantity_edit_text);
 
         if (position != -1) {
             // update ingredient --> get current ingredient ingredient
             Ingredient i = database.getIngredient(recipe.getIngredientList().get(position).getIngredientID());
             editIngredientPopupIngredientEditText.setText(i.getName());
+            String details = recipe.getIngredientList().get(position).getDetails();
+            if(details != null)
+                editIngredientPopupIngredientDetailsEditText.setText(details);
             editIngredientPopupQuantityEditText.setText(valueOf(recipe.getIngredientList().get(position).getQuantity()));
         } else {
             editIngredientPopupIngredientEditText.setText(editIngredientIngredientEditText.getText().toString());
@@ -232,7 +237,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
         Ingredient ingredient = new Ingredient(-1, ingredientName);
         int ingredientID = database.addIngredient(ingredient);
 
-        RecipeIngredient recipeIngredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, Double.valueOf(ingredientQuantity), ingredientUnit, null);
+        RecipeIngredient recipeIngredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, Double.valueOf(ingredientQuantity), ingredientUnit, ingredientDetails);
         int ret = database.addRecipeIngredient(recipeIngredient);
         if (ret == -1) {
             Context context = getApplicationContext();
@@ -269,7 +274,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
 
         // create new RecipeIngredient object for updated Ingredient
         RecipeIngredient recipeIngredient = recipe.getIngredientList().get(position);
-        //recipeIngredient.setDetails(edit_name.getText().toString());
+        recipeIngredient.setDetails(ingredientDetails);
         recipeIngredient.setQuantity(Double.valueOf(ingredientQuantity));
         recipeIngredient.setUnit(ingredientUnit);
 

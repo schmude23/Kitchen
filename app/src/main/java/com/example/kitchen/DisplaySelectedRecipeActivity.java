@@ -5,17 +5,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 //TODO: Dealing with long recipe titles
@@ -167,6 +170,18 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
             ingredientListView.setAdapter(ingredientAdapter);
             setListViewHeightBasedOnItems(ingredientListView);
         }
+        ingredientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Context context = getApplicationContext();
+
+                CharSequence text = "Details: " + recipe.getIngredientList().get(position).getDetails();
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+        });
     }
 
     /**
@@ -181,7 +196,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
                 TextView textView = ((TextView) view.findViewById(android.R.id.text1));
                 textView.setMinHeight(0); // Min Height
                 textView.setMinimumHeight(0); // Min Height
-                textView.setHeight(100); // Height
+                textView.setHeight(300); // Height
                 return view;
             }
         };
