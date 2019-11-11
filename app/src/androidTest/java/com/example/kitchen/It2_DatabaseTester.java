@@ -263,6 +263,15 @@ public class It2_DatabaseTester {
         tearDown();
     }
 
+    @Test
+    public void HELP() {
+        setUp();
+        createRecipe_TwoIngredients();
+        ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientId(ingredientIDM1);
+        assertNotEquals("HELP", null, returned);
+        tearDown();
+    }
+
     /**
      * This method checks that getRecipeByIngredientIdList returns the correct recipe
      */
@@ -1038,8 +1047,8 @@ public class It2_DatabaseTester {
         Ingredient ingredient3 = new Ingredient(-1, "Oil");
         ingredientIDM2 = testDatabase.addIngredient(ingredient3);
 
-        RecipeIngredient recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientID, 1, "cup(s)", "");
-        RecipeIngredient recipeIngredient3 = new RecipeIngredient(-1, -1, ingredientID, 3.0, "cup(s)", "White Flour");
+        RecipeIngredient recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientIDM1, 1, "cup(s)", "");
+        RecipeIngredient recipeIngredient3 = new RecipeIngredient(-1, -1, ingredientIDM2, 3.0, "cup(s)", "White Flour");
         List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
         listOfIngredients.add(recipeIngredient2);
         listOfIngredients.add(recipeIngredient3);
@@ -1066,7 +1075,7 @@ public class It2_DatabaseTester {
         Ingredient ingredient2 = new Ingredient(-1, "Flour");
         ingredientIDM1 = testDatabase.addIngredient(ingredient2);
 
-        RecipeIngredient recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientID, 6.0, units, "");
+        RecipeIngredient recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientIDM1, 6.0, units, "");
         List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
         listOfIngredients.add(recipeIngredient2);
 
