@@ -315,7 +315,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<Recipe> recipeList = getAllRecipes();
         ArrayList<Recipe> newRecipeList = new ArrayList<>();
         for(int i = 0; i < recipeList.size(); i++){
-            if(recipeList.get(i).getServings() <= prepTime){
+            if(recipeList.get(i).getPrep_time() <= prepTime){
                 newRecipeList.add(recipeList.get(i));
             }
         }
@@ -336,7 +336,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<Recipe> recipeList = getAllRecipes();
         ArrayList<Recipe> newRecipeList = new ArrayList<>();
         for (int i = 0; i < recipeList.size(); i++) {
-            if (recipeList.get(i).getServings() <= totalTime) {
+            if (recipeList.get(i).getTotal_time() <= totalTime) {
                 newRecipeList.add(recipeList.get(i));
             }
         }
@@ -717,6 +717,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
         }
         return true;
+    }
+
+    /**
+     * This method restarts the shopping cart table. effectively clearing the table
+     *
+     * @return true if the operation was successful, false otherwise
+     */
+    public void deleteAllShoppingCartIngredients(){
+        //TODO: Correct/Test
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_SHOPPING_CART_LIST);
+        //Shopping Cart Table
+        String CREATE_SHOPPING_CART_TABLE = "CREATE TABLE " + TABLE_SHOPPING_CART_LIST + "("
+                + SC_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + SC_INGREDIENT_ID + " INTEGER, "
+                + SC_QUANTITY + " INTEGER,"
+                + SC_UNIT + " TEXT" +")";
+        sqLiteDatabase.execSQL(CREATE_SHOPPING_CART_TABLE);
+        return;
     }
 
     /**
