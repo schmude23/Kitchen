@@ -27,8 +27,6 @@ public class It2_DatabaseTester {
     RecipeCategory recipeCategory;
     RecipeIngredient recipeIngredient, recipeIngredient2, recipeIngredient3;
 
-    int ingredientIDM1, ingredientIDM2;
-
     public void setUp(){
         // Create recipe to test with
         recipeTitle = "TestRecipe";
@@ -64,6 +62,7 @@ public class It2_DatabaseTester {
         for(int i = 0; i < allRecipes.size(); i++){
             testDatabase.deleteRecipe(allRecipes.get(i).getKeyID());
         }
+        // TODO: Call delete all shopping cart ingredients
     }
 
 
@@ -543,7 +542,6 @@ public class It2_DatabaseTester {
     @Test
     public void getRecipeByTotalTime_NoErrors() {
         setUp();
-        //TODO: FIX DATABASE
         ArrayList<Recipe> returned = testDatabase.getRecipeByTotalTime(60);
         assertNotEquals("getRecipeByTotalTime returns a list", null, returned);
         tearDown();
@@ -652,9 +650,9 @@ public class It2_DatabaseTester {
     @Test
     public void addRecipeToCart_CorrectInformation() {
         setUp();
-        ArrayList<RecipeIngredient> prevShoppingCart = testDatabase.getShoppingCartIngredients();
+        ArrayList<RecipeIngredient> prevShoppingCart = testDatabase.getAllShoppingCartIngredients();
         testDatabase.addRecipeToCart(recipeID);
-        ArrayList<RecipeIngredient> newShoppingCart = testDatabase.getShoppingCartIngredients();
+        ArrayList<RecipeIngredient> newShoppingCart = testDatabase.getAllShoppingCartIngredients();
         assertEquals("addRecipeToCart - Adds one ingredient", 1, (newShoppingCart.size()-prevShoppingCart.size()));
         assertEquals("addRecipeToCart - Correct ingredientID", ingredientID, newShoppingCart.get(newShoppingCart.size()-1).getIngredientID());
         assertEquals("addRecipeToCart - Correct Quantity", 2, newShoppingCart.get(newShoppingCart.size()-1).getQuantity(), 0);
@@ -668,28 +666,18 @@ public class It2_DatabaseTester {
     @Test
     public void addRecipeToCart_ReturnsTrue() {
         setUp();
-        assertEquals("Adding Recipe to Cart Returns True", true, testDatabase.addRecipeToCart(recipeID));
+        assertEquals("addRecipeToCart - Returns True", true, testDatabase.addRecipeToCart(recipeID));
         tearDown();
     }
-
-    /**
-     * This method checks that addRecipeToCart returns false upon failure
-     */
-    /*@Test
-    public void addRecipeToCart_ReturnsFalse() {
-        setUp();
-        assertEquals("Adding Recipe to Cart That Doesn't Exist", false, testDatabase.addRecipeToCart(Integer.MAX_VALUE));
-        tearDown();
-    }*/ // TODO: DO WE WANT THIS TEST
 
     /**
      * This method checks that getShoppingCartIngredients returns correct information
      * if there's only one instance of an ingredient that was added to the shopping cart
      */
     @Test
-    public void getShoppingCartIngredients_ReturnsNull() {
+    public void getAllShoppingCartIngredients_ReturnsNull() {
         setUp();
-        ArrayList<RecipeIngredient> shoppingCart = testDatabase.getShoppingCartIngredients();
+        ArrayList<RecipeIngredient> shoppingCart = testDatabase.getAllShoppingCartIngredients();
         assertEquals("getShoppingCartIngredients - Returns Null", null, shoppingCart);
         tearDown();
     } //TODO: Might need to move this up
@@ -699,10 +687,10 @@ public class It2_DatabaseTester {
      * if there's only one instance of an ingredient that was added to the shopping cart
      */
     @Test
-    public void getShoppingCartIngredients_OneInstanceCorrect() {
+    public void getAllShoppingCartIngredients_OneInstanceCorrect() {
         setUp();
         testDatabase.addRecipeToCart(recipeID);
-        ArrayList<RecipeIngredient> newShoppingCart = testDatabase.getShoppingCartIngredients();
+        ArrayList<RecipeIngredient> newShoppingCart = testDatabase.getAllShoppingCartIngredients();
         assertEquals("getShoppingCartIngredients - Correct ingredientID", ingredientID, newShoppingCart.get(newShoppingCart.size()-1).getIngredientID());
         assertEquals("getShoppingCartIngredients - Correct Quantity", 2, newShoppingCart.get(newShoppingCart.size()-1).getQuantity(), 0);
         assertEquals("getShoppingCartIngredients - Correct Unit", "cup(s)", newShoppingCart.get(newShoppingCart.size()-1).getUnit());
@@ -714,7 +702,7 @@ public class It2_DatabaseTester {
      * if there were multiple instances of an ingredient that were added to the shopping cart
      */
     @Test
-    public void getShoppingCartIngredients_MultipleInstancesCorrect() {
+    public void getAllShoppingCartIngredients_MultipleInstancesCorrect() {
         setUp();
         //TODO: FIX TEST
         // Add a second recipe
@@ -740,10 +728,10 @@ public class It2_DatabaseTester {
         int recipeID2 = testDatabase.addRecipe(testRecipe2);
 
         testDatabase.addRecipeToCart(recipeID);
-        ArrayList<RecipeIngredient> prevShoppingCart = testDatabase.getShoppingCartIngredients();
+        ArrayList<RecipeIngredient> prevShoppingCart = testDatabase.getAllShoppingCartIngredients();
         int prevSize = prevShoppingCart.size();
         testDatabase.addRecipeToCart(recipeID2);
-        ArrayList<RecipeIngredient> newShoppingCart = testDatabase.getShoppingCartIngredients();
+        ArrayList<RecipeIngredient> newShoppingCart = testDatabase.getAllShoppingCartIngredients();
         assertEquals("getShoppingCartIngredients1 - Correct ingredientID", ingredientID, newShoppingCart.get(prevSize-1).getIngredientID());
         assertEquals("getShoppingCartIngredients1 - Correct Quantity", 1, newShoppingCart.get(prevSize-1).getQuantity(), 0);
         assertEquals("getShoppingCartIngredients1 - Correct Unit", "cup(s)", newShoppingCart.get(prevSize-1).getUnit());
@@ -791,7 +779,7 @@ public class It2_DatabaseTester {
     @Test
     public void deleteShoppingCartIngredient_ReturnsTrue() {
         setUp();
-        assertEquals("deleteShoppingCartIngredeint - Returns true", true, testDatabase.deleteShoppingCartIngredient(ingredientID));
+        assertEquals("deleteShoppingCartIngredient - Returns true", true, testDatabase.deleteShoppingCartIngredient(ingredientID));
         tearDown();
     }
 
@@ -802,7 +790,7 @@ public class It2_DatabaseTester {
     public void deleteShoppingCartIngredient_ReturnsFalse() {
         setUp();
         //TODO: Zander fixing
-        assertEquals("deleteShoppingCartIngredient - Returns true", true, testDatabase.deleteShoppingCartIngredient(Integer.MAX_VALUE));
+        assertEquals("deleteShoppingCartIngredient - Returns false", true, testDatabase.deleteShoppingCartIngredient(Integer.MAX_VALUE));
         tearDown();
     }
 
@@ -813,9 +801,9 @@ public class It2_DatabaseTester {
     @Test
     public void deleteShoppingCartIngredient_Deletes() {
         setUp();
-        ArrayList<RecipeIngredient> prevShoppingCart = testDatabase.getShoppingCartIngredients();
+        ArrayList<RecipeIngredient> prevShoppingCart = testDatabase.getAllShoppingCartIngredients();
         testDatabase.deleteShoppingCartIngredient(ingredientID);
-        ArrayList<RecipeIngredient> newShoppingCart = testDatabase.getShoppingCartIngredients();
+        ArrayList<RecipeIngredient> newShoppingCart = testDatabase.getAllShoppingCartIngredients();
         boolean deleted = true;
         for(int i = 0; i < newShoppingCart.size(); i++){
             if(newShoppingCart.get(i).getIngredientID() == ingredientID){
@@ -1035,7 +1023,6 @@ public class It2_DatabaseTester {
 
     //TODO: Add tests for scaling a Recipe
 
-
     //TODO: ADD MORE TESTS?
 
     /**
@@ -1050,12 +1037,12 @@ public class It2_DatabaseTester {
         listOfCategories.add(recipeCategory2);
 
         Ingredient ingredient2 = new Ingredient(-1, "Sugar");
-        ingredientIDM1 = testDatabase.addIngredient(ingredient2);
+        int ingredientIDM2 = testDatabase.addIngredient(ingredient2);
         Ingredient ingredient3 = new Ingredient(-1, "Oil");
-        ingredientIDM2 = testDatabase.addIngredient(ingredient3);
+        int ingredientIDM3 = testDatabase.addIngredient(ingredient3);
 
-        recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientIDM1, 1, "cup(s)", "");
-        recipeIngredient3 = new RecipeIngredient(-1, -1, ingredientIDM2, 3.0, "cup(s)", "White Flour");
+        recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientIDM2, 1, "cup(s)", "");
+        recipeIngredient3 = new RecipeIngredient(-1, -1, ingredientIDM3, 3.0, "cup(s)", "White Flour");
         List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
         listOfIngredients.add(recipeIngredient2);
         listOfIngredients.add(recipeIngredient3);
@@ -1080,9 +1067,9 @@ public class It2_DatabaseTester {
         listOfCategories.add(recipeCategory2);
 
         Ingredient ingredient2 = new Ingredient(-1, "Flour");
-        ingredientIDM1 = testDatabase.addIngredient(ingredient2);
+        int ingredientIDM2 = testDatabase.addIngredient(ingredient2);
 
-        RecipeIngredient recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientIDM1, 6.0, units, "");
+        RecipeIngredient recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientIDM2, 6.0, units, "");
         List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
         listOfIngredients.add(recipeIngredient2);
 
