@@ -20,17 +20,18 @@
         android:id="@+id/action_edit_recipe"
         android:title="@string/edit_recipe"/>
     <item
-        android:id="@+id/action_share_recipe"
-        android:title="@string/share_recipe"/>
-    <item
         android:id="@+id/action_delete_recipe"
-        android:title="@string/delete_recipe"/>
+        android:title="@string/delete_recipe"
+        android:onClick="onDeleteRecipeSelected" />
+    <item
+        android:id="@+id/action_share_recipe"
+        android:title="@string/share_recipe" />
+    <item
+        android:id="@+id/action_convert_unit"
+        android:title="@string/convert_units"
+        android:onClick="onConvertUnitSelected"/>
     <item
         android:id="@+id/action_scale_recipe"
         android:title="@string/scale_recipe"
         android:onClick="onScaleRecipeSelected"/>
-    <item
-        android:id="@+id/action_covert_units"
-        android:title="@string/convert_units"
-        android:onClick="onConvertUnitSelected"/>
 </menu>

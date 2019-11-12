@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -57,8 +58,11 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
     ArrayAdapter<String> categoryAdapter;
 
     //Popup window dialogs
-    Dialog scaleRecipeDialog, convertUnitDialog;
-    String oldUnit, newUnit;
+    Dialog scaleRecipeDialog, deleteRecipeDialog, convertUnitDialog;
+    private String oldUnit, newUnit;
+
+    private EditText scaleRecipePopupServingsEditText;
+    private double scaleRecipeServings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -277,11 +281,6 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
                 editRecipe.putExtra("newRecipe", false);
                 startActivity(editRecipe);
                 return true;
-            case R.id.action_delete_recipe:
-                dbHandler.deleteRecipe(recipe.getKeyID());
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;
             case R.id.action_home:
                 Intent home = new Intent(this, MainActivity.class);
                 startActivity(home);
@@ -293,6 +292,39 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * When the user selects the delete recipe menu item,
+     * they will be prompted with a popup to confirm deleting
+     * the recipe. This is to prevent accidental deletions.
+     * @param item
+     */
+    public void onDeleteRecipeSelected(MenuItem item){
+        deleteRecipeDialog = new Dialog(this);
+        deleteRecipeDialog.setContentView(R.layout.delete_recipe_popup);
+        deleteRecipeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        deleteRecipeDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
+        deleteRecipeDialog.show();
+    }
+
+    /**
+     * Close the popup and do not delete recipe.
+     * @param v
+     */
+    public void onDeleteRecipePopupCancelButtonPressed(View v){
+       deleteRecipeDialog.dismiss();
+    }
+
+    /**
+     * Close the popup and delete the recipe.
+     * @param v
+     */
+    public void onDeleteRecipePopupConfirmationButtonPressed(View v){
+        deleteRecipeDialog.dismiss();
+        dbHandler.deleteRecipe(recipe.getKeyID());
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
     public void onDisplaySelectedRecipeFavoriteButtonPressed(View v){
         boolean favorited = recipe.getFavorited();
@@ -362,14 +394,56 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
     public void onUnitConversionPopupCancelButtonPressed(View v){
         convertUnitDialog.dismiss();
     }
+
+    /**
+     * When the "Scale Recipe" menu item is selected, a popup window
+     * for scaling the recipe appears.
+     * @param item
+     */
     public void onScaleRecipeSelected(MenuItem item){
+        scaleRecipeDialog = new Dialog(this);
+        scaleRecipeDialog.setContentView(R.layout.scale_recipe_popup);
 
+        scaleRecipePopupServingsEditText = scaleRecipeDialog.findViewById(R.id.scale_recipe_popup_servings_edit_text);
+        scaleRecipeServings = recipe.getServings();
+        scaleRecipePopupServingsEditText.setText(String.valueOf(scaleRecipeServings));
+        scaleRecipeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        scaleRecipeDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
+        scaleRecipeDialog.show();
     }
-    public void onScaleRecipePopupCancelButtonPressed(View v){
 
+    /**
+     * Subtract the servings total by 1 iff it is greater than 0
+     * and change the scaleRecipePopupEditText accordingly
+     * @param v
+     */
+    public void onScaleRecipePopupRemoveButtonPressed(View v){
+        scaleRecipeServings = Double.valueOf(scaleRecipePopupServingsEditText.getText().toString());
+        if(scaleRecipeServings != 0)
+            scaleRecipeServings--;
+        scaleRecipePopupServingsEditText.setText(String.valueOf(scaleRecipeServings));
+    }
+    /**
+     * Add to the servings total by 1 and change the
+     * scaleRecipePopupEditText accordingly
+     * @param v
+     */
+    public void onScaleRecipePopupAddButtonPressed(View v){
+        scaleRecipeServings = Double.valueOf(scaleRecipePopupServingsEditText.getText().toString());
+        scaleRecipeServings++;
+        scaleRecipePopupServingsEditText.setText(String.valueOf(scaleRecipeServings));
+    }
+
+    public void onScaleRecipePopupCancelButtonPressed(View v){
+        scaleRecipeDialog.dismiss();
     }
     public void onScaleRecipePopupOkayButtonPressed(View v){
-
+        scaleRecipeServings = Double.valueOf(scaleRecipePopupServingsEditText.getText().toString());
+        dbHandler.scaleRecipe(recipe, scaleRecipeServings);
+        servings.setText(String.valueOf(recipe.getServings()));
+        ingredientList = new ArrayList<>();
+        getIngredients();
+        scaleRecipeDialog.dismiss();
     }
 
     // Spinner Methods

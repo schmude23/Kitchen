@@ -1,82 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:background="@color/colorAccent"
-    android:outlineSpotShadowColor="@color/colorPrimary">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
 
-    <Spinner
-        android:id="@+id/scale_recipe_popup_old_unit_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginRight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/divider1" />
     <TextView
-        android:id="@+id/scale_recipe_old_unit_text"
+        android:id="@+id/scale_recipe_popup_servings_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/servings"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/old_unit"/>
-
-    <View
-        android:id="@+id/divider1"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="19dp"
-        android:background="@color/light_slate_gray"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scale_recipe_popup_old_unit_spinner"
-        app:layout_constraintVertical_bias="0.0" />
-    <TextView
-        android:id="@+id/scale_recipe_new_unit_text"
+        android:gravity="center"
+        android:paddingBottom="30dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/scale_recipe_popup_remove_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/divider1"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/new_unit"/>
+        android:clickable="true"
+        android:focusable="false"
+        app:srcCompat="@drawable/ic_remove"
+        app:layout_constraintTop_toBottomOf="@+id/scale_recipe_popup_servings_text"
+        app:layout_constraintEnd_toStartOf="@id/scale_recipe_popup_servings_edit_text"
+        android:onClick="onScaleRecipePopupRemoveButtonPressed"/>
 
-    <Spinner
-        android:id="@+id/scale_recipe_popup_new_unit_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginRight="48dp"
+    <EditText
+        android:id="@+id/scale_recipe_popup_servings_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scale_recipe_popup_servings_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider1" />
+        android:gravity="center"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/scale_recipe_popup_add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="false"
+        app:srcCompat="@drawable/ic_add"
+        app:layout_constraintStart_toEndOf="@id/scale_recipe_popup_servings_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/scale_recipe_popup_servings_text"
+        android:onClick="onScaleRecipePopupAddButtonPressed"/>
 
     <Button
-        android:id="@+id/edit_ingredient_popup_okay_button"
+        android:id="@+id/scale_recipe_popup_cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/okay"
-        android:onClick="onScaleRecipePopupOkayButtonPressed"
-        android:background="@drawable/button_style"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scale_recipe_popup_new_unit_spinner" />
-
-    <Button
-        android:id="@+id/edit_ingredient_popup_remove_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="25dp"
         android:text="@string/cancel"
-        android:background="@drawable/button_style"
-        android:onClick="onScaleRecipePopupCancelButtonPressed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scale_recipe_popup_new_unit_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/scale_recipe_popup_remove_button"
+        android:background="@drawable/button_style"
+        android:onClick="onScaleRecipePopupCancelButtonPressed"/>
+
+    <Button
+        android:id="@+id/scale_recipe_popup_okay_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/okay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scale_recipe_popup_add_button"
+        android:background="@drawable/button_style"
+        android:onClick="onScaleRecipePopupOkayButtonPressed"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
