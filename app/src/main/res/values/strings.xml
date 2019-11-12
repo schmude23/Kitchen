@@ -44,6 +44,10 @@
     <string name="prep_time_min">Prep Time (minutes)</string>
     <string name="total_time_min">Total Time (minutes)</string>
     <string name="upload_image">Upload Image</string>
+    <string name="scale_recipe">Scale Recipe</string>
+    <string name="convert_units">Convert Units</string>
+    <string name="old_unit">Old Unit</string>
+    <string name="new_unit">New Unit</string>
 
     <string-array name="units_array">
         <item>teaspoon(s)</item>
