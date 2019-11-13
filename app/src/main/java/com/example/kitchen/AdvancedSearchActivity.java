@@ -122,7 +122,7 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
                     //recyclerView.setAdapter(recipeAdapter);
             }
         }
-        if(ingredientList != null){
+        if(ingredientList.size() > 0){
             if(ingredientList.size() == 1){
                 int ingredientId = database.getIngredient(ingredientList.get(0));
                 recipes = database.getRecipeByIngredientId(ingredientId);
@@ -134,7 +134,7 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
                 recipes = database.getRecipeByIngredientIdList(ingredientId);
             }
         }
-        if(categoryList != null){
+        if(categoryList.size() > 0){
             if(categoryList.size() == 1){
                 int categoryId = database.getCategory(categoryList.get(0));
                 recipes = database.getRecipeByCategoryId(categoryId);
