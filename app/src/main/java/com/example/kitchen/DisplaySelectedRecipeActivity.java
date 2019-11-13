@@ -464,4 +464,13 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+    public void onAddToCartSelected(MenuItem item){
+        Intent shoppingCartIntent = new Intent(this, ShoppingCartActivity.class);
+        shoppingCartIntent.putExtra("recipeId", recipe.getKeyID());
+        startActivity(shoppingCartIntent);
+    }
+
+
+
 }

@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setLayoutManager(layoutManager);
         recipes = database.getAllRecipes();
+        fillDefaultRecipes();
+        recipes = database.getAllRecipes();
         checkRecipes();
         getRecipeListItems();
         recipeAdapter = new RecipeAdapter(recipeListItems, this);
@@ -147,6 +149,109 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                     recipes.remove(i);
                 }
             }
+        }
+    }
+
+    private void fillDefaultRecipes() {
+        String title;
+        double servings;
+        int prep_time;
+        int total_time;
+        boolean favorited;
+        int ingredientID;
+        int recipeID;
+        int categoryID;
+        Recipe recipe;
+        Ingredient ingredient;
+        RecipeIngredient ringredient;
+        RecipeDirection direction;
+        RecipeCategory rcategory;
+        List<RecipeIngredient> ingredients;
+        List<RecipeDirection> directions;
+        List<RecipeCategory> categories;
+        if (recipes == null) {
+
+            Category lunch = new Category(-1, "lunch");
+            categoryID = database.addCategory(lunch);
+            Category dinner = new Category(-1, "dinner");
+            categoryID = database.addCategory(dinner);
+            Category breakfast = new Category(-1, "breakfast");
+            categoryID = database.addCategory(breakfast);
+            Category dessert = new Category(-1, "dessert");
+            categoryID = database.addCategory(dessert);
+            Category snack = new Category(-1, "snack");
+            categoryID = database.addCategory(snack);
+
+            title = "Mac n Cheese";
+            servings = 4;
+            prep_time = 0;
+            total_time = 30;
+            favorited = false;
+
+            recipe = new Recipe(title, servings, prep_time, total_time, favorited);
+            recipeID = database.addRecipe(recipe);
+
+            ingredients = new ArrayList<RecipeIngredient>();
+
+            ingredient = new Ingredient(-1, "macaroni");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "box");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "butter");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 4, "tablespoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "milk");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "cup(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "cheese");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 0.5, "none", "bag of shredded cheese");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "garlic powder");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "pinch(es)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "pepper");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "pinch(es)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            recipe.setIngredientList(ingredients);
+
+            directions = new ArrayList<RecipeDirection>();
+
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "boil a pot of water", 1);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "follow instructions to boil macaroni and then strain it", 2);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "combine butter, milk, cheese, and garlic powder in pot", 3);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "once combined, add macaroni and stir, then enjoy", 4);
+            directions.add(direction);
+
+            recipe.setDirectionsList(directions);
+
+            categories = new ArrayList<RecipeCategory>();
+
+            rcategory = new RecipeCategory(-1, recipe.getKeyID(), dinner.getKeyID());
+            categories.add(rcategory);
+
+            recipe.setCategoryList(categories);
+
+            boolean worked = database.editRecipe(recipe);
         }
     }
 

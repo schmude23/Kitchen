@@ -17,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ShareRecipeActivity"></activity>
+        <activity android:name=".ShareRecipeActivity"/>
         <activity android:name=".ShoppingCartActivity" />
         <activity android:name=".EditIngredientActivity" />
         <activity android:name=".EditRecipeActivity" />
@@ -26,6 +26,7 @@
         <activity android:name=".AdvancedSearchActivity" />
         <activity android:name=".DisplaySelectedRecipeActivity" />
         <activity android:name=".RecipeListActivity" />
+        <activity android:name=".IngredientListActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

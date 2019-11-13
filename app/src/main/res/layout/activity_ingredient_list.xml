@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/activity_ingredient_list_ingredient_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_slate_gray"
+        android:text="@string/ingredients"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <ListView
+        android:id="@+id/activity_ingredient_list_ingredient_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="15dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+
+        <Button
+            android:id="@+id/activity_ingredient_list_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_weight="0.25"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:onClick="onEditIngredientFinishButtonPressed"
+            android:background="@drawable/button_style"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight=".5"/>
+
+        <Button
+            android:id="@+id/activity_ingredient_list_done_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:textColor="@color/black"
+            android:onClick="onEditIngredientNextButtonPressed"
+            android:background="@drawable/button_style"
+            android:text="@string/done" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -15,7 +15,8 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/action_add_to_cart"
-        android:title="Add to Cart"/>
+        android:title="Add to Cart"
+        android:onClick="onAddToCartSelected"/>
     <item
         android:id="@+id/action_edit_recipe"
         android:title="@string/edit_recipe"/>

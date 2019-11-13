@@ -1,7 +1,5 @@
 package com.example.kitchen;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 
 import android.app.Dialog;
 import android.content.Context;
@@ -19,17 +17,17 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 
 import static java.lang.String.valueOf;
 
-public class EditIngredientActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class IngredientListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     DatabaseHelper database = new DatabaseHelper(this);
     Recipe recipe;
     private Button finishButton;
-    private EditText editIngredientIngredientEditText,
-            editIngredientPopupIngredientEditText,
+    private EditText editIngredientPopupIngredientEditText,
             editIngredientPopupIngredientDetailsEditText,
             editIngredientPopupQuantityEditText;
 
@@ -42,7 +40,6 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
     Dialog myDialog; // Dialog for popup window
 
     String ingredientName, ingredientDetails, ingredientQuantity, ingredientUnit;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,23 +53,17 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
 
         finishButton = findViewById(R.id.edit_ingredient_finish_button);
 
-        editIngredientIngredientEditText = (EditText) findViewById(R.id.edit_ingredient_ingredient_edit_text);
         ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
 
         // set the ingredientListView variable to your ingredientList in the xml
-        ingredientListView = (ListView) findViewById(R.id.edit_ingredient_ingredient_list);
+        ingredientListView = (ListView) findViewById(R.id.activity_ingredient_list_ingredient_list);
         ingredientListView.setAdapter(ingredientAdapter);
-        if (newRecipe)
-            addRecipe();
-        else
-            editRecipe();
         ingredientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ShowPopup(view, position);
             }
         });
-
 
     }
 
@@ -107,18 +98,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
     /**
      * @param v
      */
-    public void onEditIngredientAddIngredientButtonPressed(View v) {
-        // Show popup if valid ingredient to select quantity and units
-        String input = editIngredientIngredientEditText.getText().toString();
-        if (input.length() > 0) {
-            ShowPopup(v, -1);
-        }
-    }
-
-    /**
-     * @param v
-     */
-    public void onEditIngredientNextButtonPressed(View v) {
+    public void onIngredientListIngredientDoneButtonPressed(View v) {
         if (recipe.getIngredientList().size() > 0) {
             // Next Activity
             database.editRecipe(recipe);
@@ -132,7 +112,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
     /**
      * @param v
      */
-    public void onEditIngredientFinishButtonPressed(View v) {
+    public void onIngredientListCancelButtonPressed(View v) {
         if (newRecipe) {
             database.deleteRecipe(recipe.getKeyID());
             Intent intent = new Intent(this, MainActivity.class);
@@ -204,7 +184,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
                 editIngredientPopupIngredientDetailsEditText.setText(details);
             editIngredientPopupQuantityEditText.setText(valueOf(recipe.getIngredientList().get(position).getQuantity()));
         } else {
-            editIngredientPopupIngredientEditText.setText(editIngredientIngredientEditText.getText().toString());
+            //editIngredientPopupIngredientEditText.setText(editIngredientIngredientEditText.getText().toString());
             //editIngredientPopupQuantityEditText.setText(editIngredientQuantity.getText().toString());
         }
 
@@ -250,9 +230,9 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
         if (ingredientUnit.compareTo("none") == 0)
             ingredientAdapter.add(editIngredientPopupIngredientEditText.getText().toString() + " [ " + ingredientQuantity + " ]");
         else
-            ingredientAdapter.add(editIngredientIngredientEditText.getText().toString() + " [ " + ingredientQuantity + " " + ingredientUnit + " ]");
+            //ingredientAdapter.add(editIngredientIngredientEditText.getText().toString() + " [ " + ingredientQuantity + " " + ingredientUnit + " ]");
         recipe.getIngredientList().add(recipeIngredient);
-        editIngredientIngredientEditText.getText().clear();
+        //editIngredientIngredientEditText.getText().clear();
     }
 
     /**
@@ -292,27 +272,4 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-    /**
-     * This method monitors android button keys, i.e. back button
-     * deletes the recipe and returns to RecipeList if recipe is new
-     * @param keyCode
-     * @param event
-     * @return
-     */ /*
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            // Log.d(this.getClass().getName(), "back button pressed");
-            if(newRecipe)
-            {
-                database.deleteRecipe(recipe.getKeyID());
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return false;
-                //return super.onKeyDown(keyCode, event);
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    } */
-
 }
