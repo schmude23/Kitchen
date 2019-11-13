@@ -46,13 +46,120 @@ class Recipe {
      * This constructor will attempt to read the contents of a recipe from the string provided.
      * if that fails it will just call the default constructor.
      *
-     * DON'T USE THIS FOR NOW. NOT IMPLEMENTED!!
-     *
      * @param string the string representation of the Recipe
      */
     public Recipe(String string) {
-        this(); //TODO: Implement this method.
-        System.out.println(string);
+        this();
+
+        int keyID = -1;
+        String title = "";
+        double servings = -1;
+        int prep_time = -1;
+        int total_time = -1;
+        boolean favorited = false;
+        List<RecipeIngredient> ingredientList = new ArrayList<>();
+        List<RecipeDirection> directionsList = new ArrayList<>();
+        List<RecipeCategory> categoryList = new ArrayList<>();
+
+
+        //Split the string on some identifiers.
+        String[] segments = string.split("[=,]");
+
+        //Try to get KeyID
+        if (segments[0].equals("Recipe{keyID")) {
+
+            try {
+                keyID = Integer.parseInt(segments[1]);
+            } catch (Exception e) {
+                return;
+            }
+
+        } else {
+            return;
+        }
+
+        //Try to get title
+        if (segments[2].equals(" title")) {
+            title = segments[3].trim();
+        } else {
+            return;
+        }
+
+        //Try to get # of servings
+        if (segments[4].equals(" servings")) {
+            try {
+                servings = Double.parseDouble(segments[5].trim());
+            } catch (Exception e) {
+                return;
+            }
+        } else {
+            return;
+        }
+
+        //Try to get prep time
+        if (segments[6].equals(" prep_time")) {
+
+            try {
+                prep_time = Integer.parseInt(segments[7].trim());
+            } catch (Exception e) {
+                return;
+            }
+
+        } else {
+            return;
+        }
+
+        //Try to get total time
+
+        if (segments[8].equals(" total_time")) {
+
+            try {
+                total_time = Integer.parseInt(segments[9]);
+            } catch (Exception e) {
+                return;
+            }
+
+        } else {
+            return;
+        }
+
+        //Try to get favorited status
+        if (segments[10].equals(" favorited")) {
+
+            if (segments[11].substring(0, 5).trim().equals("true")) {
+                favorited = true;
+            } else if (segments[11].substring(0, 5).trim().equals("false")) {
+                favorited = false;
+            } else {
+                return;
+            }
+
+        } else {
+            return;
+        }
+
+        //Try to get Ingredients List
+
+        segments = string.split("RecipeIngredient{");
+
+        for (int i = 1; i < segments.length; i++) {
+            //TODO: Finish implementing this method to get the ingredients list, directions list and category list
+        }
+
+        /*
+        return "Recipe{" +
+                "keyID=" + keyID +
+                ", title='" + title + '\'' + "\n" +
+                ", servings=" + servings + "\n" +
+                ", prep_time=" + prep_time + "\n" +
+                ", total_time=" + total_time + "\n" +
+                ", favorited=" + favorited + "\n" +
+                strIngList +
+                strDirList +
+                strCatList +
+                '}';
+ */
+
     }
 
     /**
