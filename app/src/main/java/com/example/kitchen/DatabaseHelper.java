@@ -421,7 +421,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     containsList = new ArrayList<>();
                     //cycle through all found recipes so far
                     for (int k = 0; k < recipeList.size(); k++) {
-                        if (String.valueOf(tmpList.get(j).getKeyID()).contains(String.valueOf(recipeList.get(k).getKeyID()))) {
+                        if (tmpList.get(j).getKeyID() == recipeList.get(k).getKeyID()) {
                             containsList.add(recipeList.get(k));
                         }
                     }
