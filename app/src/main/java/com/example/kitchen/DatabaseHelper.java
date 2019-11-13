@@ -359,7 +359,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         //pulling all recipe ingredients pertaining to ingredient id
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_INGREDIENT_LIST + "  WHERE " + RI_KEY_ID + " = ? ", new String[]{String.valueOf(ingredientId)});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_INGREDIENT_LIST + "  WHERE " + RI_INGREDIENT_ID + " = ? ", new String[]{String.valueOf(ingredientId)});
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
