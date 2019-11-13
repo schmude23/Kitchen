@@ -12,7 +12,7 @@ public class RecipeListItem {
 
     RecipeListItem(String recipe_name, double servings,  int prep_time, int total_time, Bitmap image, boolean favorited){
         this.recipe_name = recipe_name;
-        this.servings = String.valueOf(servings);
+        this.servings = servings + " Servings";
         this.prep_time = prep_time + " min";
         this.total_time = total_time + " min";
         this.image = image;

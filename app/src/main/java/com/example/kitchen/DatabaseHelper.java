@@ -69,7 +69,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SC_UNIT = "UNIT";
 
 
-
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION_NUMBER);
     }
@@ -134,7 +133,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + SC_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + SC_INGREDIENT_ID + " INTEGER, "
                 + SC_QUANTITY + " INTEGER,"
-                + SC_UNIT + " TEXT" +")";
+                + SC_UNIT + " TEXT" + ")";
         sqLiteDatabase.execSQL(CREATE_SHOPPING_CART_TABLE);
 
     }
@@ -250,7 +249,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
         }
 
-        if(recipe != null) {
+        if (recipe != null) {
             //Getting Ingredient List
             ArrayList<RecipeIngredient> recipeIngredientList = getAllRecipeIngredients(recipeId);
             recipe.setIngredientList(recipeIngredientList);
@@ -285,7 +284,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
         }
 
-        if(recipe != null) {
+        if (recipe != null) {
             int recipeId = recipe.getKeyID();
 
             //Getting Ingredient List
@@ -313,26 +312,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public ArrayList<Recipe> getRecipeByPrepTime(int prepTime) {
         //TODO: TEST
-        Recipe recipe = null;
-        ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_PREP_TIME + " <= ? ", new String[]{String.valueOf(prepTime)});
-        if (cursor != null && cursor.getCount() > 0) {
-            while (!cursor.isAfterLast()) {
-                cursor.moveToFirst();
-                recipe = mapRecipe(cursor);
-                recipeList.add(recipe);
-                cursor.moveToNext();
+        ArrayList<Recipe> recipeList = getAllRecipes();
+        ArrayList<Recipe> newRecipeList = new ArrayList<>();
+        for(int i = 0; i < recipeList.size(); i++){
+            if(recipeList.get(i).getPrep_time() <= prepTime){
+                newRecipeList.add(recipeList.get(i));
             }
-            cursor.close();
         }
-
-        if (recipeList.size() == 0) {
+        if (newRecipeList.size() == 0) {
             return null;
         }
-
-        return recipeList;
+        return newRecipeList;
     }
 
     /**
@@ -343,28 +333,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public ArrayList<Recipe> getRecipeByTotalTime(int totalTime) {
         //TODO: TEST
-        Recipe recipe = null;
-        ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_TOTAL_TIME + " <= ? ", new String[]{String.valueOf(totalTime)});
-        if (cursor != null && cursor.getCount() > 0) {
-            while (!cursor.isAfterLast()) {
-                cursor.moveToFirst();
-                recipe = mapRecipe(cursor);
-                recipeList.add(recipe);
-                cursor.moveToNext();
+        ArrayList<Recipe> recipeList = getAllRecipes();
+        ArrayList<Recipe> newRecipeList = new ArrayList<>();
+        for (int i = 0; i < recipeList.size(); i++) {
+            if (recipeList.get(i).getTotal_time() <= totalTime) {
+                newRecipeList.add(recipeList.get(i));
             }
-            cursor.close();
         }
-
-        if (recipeList.size() == 0) {
-            cursor.close();
+        if (newRecipeList.size() == 0) {
             return null;
         }
-
-        cursor.close();
-        return recipeList;
+        return newRecipeList;
     }
 
     /**
@@ -399,10 +378,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] recipeIds = new String[recipeIngredientList.size()];
         int count = 0; //used to store recipe at proper location
 
-        for(int i = 0; i < recipeIngredientList.size(); i++){
+        for (int i = 0; i < recipeIngredientList.size(); i++) {
             int tempId = recipeIngredientList.get(i).getRecipeID();
             //if string is NOT contained then add to array list
-            if(!Arrays.asList(recipeIds).contains(toString().valueOf(tempId))){
+            if (!Arrays.asList(recipeIds).contains(toString().valueOf(tempId))) {
                 recipeIds[count] = toString().valueOf(tempId);
                 count++;
             }
@@ -410,7 +389,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //create list of all found recipes (full recipe built)
         ArrayList<Recipe> recipeList = new ArrayList<>();
-        for(int j = 0; j < recipeIds.length; j++ ){
+        for (int j = 0; j < recipeIds.length; j++) {
             recipeList.add(getRecipe(Integer.parseInt(recipeIds[j])));
         }
 
@@ -429,26 +408,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //could this be possible by just reusing getRecipeByIngredientId() and returning the
         //recipes that had matched through all of the tests?
         ArrayList<Recipe> recipeList = getRecipeByIngredientId(ingredientIdList[0]);
-        if(recipeList == null){
+        if (recipeList == null) {
             return null;
         }
         //cycle through all ingredient ids
-        for(int i =1; i < ingredientIdList.length; i++){
+        for (int i = 1; i < ingredientIdList.length; i++) {
             ArrayList<Recipe> tmpList = getRecipeByIngredientId(ingredientIdList[i]);
             ArrayList<Recipe> containsList = new ArrayList<>();
-            if(tmpList != null) {
+            if (tmpList != null) {
                 //cycle through all recipes which contain ingredient i
                 for (int j = 1; j < tmpList.size(); j++) {
                     containsList = new ArrayList<>();
                     //cycle through all found recipes so far
-                    for(int k = 0; k < recipeList.size(); k++) {
+                    for (int k = 0; k < recipeList.size(); k++) {
                         if (String.valueOf(tmpList.get(j).getKeyID()).contains(String.valueOf(recipeList.get(k).getKeyID()))) {
                             containsList.add(recipeList.get(k));
                         }
                     }
                 }
-            }
-            else{
+            } else {
                 return null;
             }
             recipeList = containsList;
@@ -490,10 +468,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] recipeIds = new String[recipeCategoryList.size()];
         int count = 0; //used to store recipe at proper location
 
-        for(int i = 0; i < recipeCategoryList.size(); i++){
+        for (int i = 0; i < recipeCategoryList.size(); i++) {
             int tempId = recipeCategoryList.get(i).getRecipeID();
             //if string is NOT contained then add to array list
-            if(!Arrays.asList(recipeIds).contains(toString().valueOf(tempId))){
+            if (!Arrays.asList(recipeIds).contains(toString().valueOf(tempId))) {
                 recipeIds[count] = toString().valueOf(tempId);
                 count++;
             }
@@ -501,7 +479,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //create list of all found recipes (full recipe built)
         ArrayList<Recipe> recipeList = new ArrayList<>();
-        for(int j = 0; j < recipeIds.length; j++ ){
+        for (int j = 0; j < recipeIds.length; j++) {
             recipeList.add(getRecipe(Integer.parseInt(recipeIds[j])));
         }
 
@@ -640,16 +618,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param recipeId
      * @return true if the operation was successful, false otherwise
      */
-    public boolean addRecipeToCart(int recipeId){
+    public boolean addRecipeToCart(int recipeId) {
         //TODO: Test
         Recipe recipe = getRecipe(recipeId);
-        if(recipe == null){
+        if (recipe == null) {
             return false;
         }
         List<RecipeIngredient> recipeIngredientList = recipe.getIngredientList();
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
-        for(int i =0; i < recipeIngredientList.size(); i++) {
+        for (int i = 0; i < recipeIngredientList.size(); i++) {
             RecipeIngredient ingredient = recipeIngredientList.get(i);
 
             //Create a new map of values, where column names are the keys
@@ -662,7 +640,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             int newRowId = (int) sqLiteDatabase.insert(TABLE_SHOPPING_CART_LIST, null, contentValues);
 
             //check to make sure properly inserted
-            if(newRowId == -1){
+            if (newRowId == -1) {
                 //delete all things aready created
                 //TODO: if failure you need to delete ALL added ingredients using int[]
                 deleteShoppingCartIngredient(newRowId);
@@ -679,7 +657,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @return true if the operation was successful, false otherwise
      */
-    public ArrayList<RecipeIngredient> getShoppingCartIngredients(){
+    public ArrayList<RecipeIngredient> getAllShoppingCartIngredients() {
         //TODO: CORRECT/TEST
         RecipeIngredient recipeIngredient;
         ArrayList<RecipeIngredient> shoppingCartList = new ArrayList<RecipeIngredient>();
@@ -693,11 +671,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 shoppingCartList.add(recipeIngredient);
                 cursor.moveToNext();
             }
-            cursor.close();
         }
         if (shoppingCartList.size() == 0) {
+            cursor.close();
             return null;
         }
+        cursor.close();
         return shoppingCartList;
     }
 
@@ -706,7 +685,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @return true if the operation was successful, false otherwise
      */
-    public boolean updateShoppingCartIngredient(RecipeIngredient ingredient){
+    public boolean updateShoppingCartIngredient(RecipeIngredient ingredient) {
         //TODO: Correct/Test
         int id = ingredient.getKeyID();
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -730,7 +709,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param ingredientId
      * @return true if the operation was successful, false otherwise
      */
-    public boolean deleteShoppingCartIngredient(int ingredientId){
+    public boolean deleteShoppingCartIngredient(int ingredientId) {
         //TODO: Correct/Test
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         long returned = sqLiteDatabase.delete(TABLE_SHOPPING_CART_LIST, SC_INGREDIENT_ID + " = ?", new String[]{String.valueOf(ingredientId)});
@@ -738,6 +717,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
         }
         return true;
+    }
+
+    /**
+     * This method restarts the shopping cart table. effectively clearing the table
+     *
+     * @return true if the operation was successful, false otherwise
+     */
+    public void deleteAllShoppingCartIngredients(){
+        //TODO: Correct/Test
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_SHOPPING_CART_LIST);
+        //Shopping Cart Table
+        String CREATE_SHOPPING_CART_TABLE = "CREATE TABLE " + TABLE_SHOPPING_CART_LIST + "("
+                + SC_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + SC_INGREDIENT_ID + " INTEGER, "
+                + SC_QUANTITY + " INTEGER,"
+                + SC_UNIT + " TEXT" +")";
+        sqLiteDatabase.execSQL(CREATE_SHOPPING_CART_TABLE);
+        return;
     }
 
     /**
@@ -803,7 +801,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int addIngredient(Ingredient ingredient) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
-        if(getIngredient(ingredient.getName()) != -1){
+        if (getIngredient(ingredient.getName()) != -1) {
             return getIngredient(ingredient.getName());
         }
         //adding ingredients
@@ -846,14 +844,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * This method retrieves the ingredient for the given ingredient Title
-     *        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_TITLE + " = ? ", new String[]{String.valueOf(recipeTitle)});
-     *         if (cursor != null) {
-     *             cursor.moveToFirst();
-     *             recipe = mapRecipe(cursor);
-     *             cursor.moveToNext();
+     * Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_TITLE + " = ? ", new String[]{String.valueOf(recipeTitle)});
+     * if (cursor != null) {
+     * cursor.moveToFirst();
+     * recipe = mapRecipe(cursor);
+     * cursor.moveToNext();
+     * <p>
+     * cursor.close();
+     * }
      *
-     *             cursor.close();
-     *         }
      * @param ingredientTitle
      * @return The recipe corresponding to the provided ingredient Title, or -1 if one is not found.
      */
@@ -1056,7 +1055,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Get the Data Repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
 
-        if(getCategory(category.getName()) != -1){
+        if (getCategory(category.getName()) != -1) {
             return getCategory(category.getName());
         }
         //Create a new map of values, where column names are the keys
@@ -1158,10 +1157,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Recipe convertRecipeIngredientUnits(Recipe recipe, String origUnit, String reqUnit) {
         //TODO: Correct/Test
         List<RecipeIngredient> ingredientList = recipe.getIngredientList();
-        for(int i = 0; i < ingredientList.size(); i++){
-            if(ingredientList.get(i).getUnit().contentEquals(origUnit)){
-                double tempQuant = convertUnit(origUnit, reqUnit,ingredientList.get(i).getQuantity());
-                if(tempQuant != -1){
+        for (int i = 0; i < ingredientList.size(); i++) {
+            if (ingredientList.get(i).getUnit().contentEquals(origUnit)) {
+                double tempQuant = convertUnit(origUnit, reqUnit, ingredientList.get(i).getQuantity());
+                if (tempQuant != -1) {
                     ingredientList.get(i).setQuantity(tempQuant);
                     ingredientList.get(i).setUnit(reqUnit);
                 }
@@ -1178,56 +1177,56 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param origUnit, reqUnit, quantity
      * @return If successful, will return a value of the quantity in the new unit
      */
-    private double convertUnit(String origUnit, String reqUnit, double quantity){
+    private double convertUnit(String origUnit, String reqUnit, double quantity) {
         //converting all values to cups
-        if(origUnit.contentEquals("tablespoon(s)")){
-            quantity = quantity*0.0625;
+        if (origUnit.contentEquals("tablespoon(s)")) {
+            quantity = quantity * 0.0625;
         }
-        if(origUnit.contentEquals("teaspoon(s)")){
-            quantity = quantity*0.0208333;
+        if (origUnit.contentEquals("teaspoon(s)")) {
+            quantity = quantity * 0.0208333;
         }
-        if(origUnit.contentEquals("pint(s)")){
-            quantity = quantity*2;
+        if (origUnit.contentEquals("pint(s)")) {
+            quantity = quantity * 2;
         }
-        if(origUnit.contentEquals("quart(s)")){
-            quantity = quantity*4;
+        if (origUnit.contentEquals("quart(s)")) {
+            quantity = quantity * 4;
         }
-        if(origUnit.contentEquals("gallon(s)")){
-            quantity = quantity*16;
+        if (origUnit.contentEquals("gallon(s)")) {
+            quantity = quantity * 16;
         }
-        if(origUnit.contentEquals("pound(s)")){
-            quantity = quantity*1.917222837;
+        if (origUnit.contentEquals("pound(s)")) {
+            quantity = quantity * 1.917222837;
         }
-        if(origUnit.contentEquals("pinch(es)")){
-            quantity = quantity/768;
+        if (origUnit.contentEquals("pinch(es)")) {
+            quantity = quantity / 768;
         }
-        if(origUnit.contentEquals("none")){
+        if (origUnit.contentEquals("none")) {
             return -1;
         }
 
         //converting quantity to desired unit
-        if(reqUnit.contentEquals("tablespoon(s)")){
-            quantity = quantity/0.0625;
+        if (reqUnit.contentEquals("tablespoon(s)")) {
+            quantity = quantity / 0.0625;
         }
-        if(reqUnit.contentEquals("teaspoon(s)")){
-            quantity = quantity/0.0208333;
+        if (reqUnit.contentEquals("teaspoon(s)")) {
+            quantity = quantity / 0.0208333;
         }
-        if(reqUnit.contentEquals("pint(s)")){
-            quantity = quantity/2;
+        if (reqUnit.contentEquals("pint(s)")) {
+            quantity = quantity / 2;
         }
-        if(reqUnit.contentEquals("quart(s)")){
-            quantity = quantity/4;
+        if (reqUnit.contentEquals("quart(s)")) {
+            quantity = quantity / 4;
         }
-        if(reqUnit.contentEquals("gallon(s)")){
-            quantity = quantity/16;
+        if (reqUnit.contentEquals("gallon(s)")) {
+            quantity = quantity / 16;
         }
-        if(reqUnit.contentEquals("pound(s)")){
-            quantity = quantity/1.917222837;
+        if (reqUnit.contentEquals("pound(s)")) {
+            quantity = quantity / 1.917222837;
         }
-        if(reqUnit.contentEquals("pinch(es)")){
-            quantity = quantity*768;
+        if (reqUnit.contentEquals("pinch(es)")) {
+            quantity = quantity * 768;
         }
-        if(reqUnit.contentEquals("none")){
+        if (reqUnit.contentEquals("none")) {
             return -1;
         }
         //converts the Double to have 2 decimal places
@@ -1244,10 +1243,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public Recipe scaleRecipe(Recipe recipe, double desiredServing) {
         //TODO: implement should recipe scaler be within a recipe?
-        double scalar = desiredServing/recipe.getServings();
+        double scalar = desiredServing / recipe.getServings();
         List<RecipeIngredient> ingredientList = recipe.getIngredientList();
-        for(int i = 0; i < ingredientList.size(); i++){
-            ingredientList.get(i).setQuantity(ingredientList.get(i).getQuantity()*scalar);
+        for (int i = 0; i < ingredientList.size(); i++) {
+            ingredientList.get(i).setQuantity(ingredientList.get(i).getQuantity() * scalar);
         }
         recipe.setIngredientList(ingredientList);
         recipe.setServings(desiredServing);

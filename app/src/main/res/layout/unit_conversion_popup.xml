@@ -1,33 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:background="@color/colorAccent"
     android:outlineSpotShadowColor="@color/colorPrimary">
 
-    <EditText
-        android:id="@+id/ingredient_text"
+    <Spinner
+        android:id="@+id/unit_conversion_popup_old_unit_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="30dp"
-        android:textSize="22sp"
-        android:hint="Ingredient"
-        android:textCursorDrawable="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginRight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.097" />
-
+        app:layout_constraintBottom_toTopOf="@+id/divider1" />
+    <TextView
+        android:id="@+id/unit_conversion_popup_old_unit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/old_unit"/>
 
     <View
         android:id="@+id/divider1"
@@ -36,55 +32,51 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="19dp"
         android:background="@color/light_slate_gray"
-        app:layout_constraintBottom_toTopOf="@+id/spinner"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ingredient_text" />
-
-    <EditText
-        android:id="@+id/ingredient_quantity_text"
+        app:layout_constraintTop_toBottomOf="@+id/unit_conversion_popup_old_unit_spinner"
+        app:layout_constraintVertical_bias="0.0" />
+    <TextView
+        android:id="@+id/unit_conversion_popup_new_unit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="24dp"
-        android:hint="Quantity"
-        android:inputType="numberDecimal"
-        android:textCursorDrawable="@null"
+        app:layout_constraintTop_toBottomOf="@id/divider1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ingredient_text" />
+        android:text="@string/new_unit"/>
 
     <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="165dp"
+        android:id="@+id/unit_conversion_popup_new_unit_spinner"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="48dp"
         android:layout_marginRight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ingredient_text" />
+        app:layout_constraintTop_toBottomOf="@+id/divider1" />
 
     <Button
-        android:id="@+id/button_okay"
+        android:id="@+id/unit_conversion_popup_okay_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginRight="20dp"
-        android:text="okay"
+        android:text="@string/okay"
+        android:onClick="onUnitConversionPopupOkayButtonPressed"
         android:background="@drawable/button_style"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ingredient_quantity_text" />
+        app:layout_constraintTop_toBottomOf="@+id/unit_conversion_popup_new_unit_spinner" />
 
     <Button
-        android:id="@+id/button_remove"
+        android:id="@+id/edit_ingredient_popup_remove_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginLeft="20dp"
-        android:visibility="invisible"
-        android:text="remove"
+        android:text="@string/cancel"
         android:background="@drawable/button_style"
+        android:onClick="onUnitConversionPopupCancelButtonPressed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ingredient_quantity_text" />
+        app:layout_constraintTop_toBottomOf="@+id/unit_conversion_popup_new_unit_spinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

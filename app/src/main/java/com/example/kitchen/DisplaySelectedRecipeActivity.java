@@ -5,18 +5,25 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +31,7 @@ import java.util.ArrayList;
 //TODO: Dealing with long recipe titles
 // TODO: back button pressed go to recipe list
 
-public class DisplaySelectedRecipeActivity extends AppCompatActivity {
+public class DisplaySelectedRecipeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     DatabaseHelper dbHandler = new DatabaseHelper(DisplaySelectedRecipeActivity.this);
     private TextView recipe_title;
@@ -32,7 +39,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
     private TextView prep_time;
     private TextView total_time;
     private ImageView image;
-    private ImageView favoriteIcon;
+    private ImageButton favoriteIcon;
     Recipe recipe;
 
     // Ingredient ListView variables
@@ -50,6 +57,12 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
     ArrayList<String> categoryList = new ArrayList<String>();
     ArrayAdapter<String> categoryAdapter;
 
+    //Popup window dialogs
+    Dialog scaleRecipeDialog, deleteRecipeDialog, convertUnitDialog;
+    private String oldUnit, newUnit;
+
+    private EditText scaleRecipePopupServingsEditText;
+    private double scaleRecipeServings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -254,9 +267,6 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.recipe_menu, menu);
-        if(recipe.getFavorited()) {
-            menu.findItem(R.id.action_favorite).setTitle("Unfavorite Recipe");
-        }
         return true;
     }
 
@@ -271,29 +281,9 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
                 editRecipe.putExtra("newRecipe", false);
                 startActivity(editRecipe);
                 return true;
-            case R.id.action_delete_recipe:
-                dbHandler.deleteRecipe(recipe.getKeyID());
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;
             case R.id.action_home:
                 Intent home = new Intent(this, MainActivity.class);
                 startActivity(home);
-                return true;
-            case R.id.action_favorite:
-                boolean favorited = recipe.getFavorited();
-                if(favorited){
-                    recipe.setFavorited(false);
-                    dbHandler.editRecipe(recipe);
-                    favoriteIcon.setImageResource(R.drawable.ic_favorite_outline);
-                    item.setTitle("Favorite Recipe");
-                }
-                else{
-                    recipe.setFavorited(true);
-                    dbHandler.editRecipe(recipe);
-                    favoriteIcon.setImageResource(R.drawable.ic_favorite);
-                    item.setTitle("Unfavorite Recipe");
-                }
                 return true;
             case R.id.action_share_recipe:
                 Intent shareRecipe = new Intent(this, ShareRecipeActivity.class);
@@ -302,5 +292,176 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * When the user selects the delete recipe menu item,
+     * they will be prompted with a popup to confirm deleting
+     * the recipe. This is to prevent accidental deletions.
+     * @param item
+     */
+    public void onDeleteRecipeSelected(MenuItem item){
+        deleteRecipeDialog = new Dialog(this);
+        deleteRecipeDialog.setContentView(R.layout.delete_recipe_popup);
+        deleteRecipeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        deleteRecipeDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
+        deleteRecipeDialog.show();
+    }
+
+    /**
+     * Close the popup and do not delete recipe.
+     * @param v
+     */
+    public void onDeleteRecipePopupCancelButtonPressed(View v){
+       deleteRecipeDialog.dismiss();
+    }
+
+    /**
+     * Close the popup and delete the recipe.
+     * @param v
+     */
+    public void onDeleteRecipePopupConfirmationButtonPressed(View v){
+        deleteRecipeDialog.dismiss();
+        dbHandler.deleteRecipe(recipe.getKeyID());
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+    public void onDisplaySelectedRecipeFavoriteButtonPressed(View v){
+        boolean favorited = recipe.getFavorited();
+        if(favorited){
+            recipe.setFavorited(false);
+            dbHandler.editRecipe(recipe);
+            favoriteIcon.setImageResource(R.drawable.ic_favorite_outline);
+        }
+        else{
+            recipe.setFavorited(true);
+            dbHandler.editRecipe(recipe);
+            favoriteIcon.setImageResource(R.drawable.ic_favorite);
+        }
+    }
+
+    /**
+     * When the "Convert Units" menu option is selected, a popup window is
+     * displayed.This popup contains two spinners prompting the user to select
+     * the unit to be converted and its newly converted unit.
+     * @param item
+     */
+    public void onConvertUnitSelected(MenuItem item){
+        convertUnitDialog = new Dialog(this);
+        convertUnitDialog.setContentView(R.layout.unit_conversion_popup);
+        Spinner oldUnitSpinner, newUnitSpinner;
+        oldUnitSpinner = convertUnitDialog.findViewById(R.id.unit_conversion_popup_old_unit_spinner);
+        newUnitSpinner = convertUnitDialog.findViewById(R.id.unit_conversion_popup_new_unit_spinner);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> oldUnitAdapter = ArrayAdapter.createFromResource(this,
+                R.array.units_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        oldUnitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        oldUnitSpinner.setAdapter(oldUnitAdapter);
+        oldUnitSpinner.setOnItemSelectedListener(this);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> newUnitAdapter = ArrayAdapter.createFromResource(this,
+                R.array.units_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        newUnitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        newUnitSpinner.setAdapter(newUnitAdapter);
+        newUnitSpinner.setOnItemSelectedListener(this);
+
+        convertUnitDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        convertUnitDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
+        convertUnitDialog.show();
+    }
+
+
+    public void onUnitConversionPopupOkayButtonPressed(View v){
+
+        recipe = dbHandler.convertRecipeIngredientUnits(recipe, oldUnit, newUnit);
+        ingredientList = new ArrayList<>();
+        getIngredients();
+        Context context = getApplicationContext();
+
+        CharSequence text = oldUnit + " converted to " + newUnit;
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+        convertUnitDialog.dismiss();
+    }
+    public void onUnitConversionPopupCancelButtonPressed(View v){
+        convertUnitDialog.dismiss();
+    }
+
+    /**
+     * When the "Scale Recipe" menu item is selected, a popup window
+     * for scaling the recipe appears.
+     * @param item
+     */
+    public void onScaleRecipeSelected(MenuItem item){
+        scaleRecipeDialog = new Dialog(this);
+        scaleRecipeDialog.setContentView(R.layout.scale_recipe_popup);
+
+        scaleRecipePopupServingsEditText = scaleRecipeDialog.findViewById(R.id.scale_recipe_popup_servings_edit_text);
+        scaleRecipeServings = recipe.getServings();
+        scaleRecipePopupServingsEditText.setText(String.valueOf(scaleRecipeServings));
+        scaleRecipeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        scaleRecipeDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
+        scaleRecipeDialog.show();
+    }
+
+    /**
+     * Subtract the servings total by 1 iff it is greater than 0
+     * and change the scaleRecipePopupEditText accordingly
+     * @param v
+     */
+    public void onScaleRecipePopupRemoveButtonPressed(View v){
+        scaleRecipeServings = Double.valueOf(scaleRecipePopupServingsEditText.getText().toString());
+        if(scaleRecipeServings != 0)
+            scaleRecipeServings--;
+        scaleRecipePopupServingsEditText.setText(String.valueOf(scaleRecipeServings));
+    }
+    /**
+     * Add to the servings total by 1 and change the
+     * scaleRecipePopupEditText accordingly
+     * @param v
+     */
+    public void onScaleRecipePopupAddButtonPressed(View v){
+        scaleRecipeServings = Double.valueOf(scaleRecipePopupServingsEditText.getText().toString());
+        scaleRecipeServings++;
+        scaleRecipePopupServingsEditText.setText(String.valueOf(scaleRecipeServings));
+    }
+
+    public void onScaleRecipePopupCancelButtonPressed(View v){
+        scaleRecipeDialog.dismiss();
+    }
+    public void onScaleRecipePopupOkayButtonPressed(View v){
+        scaleRecipeServings = Double.valueOf(scaleRecipePopupServingsEditText.getText().toString());
+        dbHandler.scaleRecipe(recipe, scaleRecipeServings);
+        servings.setText(String.valueOf(recipe.getServings()));
+        ingredientList = new ArrayList<>();
+        getIngredients();
+        scaleRecipeDialog.dismiss();
+    }
+
+    // Spinner Methods
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // A unit was selected, assign to String
+        switch(parent.getId()) {
+            case R.id.unit_conversion_popup_old_unit_spinner:
+                oldUnit = parent.getItemAtPosition(position).toString();
+                break;
+            case R.id.unit_conversion_popup_new_unit_spinner:
+                newUnit = parent.getItemAtPosition(position).toString();
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
