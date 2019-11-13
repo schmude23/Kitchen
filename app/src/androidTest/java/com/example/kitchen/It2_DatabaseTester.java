@@ -311,11 +311,11 @@ public class It2_DatabaseTester {
         Ingredient ingredient5 = new Ingredient(-1, "Oil");
         int ingredientIDM5 = testDatabase.addIngredient(ingredient5);
 
-        RecipeIngredient recipeIngredient4 = new RecipeIngredient(-1, -1, ingredientIDM4, 1, "cup(s)", "");
-        RecipeIngredient recipeIngredient5 = new RecipeIngredient(-1, -1, ingredientIDM5, 3.0, "cup(s)", "White Flour");
+        RecipeIngredient recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientIDM4, 1, "cup(s)", "");
+        RecipeIngredient recipeIngredient3 = new RecipeIngredient(-1, -1, ingredientIDM5, 3.0, "cup(s)", "White Flour");
         List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
-        listOfIngredients.add(recipeIngredient4);
-        listOfIngredients.add(recipeIngredient5);
+        listOfIngredients.add(recipeIngredient2);
+        listOfIngredients.add(recipeIngredient3);
 
         RecipeDirection recipeDirection = new RecipeDirection(-1, -1, "Direction", 1);
         List<RecipeDirection> listOfDirections = new ArrayList<RecipeDirection>();
