@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_home"
+        android:icon="@drawable/ic_home"
+        android:title="home"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_remove_selected_items"
+        android:title="Remove Selected Items"
+        android:onClick="onRemoveSelectedItemsSelected"/>
+    <item
+        android:id="@+id/edit_cart_ingredients"
+        android:title="Edit Ingredients"
+        android:onClick="onEditCartIngredientsSelected"/>
+    <item
+        android:id="@+id/action_convert_unit"
+        android:title="@string/convert_units"
+        android:onClick="onConvertUnitSelected"/>
+
+
+</menu>

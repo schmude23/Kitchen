@@ -110,6 +110,12 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                 addRecipe.putExtra("recipeId", -1); // New recipe
                 addRecipe.putExtra("newRecipe", true); // New recipe
                 startActivity(addRecipe);
+                return true;
+            case R.id.action_view_cart:
+                Intent viewCart = new Intent(this, ShoppingCartActivity.class);
+                viewCart.putExtra("recipeId", -1);
+                startActivity(viewCart);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

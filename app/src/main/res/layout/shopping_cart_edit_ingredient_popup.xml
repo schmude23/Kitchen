@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/shopping_cart_edit_ingredient_popup_quantity_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/quantity"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:paddingBottom="30dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/shopping_cart_edit_ingredient_popup_remove_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="false"
+        app:srcCompat="@drawable/ic_remove"
+        app:layout_constraintTop_toBottomOf="@+id/shopping_cart_edit_ingredient_popup_quantity_text"
+        app:layout_constraintEnd_toStartOf="@id/shopping_cart_edit_ingredient_popup_quantity_edit_text"
+        android:onClick="onShoppingCartEditIngredientPopupRemoveButtonPressed"/>
+
+    <EditText
+        android:id="@+id/shopping_cart_edit_ingredient_popup_quantity_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shopping_cart_edit_ingredient_popup_quantity_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/shopping_cart_edit_ingredient_popup_add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="false"
+        app:srcCompat="@drawable/ic_add"
+        app:layout_constraintStart_toEndOf="@id/shopping_cart_edit_ingredient_popup_quantity_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/shopping_cart_edit_ingredient_popup_quantity_text"
+        android:onClick="onShoppingCartEditIngredientPopupAddButtonPressed"/>
+
+    <Button
+        android:id="@+id/shopping_cart_edit_ingredient_popup_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shopping_cart_edit_ingredient_popup_remove_button"
+        android:background="@drawable/button_style"
+        android:onClick="onShoppingCartEditIngredientPopupCancelButtonPressed"/>
+
+    <Button
+        android:id="@+id/shopping_cart_edit_ingredient_popup_okay_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/okay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shopping_cart_edit_ingredient_popup_add_button"
+        android:background="@drawable/button_style"
+        android:onClick="onShoppingCartEditIngredientPopupOkayButtonPressed"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
