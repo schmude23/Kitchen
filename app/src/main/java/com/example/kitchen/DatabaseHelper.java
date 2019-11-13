@@ -417,7 +417,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ArrayList<Recipe> containsList = new ArrayList<>();
             if (tmpList != null) {
                 //cycle through all recipes which contain ingredient i
-                for (int j = 1; j < tmpList.size(); j++) {
+                for (int j = 0; j < tmpList.size(); j++) {
                     containsList = new ArrayList<>();
                     //cycle through all found recipes so far
                     for (int k = 0; k < recipeList.size(); k++) {
