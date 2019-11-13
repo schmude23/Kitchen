@@ -152,6 +152,9 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         }
     }
 
+    /**
+     * Adds default recipes to database when app is opened for the first time
+     */
     private void fillDefaultRecipes() {
         String title;
         double servings;
@@ -239,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
             directions.add(direction);
             direction = new RecipeDirection(-1, recipe.getKeyID(), "combine butter, milk, cheese, and garlic powder in pot", 3);
             directions.add(direction);
-            direction = new RecipeDirection(-1, recipe.getKeyID(), "once combined, add macaroni and stir, then enjoy", 4);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "once combined, add macaroni and stir, then serve", 4);
             directions.add(direction);
 
             recipe.setDirectionsList(directions);
@@ -252,6 +255,579 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
             recipe.setCategoryList(categories);
 
             boolean worked = database.editRecipe(recipe);
+
+            title = "Chicken and Rice";
+            servings = 4;
+            prep_time = 15;
+            total_time = 60;
+            favorited = false;
+
+            recipe = new Recipe(title, servings, prep_time, total_time, favorited);
+            recipeID = database.addRecipe(recipe);
+
+            ingredients = new ArrayList<RecipeIngredient>();
+
+            ingredient = new Ingredient(-1, "chicken");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 2, "none", "breasts");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "oil");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 4, "tablespoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "wild rice");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 2, "cup(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "mushroom");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 2, "cup(s)", "sliced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "onion");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "diced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("garlic powder"), (double) 1, "pinch(es)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "pepper");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "pinch(es)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "salt");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "pinch(es)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            recipe.setIngredientList(ingredients);
+
+            directions = new ArrayList<RecipeDirection>();
+
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "boil a pot of water", 1);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "follow instructions to boil rice", 2);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "preheat oil in pan on medium-high heat", 3);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "coat chicken in seasonings and sear " +
+                    "until cooked through, then let rest for 5 minutes", 4);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "sweat mushroom and onions in pan until mushrooms and onions " +
+                    "have lost all moisture", 5);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "add mushrooms and onions to rice and stir", 6);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "slice chicken breast and serve with rice", 7);
+            directions.add(direction);
+
+            recipe.setDirectionsList(directions);
+
+            categories = new ArrayList<RecipeCategory>();
+
+            rcategory = new RecipeCategory(-1, recipe.getKeyID(), dinner.getKeyID());
+            categories.add(rcategory);
+
+            recipe.setCategoryList(categories);
+
+            worked = database.editRecipe(recipe);
+
+            title = "Beef and Bean Chili";
+            servings = 20;
+            prep_time = 60;
+            total_time = 360;
+            favorited = false;
+
+            recipe = new Recipe(title, servings, prep_time, total_time, favorited);
+            recipeID = database.addRecipe(recipe);
+
+            ingredients = new ArrayList<RecipeIngredient>();
+
+            ingredient = new Ingredient(-1, "beef");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 2, "pound(s)", "chuck roast");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "beans");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 2, "pound(s)", "mixed beans");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "tomato");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "can, diced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("onion"), (double) 1, "none", "diced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "garlic");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 5, "none", "cloves, minced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "beef stock");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "box");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "chili powder");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "teaspoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("salt"), (double) 1, "tablespoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("pepper"), (double) 1, "tablespoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("cheese"), (double) 1, "none", "shredded cheddar");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "sour cream");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "tub");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "green onion");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "bunch, chopped");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            recipe.setIngredientList(ingredients);
+
+            directions = new ArrayList<RecipeDirection>();
+
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "follow directions to cook beans", 1);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "slice beef into bite sized pieces", 2);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "sear beef in large pot, but do not cook through", 3);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "add onions and sweat to remove moisture", 4);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "add tomatoes, garlic, and chili powder", 5);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "add beef stock and spices, then stir and cover completely", 6);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "simmer for 5 hours, occasionally stirring", 7);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "ladel into bowl, and add cheese, green onions, and sour cream to the top, then serve", 8);
+            directions.add(direction);
+
+            recipe.setDirectionsList(directions);
+
+            categories = new ArrayList<RecipeCategory>();
+
+            rcategory = new RecipeCategory(-1, recipe.getKeyID(), dinner.getKeyID());
+            categories.add(rcategory);
+
+            recipe.setCategoryList(categories);
+
+            worked = database.editRecipe(recipe);
+
+            title = "Restaurant-style Salsa";
+            servings = 12;
+            prep_time = 5;
+            total_time = 10;
+            favorited = false;
+
+            recipe = new Recipe(title, servings, prep_time, total_time, favorited);
+            recipeID = database.addRecipe(recipe);
+
+            ingredients = new ArrayList<RecipeIngredient>();
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("tomato"), (double) 28, "none", "ounce can, whole peeled");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("onion"), (double) 1, "none", "white, diced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "jalapeno");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "seeded and finely chopped");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("garlic"), (double) 3, "none", "cloves, minced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "cumin");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "teaspoon(s)", "ground");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("salt"), (double) 1, "teaspoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "cilantro");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "bunch, stems removed");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "lime");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 3, "tablespoon(s)", "juice");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            recipe.setIngredientList(ingredients);
+
+            directions = new ArrayList<RecipeDirection>();
+
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "add ingredients to food processor and blend until desired consistency is reached", 1);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "optional: cover and chill in fridge for a couple hours before serving", 2);
+            directions.add(direction);
+
+            recipe.setDirectionsList(directions);
+
+            categories = new ArrayList<RecipeCategory>();
+
+            rcategory = new RecipeCategory(-1, recipe.getKeyID(), snack.getKeyID());
+            categories.add(rcategory);
+
+            recipe.setCategoryList(categories);
+
+            worked = database.editRecipe(recipe);
+
+            title = "Breakfast Sandwich";
+            servings = 1;
+            prep_time = 10;
+            total_time = 20;
+            favorited = false;
+
+            recipe = new Recipe(title, servings, prep_time, total_time, favorited);
+            recipeID = database.addRecipe(recipe);
+
+            ingredients = new ArrayList<RecipeIngredient>();
+
+            ingredient = new Ingredient(-1, "bagel");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("salt"), (double) 1, "tablespoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("pepper"), (double) 1, "tablespoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "egg");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 2, "none", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "bacon");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 2, "none", "slices");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("onion"), (double) 0.25, "none", "sliced into rings");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("cheese"), (double) 1, "none", "handful shredded cheddar");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            recipe.setIngredientList(ingredients);
+
+            directions = new ArrayList<RecipeDirection>();
+
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "toast bagel in toaster or toaster oven", 1);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "fry bacon in pan, then set aside to dry", 2);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "fry eggs and onions in bacon grease, season with salt and pepper", 3);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "after flipping eggs, cover with cheese", 4);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "place bacon, eggs, and onions on bagel and let cool before serving", 5);
+            directions.add(direction);
+
+            recipe.setDirectionsList(directions);
+
+            categories = new ArrayList<RecipeCategory>();
+
+            rcategory = new RecipeCategory(-1, recipe.getKeyID(), breakfast.getKeyID());
+            categories.add(rcategory);
+
+            recipe.setCategoryList(categories);
+
+            worked = database.editRecipe(recipe);
+
+            title = "Quick Lunch Panini";
+            servings = 1;
+            prep_time = 5;
+            total_time = 10;
+            favorited = false;
+
+            recipe = new Recipe(title, servings, prep_time, total_time, favorited);
+            recipeID = database.addRecipe(recipe);
+
+            ingredients = new ArrayList<RecipeIngredient>();
+
+            ingredient = new Ingredient(-1, "bread");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 2, "none", "sourdough, sliced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "meat");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 0.5, "pound(s)", "choice of deli meat, sliced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("cheese"), (double) 0.25, "pound(s)", "desired cheese, sliced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "mayonnaise");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "bottle");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            recipe.setIngredientList(ingredients);
+
+            directions = new ArrayList<RecipeDirection>();
+
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "spread a thin layer of mayo on both sides of each slice of bread (trust me)", 1);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "layer meat and cheese on one slice of bread", 2);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "cover with second slice of bread, and place in panini press", 3);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "use panini press, allowing mayo on outside to turn into a crisp crust, then serve", 4);
+            directions.add(direction);
+
+            recipe.setDirectionsList(directions);
+
+            categories = new ArrayList<RecipeCategory>();
+
+            rcategory = new RecipeCategory(-1, recipe.getKeyID(), lunch.getKeyID());
+            categories.add(rcategory);
+
+            recipe.setCategoryList(categories);
+
+            worked = database.editRecipe(recipe);
+
+            title = "Ground Beef Tacos";
+            servings = 10;
+            prep_time = 30;
+            total_time = 45;
+            favorited = false;
+
+            recipe = new Recipe(title, servings, prep_time, total_time, favorited);
+            recipeID = database.addRecipe(recipe);
+
+            ingredients = new ArrayList<RecipeIngredient>();
+
+            ingredient = new Ingredient(-1, "tortillas");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "pack");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("beef"), (double) 1, "pound(s)", "ground");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("onion"), (double) 1, "none", "white, diced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("cheese"), (double) 1, "none", "bag shredded cheddar");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "salsa");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "container");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("garlic"), (double) 2, "none", "cloves, minced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("cumin"), (double) 1, "teaspoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("salt"), (double) 1, "teaspoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("pepper"), (double) 1, "teaspoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("cilantro"), (double) 1, "none", "bunch, finely chopped");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            recipe.setIngredientList(ingredients);
+
+            directions = new ArrayList<RecipeDirection>();
+
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "add beef, seasonings, garlic, and half the diced onion to a pan on " +
+                    "medium-high heat and cook until done", 1);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "warm tortillas in microwave covered with a damp paper towel or on the stovetop", 2);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "serve each ingredient in separate bowls and build tacos as desired", 3);
+            directions.add(direction);
+
+            recipe.setDirectionsList(directions);
+
+            categories = new ArrayList<RecipeCategory>();
+
+            rcategory = new RecipeCategory(-1, recipe.getKeyID(), lunch.getKeyID());
+            categories.add(rcategory);
+            rcategory = new RecipeCategory(-1, recipe.getKeyID(), dinner.getKeyID());
+            categories.add(rcategory);
+
+            recipe.setCategoryList(categories);
+
+            worked = database.editRecipe(recipe);
+
+            title = "Spaghetti with Meat Sauce";
+            servings = 4;
+            prep_time = 15;
+            total_time = 45;
+            favorited = false;
+
+            recipe = new Recipe(title, servings, prep_time, total_time, favorited);
+            recipeID = database.addRecipe(recipe);
+
+            ingredients = new ArrayList<RecipeIngredient>();
+
+            ingredient = new Ingredient(-1, "spaghetti");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "box");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "italian sausage");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "pack, ground or cased");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("tomato"), (double) 28, "none", "ounce can, crushed");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "tomato paste");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "none", "8 oz can");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "wine");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "cup(s)", "dry red");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("onion"), (double) 1, "none", "white, diced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("salt"), (double) 1, "teaspoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("pepper"), (double) 1, "teaspoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("garlic"), (double) 6, "none", "cloves, minced");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), database.getIngredient("cheese"), (double) 1, "none", "parmesan");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "oregano");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 1, "teaspoon(s)", "");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            ingredient = new Ingredient(-1, "basil");
+            ingredientID = database.addIngredient(ingredient);
+            ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 4, "none", "fresh leaves");
+            database.addRecipeIngredient(ringredient);
+            ingredients.add(ringredient);
+
+            recipe.setIngredientList(ingredients);
+
+            directions = new ArrayList<RecipeDirection>();
+
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "boil spaghetti in large pot per instructions", 1);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "sear sausage in medium pot, removing casings if necessary", 2);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "add onions and garlic, and sweat", 3);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "add tomatoes, tomato paste, seasonings, wine, cover, " +
+                    "and let simmer for 30 minutes", 4);
+            directions.add(direction);
+            direction = new RecipeDirection(-1, recipe.getKeyID(), "drain pasta when done, and serve with sauce poured over top", 5);
+            directions.add(direction);
+
+            recipe.setDirectionsList(directions);
+
+            categories = new ArrayList<RecipeCategory>();
+
+            rcategory = new RecipeCategory(-1, recipe.getKeyID(), dinner.getKeyID());
+            categories.add(rcategory);
+
+            recipe.setCategoryList(categories);
+
+            worked = database.editRecipe(recipe);
         }
     }
 
