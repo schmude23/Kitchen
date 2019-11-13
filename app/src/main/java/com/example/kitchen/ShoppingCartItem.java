@@ -8,8 +8,9 @@ public class ShoppingCartItem {
     private String details;
     private double quantity;
     private String unit;
+    boolean checked;
 
-    public ShoppingCartItem(int keyID, int recipeID, int ingredientID, String name, String details, double quantity, String unit) {
+    public ShoppingCartItem(int keyID, int recipeID, int ingredientID, String name, String details, double quantity, String unit, boolean checked) {
         this.keyID = keyID;
         this.recipeID = recipeID;
         this.ingredientID = ingredientID;
@@ -17,6 +18,7 @@ public class ShoppingCartItem {
         this.details = details;
         this.quantity = quantity;
         this.unit = unit;
+        this.checked = checked;
 
     }
 
@@ -74,5 +76,8 @@ public class ShoppingCartItem {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+    public boolean isChecked(){
+        return checked;
     }
 }
