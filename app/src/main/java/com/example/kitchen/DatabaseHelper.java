@@ -695,7 +695,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cVals.put(SC_QUANTITY, ingredient.getQuantity());
         cVals.put(SC_UNIT, ingredient.getUnit());
 
-        long returned = sqLiteDatabase.update(TABLE_INGREDIENT_LIST, cVals, IT_KEY_ID + " = ?", new String[]{String.valueOf(id)});
+        long returned = sqLiteDatabase.update(TABLE_SHOPPING_CART_LIST, cVals, IT_KEY_ID + " = ?", new String[]{String.valueOf(id)});
         if (returned == -1) {
             return false;
         }
