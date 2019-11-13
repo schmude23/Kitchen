@@ -1177,7 +1177,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param origUnit, reqUnit, quantity
      * @return If successful, will return a value of the quantity in the new unit
      */
-    private double convertUnit(String origUnit, String reqUnit, double quantity) {
+    public double convertUnit(String origUnit, String reqUnit, double quantity) {
         //converting all values to cups
         if (origUnit.contentEquals("tablespoon(s)")) {
             quantity = quantity * 0.0625;

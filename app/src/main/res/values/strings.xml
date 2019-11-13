@@ -28,6 +28,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="filter_by">Filter By</string>
+    <string name="search">Search</string>
     <string name="sort_by">Sort By</string>
     <string name="servings">Servings</string>
     <string name="prep_time">Prep Time</string>

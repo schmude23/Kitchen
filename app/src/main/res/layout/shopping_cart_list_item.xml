@@ -9,10 +9,11 @@
         android:id="@+id/ingredient_check_box"
         android:layout_width="154dp"
         android:layout_height="60dp"
-        android:text="Ingredient"
+        android:text="@string/ingredient"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:buttonTint="@color/orange"/>
 
     <TextView
         android:id="@+id/ingredient_quantity_text"
