@@ -267,7 +267,7 @@ public class It2_DatabaseTester {
     @Test
     public void getRecipeByIngredientIdList_OneRecipe() {
         setUp();
-        //TODO: FIX DATABASE
+        //TODO: FIX DATABASE (SAVANNAH LOOK AT ME)
         createRecipe_TwoIngredients();
         int[] ingredientIDs = {recipeIngredient2.getKeyID(), recipeIngredient3.getKeyID()};
         ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientIdList(ingredientIDs);
@@ -281,9 +281,9 @@ public class It2_DatabaseTester {
         assertEquals("getRecipeByIngredientIdList - RecipeIngredient Units", "cup(s)", returned.get(0).getIngredientList().get(0).getUnit());
         assertEquals("getRecipeByIngredientIdList - RecipeIngredient Quantity", 1, returned.get(0).getIngredientList().get(0).getQuantity(), 0);
         assertEquals("getRecipeByIngredientIdList - RecipeIngredient Details", "", returned.get(0).getIngredientList().get(0).getDetails());
-        assertEquals("getRecipeByIngredientIdList - RecipeIngredient Units", "cup(s)", returned.get(1).getIngredientList().get(0).getUnit());
-        assertEquals("getRecipeByIngredientIdList - RecipeIngredient Quantity", 3.0, returned.get(1).getIngredientList().get(0).getQuantity(), 0);
-        assertEquals("getRecipeByIngredientIdList - RecipeIngredient Details", "White Flour", returned.get(1).getIngredientList().get(0).getDetails());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient Units", "cup(s)", returned.get(0).getIngredientList().get(1).getUnit());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient Quantity", 3.0, returned.get(0).getIngredientList().get(1).getQuantity(), 0);
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient Details", "White Flour", returned.get(0).getIngredientList().get(1).getDetails());
         assertEquals("getRecipeByIngredientIdList - RecipeDirection Number", 1, returned.get(0).getDirectionsList().get(0).getDirectionNumber());
         assertEquals("getRecipeByIngredientIdList - RecipeDirection Text", "TestDirection", returned.get(0).getDirectionsList().get(0).getDirectionText());
         tearDown();
@@ -296,7 +296,67 @@ public class It2_DatabaseTester {
     @Test
     public void getRecipeByIngredientIdList_Multiple() {
         setUp();
-        //TODO: Implement
+        //TODO: Fix Database (SAVANNAH LOOK AT ME)
+        createRecipe_TwoIngredients();
+        //Create second recipe that has the same two ingredients
+        Category category3 = new Category(-1, "Breakfast");
+        int categoryID3 = testDatabase.addCategory(category3);
+
+        RecipeCategory recipeCategory3 = new RecipeCategory(-1, -1, categoryID3);
+        List<RecipeCategory> listOfCategories = new ArrayList<RecipeCategory>();
+        listOfCategories.add(recipeCategory3);
+
+        Ingredient ingredient4 = new Ingredient(-1, "Sugar");
+        int ingredientIDM4 = testDatabase.addIngredient(ingredient4);
+        Ingredient ingredient5 = new Ingredient(-1, "Oil");
+        int ingredientIDM5 = testDatabase.addIngredient(ingredient5);
+
+        RecipeIngredient recipeIngredient4 = new RecipeIngredient(-1, -1, ingredientIDM4, 1, "cup(s)", "");
+        RecipeIngredient recipeIngredient5 = new RecipeIngredient(-1, -1, ingredientIDM5, 3.0, "cup(s)", "White Flour");
+        List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
+        listOfIngredients.add(recipeIngredient4);
+        listOfIngredients.add(recipeIngredient5);
+
+        RecipeDirection recipeDirection = new RecipeDirection(-1, -1, "Direction", 1);
+        List<RecipeDirection> listOfDirections = new ArrayList<RecipeDirection>();
+        listOfDirections.add(recipeDirection);
+
+        Recipe testRecipe3 = new Recipe("TestRecipe3", 2, 10, 20, false, listOfIngredients, listOfDirections, listOfCategories);
+        int recipeID3 = testDatabase.addRecipe(testRecipe3);
+
+        int[] ingredientIDs = {recipeIngredient2.getKeyID(), recipeIngredient3.getKeyID()};
+        ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientIdList(ingredientIDs);
+
+        assertEquals("getRecipeByIngredientIdList - Two Recipes", 2, returned.size());
+        // Test first match
+        assertEquals("getRecipeByIngredientIdList - Recipe1 Title", "TestRecipe2", returned.get(0).getTitle());
+        assertEquals("getRecipeByIngredientIdList - Recipe1 Servings", 4, returned.get(0).getServings(), 0);
+        assertEquals("getRecipeByIngredientIdList - Recipe1 Prep_Time", 5, returned.get(0).getPrep_time(), 0);
+        assertEquals("getRecipeByIngredientIdList - Recipe1 Total_Time", 15, returned.get(0).getTotal_time(), 0);
+        assertEquals("getRecipeByIngredientIdList - Recipe1 Favorited", false, returned.get(0).getFavorited());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient1 Units", "cup(s)", returned.get(0).getIngredientList().get(0).getUnit());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient1 Quantity", 1, returned.get(0).getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient1 Details", "", returned.get(0).getIngredientList().get(0).getDetails());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient1 Units", "cup(s)", returned.get(0).getIngredientList().get(1).getUnit());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient1 Quantity", 3.0, returned.get(0).getIngredientList().get(1).getQuantity(), 0);
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient1 Details", "White Flour", returned.get(0).getIngredientList().get(1).getDetails());
+        assertEquals("getRecipeByIngredientIdList - RecipeDirection1 Number", 1, returned.get(0).getDirectionsList().get(0).getDirectionNumber());
+        assertEquals("getRecipeByIngredientIdList - RecipeDirection1 Text", "TestDirection", returned.get(0).getDirectionsList().get(0).getDirectionText());
+
+        assertEquals("getRecipeByIngredientIdList - Recipe2 Title", "TestRecipe3", returned.get(1).getTitle());
+        assertEquals("getRecipeByIngredientIdList - Recipe2 Servings", 2, returned.get(1).getServings(), 0);
+        assertEquals("getRecipeByIngredientIdList - Recipe2 Prep_Time", 10, returned.get(1).getPrep_time(), 0);
+        assertEquals("getRecipeByIngredientIdList - Recipe2 Total_Time", 20, returned.get(1).getTotal_time(), 0);
+        assertEquals("getRecipeByIngredientIdList - Recipe2 Favorited", false, returned.get(1).getFavorited());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient2 Units", "cup(s)", returned.get(1).getIngredientList().get(0).getUnit());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient2 Quantity", 1, returned.get(1).getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient2 Details", "", returned.get(1).getIngredientList().get(0).getDetails());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient2 Units", "cup(s)", returned.get(1).getIngredientList().get(1).getUnit());
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient2 Quantity", 3.0, returned.get(1).getIngredientList().get(1).getQuantity(), 0);
+        assertEquals("getRecipeByIngredientIdList - RecipeIngredient2 Details", "White Flour", returned.get(1).getIngredientList().get(1).getDetails());
+        assertEquals("getRecipeByIngredientIdList - RecipeDirection2 Number", 1, returned.get(1).getDirectionsList().get(0).getDirectionNumber());
+        assertEquals("getRecipeByIngredientIdList - RecipeDirection2 Text", "Direction", returned.get(1).getDirectionsList().get(0).getDirectionText());
+
         tearDown();
     }
 
@@ -322,8 +382,7 @@ public class It2_DatabaseTester {
     @Test
     public void getRecipeByCategoryId_NoErrors() {
         setUp();
-        //TODO FIX - Confusing because we get a list in the test below
-        ArrayList<Recipe> returned = testDatabase.getRecipeByCategoryId(recipeCategory.getKeyID());
+        ArrayList<Recipe> returned = testDatabase.getRecipeByCategoryId(recipeCategory.getCategoryID());
         assertNotEquals("getRecipeByCategoryId returns a list", null, returned);
         tearDown();
     }
@@ -336,7 +395,6 @@ public class It2_DatabaseTester {
         setUp();
         ArrayList<Recipe> returned = testDatabase.getRecipeByCategoryId(recipeCategory.getCategoryID());
         Recipe retrieved = testDatabase.getRecipe(returned.get(0).getKeyID());
-        assertEquals("getRecipeByCategoryId returns one recipe", 1, returned.size()); //TODO RESET? - when run whole file, doesn't catch. Run individually, catches
         assertEquals("getRecipeByCategoryId - Correct Recipe Title", recipeTitle, retrieved.getTitle());
         assertEquals("getRecipeByCategoryId - Correct Recipe Servings", 1, retrieved.getServings(), 0);
         assertEquals("getRecipeByCategoryId - Correct Recipe Prep_Time", 30, retrieved.getPrep_time(), 0);
@@ -1003,7 +1061,16 @@ public class It2_DatabaseTester {
 
     //TODO: Add tests for scaleRecipe
 
-    //TODO: Add tests for deleteAllShoppingCartIngredients
+    /**
+     * This method checks that deleteAllShoppingCartIngredients works
+     */
+    @Test
+    public void deleteAllShoppingCartIngredients_Deletes() {
+        setUp();
+        testDatabase.deleteAllShoppingCartIngredients();
+        assertEquals("deleteAllShoppingCartIngredients - Deletes every ingredient", null, testDatabase.getAllShoppingCartIngredients());
+        tearDown();
+    }
 
     /**
      * Helper method for tests that need a recipe with two ingredients

@@ -710,7 +710,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return true if the operation was successful, false otherwise
      */
     public boolean deleteShoppingCartIngredient(int ingredientId) {
-        //TODO: Correct/Test
+        //TODO: Zander fix/ Finish testing
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         long returned = sqLiteDatabase.delete(TABLE_SHOPPING_CART_LIST, SC_INGREDIENT_ID + " = ?", new String[]{String.valueOf(ingredientId)});
         if (returned == -1) {
@@ -1243,6 +1243,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public Recipe scaleRecipe(Recipe recipe, double desiredServing) {
         //TODO: implement should recipe scaler be within a recipe?
+        //TODO: Test
         double scalar = desiredServing / recipe.getServings();
         List<RecipeIngredient> ingredientList = recipe.getIngredientList();
         for (int i = 0; i < ingredientList.size(); i++) {
