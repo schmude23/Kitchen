@@ -20,12 +20,12 @@ public class It2_DatabaseTester {
     Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
     DatabaseHelper testDatabase = new DatabaseHelper(appContext.getApplicationContext());
     String recipeTitle;
-    int categoryID, ingredientID, recipeID, ingredientID2, recipeID2;
+    int categoryID, ingredientID, recipeID, ingredientID2, recipeID2, ingredientIDM2, ingredientIDM3;
     Recipe testRecipe, testRecipe2;
     Category category;
     Ingredient ingredient;
     RecipeCategory recipeCategory;
-    RecipeIngredient recipeIngredient, recipeIngredient2, recipeIngredient3;
+    RecipeIngredient recipeIngredient;
 
     public void setUp(){
         // Create recipe to test with
@@ -147,7 +147,7 @@ public class It2_DatabaseTester {
     @Test
     public void getRecipeByIngredientId_NoErrors() {
         setUp();
-        ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientId(recipeIngredient.getKeyID());
+        ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientId(ingredientID);
         assertNotEquals("getRecipeByIngredientId returns a list", null, returned);
         tearDown();
     }
@@ -158,7 +158,7 @@ public class It2_DatabaseTester {
     @Test
     public void getRecipeByIngredientId_OneRecipe() {
         setUp();
-        ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientId(recipeIngredient.getKeyID());
+        ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientId(ingredientID);
         assertEquals("getRecipeByIngredientId returns one recipe", 1, returned.size());
         assertEquals("getRecipeByIngredientId - Correct Recipe Title", recipeTitle, returned.get(0).getTitle());
         assertEquals("getRecipeByIngredientId - Correct Recipe Servings", 1, returned.get(0).getServings(), 0);
@@ -255,7 +255,7 @@ public class It2_DatabaseTester {
     public void getRecipeByIngredientIdList_NoErrors() {
         setUp();
         createRecipe_TwoIngredients();
-        int[] ingredientIDs = {recipeIngredient2.getKeyID(), recipeIngredient3.getKeyID()};
+        int[] ingredientIDs = {ingredientIDM2, ingredientIDM3};
         ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientIdList(ingredientIDs);
         assertNotEquals("getRecipeByIngredientIdList returns a list", null, returned);
         tearDown();
@@ -267,9 +267,8 @@ public class It2_DatabaseTester {
     @Test
     public void getRecipeByIngredientIdList_OneRecipe() {
         setUp();
-        //TODO: FIX DATABASE (SAVANNAH LOOK AT ME)
         createRecipe_TwoIngredients();
-        int[] ingredientIDs = {recipeIngredient2.getKeyID(), recipeIngredient3.getKeyID()};
+        int[] ingredientIDs = {ingredientIDM2, ingredientIDM3};
         ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientIdList(ingredientIDs);
 
         assertEquals("getRecipeByIngredientIdList - One Recipe", 1, returned.size());
@@ -296,7 +295,7 @@ public class It2_DatabaseTester {
     @Test
     public void getRecipeByIngredientIdList_Multiple() {
         setUp();
-        //TODO: Fix Database (SAVANNAH LOOK AT ME)
+        //TODO: Failing
         createRecipe_TwoIngredients();
         //Create second recipe that has the same two ingredients
         Category category3 = new Category(-1, "Breakfast");
@@ -324,7 +323,7 @@ public class It2_DatabaseTester {
         Recipe testRecipe3 = new Recipe("TestRecipe3", 2, 10, 20, false, listOfIngredients, listOfDirections, listOfCategories);
         int recipeID3 = testDatabase.addRecipe(testRecipe3);
 
-        int[] ingredientIDs = {recipeIngredient2.getKeyID(), recipeIngredient3.getKeyID()};
+        int[] ingredientIDs = {ingredientIDM4, ingredientIDM5};
         ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientIdList(ingredientIDs);
 
         assertEquals("getRecipeByIngredientIdList - Two Recipes", 2, returned.size());
@@ -1084,12 +1083,12 @@ public class It2_DatabaseTester {
         listOfCategories.add(recipeCategory2);
 
         Ingredient ingredient2 = new Ingredient(-1, "Sugar");
-        int ingredientIDM2 = testDatabase.addIngredient(ingredient2);
+        ingredientIDM2 = testDatabase.addIngredient(ingredient2);
         Ingredient ingredient3 = new Ingredient(-1, "Oil");
-        int ingredientIDM3 = testDatabase.addIngredient(ingredient3);
+        ingredientIDM3 = testDatabase.addIngredient(ingredient3);
 
-        recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientIDM2, 1, "cup(s)", "");
-        recipeIngredient3 = new RecipeIngredient(-1, -1, ingredientIDM3, 3.0, "cup(s)", "White Flour");
+        RecipeIngredient recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientIDM2, 1, "cup(s)", "");
+        RecipeIngredient recipeIngredient3 = new RecipeIngredient(-1, -1, ingredientIDM3, 3.0, "cup(s)", "White Flour");
         List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
         listOfIngredients.add(recipeIngredient2);
         listOfIngredients.add(recipeIngredient3);
