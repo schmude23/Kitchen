@@ -407,10 +407,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //TODO: TEST
         //could this be possible by just reusing getRecipeByIngredientId() and returning the
         //recipes that had matched through all of the tests?
+
+        System.out.println("Testing, 1, 2, 3");
+
         ArrayList<Recipe> recipeList = getRecipeByIngredientId(ingredientIdList[0]);
         if (recipeList == null) {
             return null;
         }
+
+        System.out.println("Hello hello? is this thing working?");
+
         //cycle through all ingredient ids
         for (int i = 1; i < ingredientIdList.length; i++) {
             ArrayList<Recipe> tmpList = getRecipeByIngredientId(ingredientIdList[i]);
@@ -418,7 +424,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (tmpList != null) {
                 //cycle through all recipes which contain ingredient i
                 for (int j = 0; j < tmpList.size(); j++) {
-                    containsList = new ArrayList<>();
                     //cycle through all found recipes so far
                     for (int k = 0; k < recipeList.size(); k++) {
                         if (tmpList.get(j).getKeyID() == recipeList.get(k).getKeyID()) {
@@ -431,6 +436,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             recipeList = containsList;
         }
+
 
         return recipeList;
     }
