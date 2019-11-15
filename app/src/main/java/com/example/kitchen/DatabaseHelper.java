@@ -300,8 +300,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<Recipe> getRecipeByPrepTime(int prepTime) {
         ArrayList<Recipe> recipeList = getAllRecipes();
         ArrayList<Recipe> newRecipeList = new ArrayList<>();
-        for(int i = 0; i < recipeList.size(); i++){
-            if(recipeList.get(i).getPrep_time() <= prepTime){
+        for (int i = 0; i < recipeList.size(); i++) {
+            if (recipeList.get(i).getPrep_time() <= prepTime) {
                 newRecipeList.add(recipeList.get(i));
             }
         }
@@ -612,7 +612,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         for (int i = 0; i < recipeIngredientList.size(); i++) {
             RecipeIngredient recipeIngredient = recipeIngredientList.get(i);
             RecipeIngredient existCheck = getShoppingCartIngredient(recipeIngredient.getIngredientID());
-            if( existCheck == null) {
+            if (existCheck == null) {
                 //Create a new map of values, where column names are the keys
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(SC_INGREDIENT_ID, recipeIngredient.getIngredientID());
@@ -628,10 +628,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     deleteShoppingCartIngredient(newRowId);
                     return false;
                 }
-            }
-            else{
+            } else {
                 double quantity = existCheck.getQuantity();
-                recipeIngredient.setQuantity(recipeIngredient.getQuantity()+ quantity);
+                recipeIngredient.setQuantity(recipeIngredient.getQuantity() + quantity);
                 updateShoppingCartIngredient(recipeIngredient);
             }
         }
@@ -733,7 +732,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @return true if the operation was successful, false otherwise
      */
-    public void deleteAllShoppingCartIngredients(){
+    public void deleteAllShoppingCartIngredients() {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_SHOPPING_CART_LIST);
         //Shopping Cart Table
@@ -741,7 +740,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + SC_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + SC_INGREDIENT_ID + " INTEGER, "
                 + SC_QUANTITY + " INTEGER,"
-                + SC_UNIT + " TEXT" +")";
+                + SC_UNIT + " TEXT" + ")";
         sqLiteDatabase.execSQL(CREATE_SHOPPING_CART_TABLE);
         return;
     }
@@ -817,10 +816,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cVals.put(IT_NAME, ingredient.getName());
         int res = (int) sqLiteDatabase.insert(TABLE_INGREDIENT_LIST, null, cVals);
         ingredient.setKeyID(res);
-
-        if (res == -1) {
-            return -1;
-        }
 
         return res;
     }
@@ -1244,7 +1239,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful, will return true
      */
     public Recipe scaleRecipe(Recipe recipe, double desiredServing) {
-        if(recipe.getKeyID() == -1)
+        if (recipe.getKeyID() == -1)
             return null;
         double scalar = desiredServing / recipe.getServings();
         List<RecipeIngredient> ingredientList = recipe.getIngredientList();
@@ -1264,43 +1259,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     private Recipe mapRecipe(Cursor cursor) {
         Recipe recipe = new Recipe();
-        try {
-            if (cursor != null && cursor.getCount() > 0) {
-                if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
-                    int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
-                    recipe.setKeyID((cursor.getInt(idIndex)));
-                }
-                if (cursor.getColumnIndex(RT_TITLE) != -1) {
-                    int recipeTitleIndex = cursor.getColumnIndexOrThrow(RT_TITLE);
-                    recipe.setTitle(cursor.getString(recipeTitleIndex));
-                }
-                if (cursor.getColumnIndex(RT_TOTAL_TIME) != -1) {
-                    int recipetTimeIndex = cursor.getColumnIndexOrThrow(RT_TOTAL_TIME);
-                    recipe.setTotal_time(cursor.getInt(recipetTimeIndex));
-                }
-                if (cursor.getColumnIndex(RT_PREP_TIME) != -1) {
-                    int recipepTimeIndex = cursor.getColumnIndexOrThrow(RT_PREP_TIME);
-                    recipe.setPrep_time(cursor.getInt(recipepTimeIndex));
-                }
-                if (cursor.getColumnIndex(RT_SERVINGS) != -1) {
-                    int recipeServingsIndex = cursor.getColumnIndexOrThrow(RT_SERVINGS);
-                    recipe.setServings(cursor.getDouble(recipeServingsIndex));
-                }
-                //not sure how to get the bit type out of the cursor... could just do 1 or 0
-                if (cursor.getColumnIndex(RT_FAVORITED) != -1) {
-                    int recipeFavoritedIndex = cursor.getColumnIndexOrThrow(RT_FAVORITED);
-                    if (cursor.getInt(recipeFavoritedIndex) == 1) {
-                        recipe.setFavorited(true);
-                    } else {
-                        recipe.setFavorited(false);
-                    }
-                }
-            }
-        } catch (CursorIndexOutOfBoundsException ex) {
-            return null;
+        if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
+            int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
+            recipe.setKeyID((cursor.getInt(idIndex)));
         }
-        if (recipe.getKeyID() == -1) {
-            return null;
+        if (cursor.getColumnIndex(RT_TITLE) != -1) {
+            int recipeTitleIndex = cursor.getColumnIndexOrThrow(RT_TITLE);
+            recipe.setTitle(cursor.getString(recipeTitleIndex));
+        }
+        if (cursor.getColumnIndex(RT_TOTAL_TIME) != -1) {
+            int recipetTimeIndex = cursor.getColumnIndexOrThrow(RT_TOTAL_TIME);
+            recipe.setTotal_time(cursor.getInt(recipetTimeIndex));
+        }
+        if (cursor.getColumnIndex(RT_PREP_TIME) != -1) {
+            int recipepTimeIndex = cursor.getColumnIndexOrThrow(RT_PREP_TIME);
+            recipe.setPrep_time(cursor.getInt(recipepTimeIndex));
+        }
+        if (cursor.getColumnIndex(RT_SERVINGS) != -1) {
+            int recipeServingsIndex = cursor.getColumnIndexOrThrow(RT_SERVINGS);
+            recipe.setServings(cursor.getDouble(recipeServingsIndex));
+        }
+        //not sure how to get the bit type out of the cursor... could just do 1 or 0
+        if (cursor.getColumnIndex(RT_FAVORITED) != -1) {
+            int recipeFavoritedIndex = cursor.getColumnIndexOrThrow(RT_FAVORITED);
+            if (cursor.getInt(recipeFavoritedIndex) == 1) {
+                recipe.setFavorited(true);
+            } else {
+                recipe.setFavorited(false);
+            }
         }
         return recipe;
 
@@ -1316,38 +1302,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         RecipeIngredient recipeIngredient = new RecipeIngredient();
         //had to take this out so ingredient can set name
         int idIndex = -1;
-        try {
-            if (cursor != null && cursor.getCount() > 0) {
-                if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
-                    idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
-                    recipeIngredient.setKeyID((cursor.getInt(idIndex)));
-                }
-                if (cursor.getColumnIndex(RI_RECIPE_ID) != -1) {
-                    int recipeIdIndex = cursor.getColumnIndexOrThrow(RI_RECIPE_ID);
-                    recipeIngredient.setRecipeID(cursor.getInt(recipeIdIndex));
-                }
-                if (cursor.getColumnIndex(RI_INGREDIENT_ID) != -1) {
-                    int ingredientIdIndex = cursor.getColumnIndexOrThrow(RI_INGREDIENT_ID);
-                    recipeIngredient.setIngredientID(cursor.getInt(ingredientIdIndex));
-                }
-                if (cursor.getColumnIndex(RI_QUANTITY) != -1) {
-                    int quantityIndex = cursor.getColumnIndexOrThrow(RI_QUANTITY);
-                    recipeIngredient.setQuantity(cursor.getDouble(quantityIndex));
-                }
-                if (cursor.getColumnIndex(RI_UNIT) != -1) {
-                    int unitIndex = cursor.getColumnIndexOrThrow(RI_UNIT);
-                    recipeIngredient.setUnit(cursor.getString(unitIndex));
-                }
-                if (cursor.getColumnIndex(RI_DETAILS) != -1) {
-                    int detailsIndex = cursor.getColumnIndexOrThrow(RI_DETAILS);
-                    recipeIngredient.setDetails(cursor.getString(detailsIndex));
-                }
-            }
-        } catch (CursorIndexOutOfBoundsException ex) {
-            return null;
+        if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
+            idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
+            recipeIngredient.setKeyID((cursor.getInt(idIndex)));
         }
-        if (recipeIngredient.getKeyID() == -1) {
-            return null;
+        if (cursor.getColumnIndex(RI_RECIPE_ID) != -1) {
+            int recipeIdIndex = cursor.getColumnIndexOrThrow(RI_RECIPE_ID);
+            recipeIngredient.setRecipeID(cursor.getInt(recipeIdIndex));
+        }
+        if (cursor.getColumnIndex(RI_INGREDIENT_ID) != -1) {
+            int ingredientIdIndex = cursor.getColumnIndexOrThrow(RI_INGREDIENT_ID);
+            recipeIngredient.setIngredientID(cursor.getInt(ingredientIdIndex));
+        }
+        if (cursor.getColumnIndex(RI_QUANTITY) != -1) {
+            int quantityIndex = cursor.getColumnIndexOrThrow(RI_QUANTITY);
+            recipeIngredient.setQuantity(cursor.getDouble(quantityIndex));
+        }
+        if (cursor.getColumnIndex(RI_UNIT) != -1) {
+            int unitIndex = cursor.getColumnIndexOrThrow(RI_UNIT);
+            recipeIngredient.setUnit(cursor.getString(unitIndex));
+        }
+        if (cursor.getColumnIndex(RI_DETAILS) != -1) {
+            int detailsIndex = cursor.getColumnIndexOrThrow(RI_DETAILS);
+            recipeIngredient.setDetails(cursor.getString(detailsIndex));
         }
         return recipeIngredient;
 
@@ -1361,30 +1338,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     private RecipeDirection mapRecipeDirection(Cursor cursor) {
         RecipeDirection recipeDirection = new RecipeDirection();
-        try {
-            if (cursor != null && cursor.getCount() > 0) {
-                if (cursor.getColumnIndex(RD_KEY_ID) != -1) {
-                    int idIndex = cursor.getColumnIndexOrThrow(RD_KEY_ID);
-                    recipeDirection.setKeyID((cursor.getInt(idIndex)));
-                }
-                if (cursor.getColumnIndex(RD_RECIPE_ID) != -1) {
-                    int recipeIdIndex = cursor.getColumnIndexOrThrow(RD_RECIPE_ID);
-                    recipeDirection.setRecipeID(cursor.getInt(recipeIdIndex));
-                }
-                if (cursor.getColumnIndex(RD_DIRECTION_TEXT) != -1) {
-                    int directionTextIndex = cursor.getColumnIndexOrThrow(RD_DIRECTION_TEXT);
-                    recipeDirection.setDirectionText(cursor.getString(directionTextIndex));
-                }
-                if (cursor.getColumnIndex(RD_DIRECTION_NUMBER) != -1) {
-                    int quantityIndex = cursor.getColumnIndexOrThrow(RD_DIRECTION_NUMBER);
-                    recipeDirection.setDirectionNumber(cursor.getInt(quantityIndex));
-                }
-            }
-        } catch (CursorIndexOutOfBoundsException ex) {
-            return null;
+        if (cursor.getColumnIndex(RD_KEY_ID) != -1) {
+            int idIndex = cursor.getColumnIndexOrThrow(RD_KEY_ID);
+            recipeDirection.setKeyID((cursor.getInt(idIndex)));
         }
-        if (recipeDirection.getKeyID() == -1) {
-            return null;
+        if (cursor.getColumnIndex(RD_RECIPE_ID) != -1) {
+            int recipeIdIndex = cursor.getColumnIndexOrThrow(RD_RECIPE_ID);
+            recipeDirection.setRecipeID(cursor.getInt(recipeIdIndex));
+        }
+        if (cursor.getColumnIndex(RD_DIRECTION_TEXT) != -1) {
+            int directionTextIndex = cursor.getColumnIndexOrThrow(RD_DIRECTION_TEXT);
+            recipeDirection.setDirectionText(cursor.getString(directionTextIndex));
+        }
+        if (cursor.getColumnIndex(RD_DIRECTION_NUMBER) != -1) {
+            int quantityIndex = cursor.getColumnIndexOrThrow(RD_DIRECTION_NUMBER);
+            recipeDirection.setDirectionNumber(cursor.getInt(quantityIndex));
         }
         return recipeDirection;
     }
@@ -1398,26 +1366,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     private RecipeCategory mapRecipeCategory(Cursor cursor) {
         RecipeCategory recipeCategory = new RecipeCategory();
-        try {
-            if (cursor != null && cursor.getCount() > 0) {
-                if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
-                    int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
-                    recipeCategory.setKeyID((cursor.getInt(idIndex)));
-                }
-                if (cursor.getColumnIndex(RC_RECIPE_ID) != -1) {
-                    int recipeIdIndex = cursor.getColumnIndexOrThrow(RC_RECIPE_ID);
-                    recipeCategory.setRecipeID(cursor.getInt(recipeIdIndex));
-                }
-                if (cursor.getColumnIndex(RC_CATEGORY_ID) != -1) {
-                    int categoryIdIndex = cursor.getColumnIndexOrThrow(RC_CATEGORY_ID);
-                    recipeCategory.setCategoryID(cursor.getInt(categoryIdIndex));
-                }
-            }
-        } catch (CursorIndexOutOfBoundsException ex) {
-            return null;
+        if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
+            int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
+            recipeCategory.setKeyID((cursor.getInt(idIndex)));
         }
-        if (recipeCategory.getKeyID() == -1) {
-            return null;
+        if (cursor.getColumnIndex(RC_RECIPE_ID) != -1) {
+            int recipeIdIndex = cursor.getColumnIndexOrThrow(RC_RECIPE_ID);
+            recipeCategory.setRecipeID(cursor.getInt(recipeIdIndex));
+        }
+        if (cursor.getColumnIndex(RC_CATEGORY_ID) != -1) {
+            int categoryIdIndex = cursor.getColumnIndexOrThrow(RC_CATEGORY_ID);
+            recipeCategory.setCategoryID(cursor.getInt(categoryIdIndex));
         }
         return recipeCategory;
     }
@@ -1430,23 +1389,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     private Category mapCategory(Cursor cursor) {
         Category category = new Category();
-        try {
-            if (cursor != null && cursor.getCount() > 0) {
-                if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
-                    int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
-                    category.setKeyID((cursor.getInt(idIndex)));
-                }
-                if (cursor.getColumnIndex(IT_NAME) != -1) {
-                    int categoryNameIndex = cursor.getColumnIndexOrThrow(IT_NAME);
-                    category.setName(cursor.getString(categoryNameIndex));
-                }
-
-            }
-        } catch (CursorIndexOutOfBoundsException ex) {
-            return null;
+        if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
+            int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
+            category.setKeyID((cursor.getInt(idIndex)));
         }
-        if (category.getKeyID() == -1) {
-            return null;
+        if (cursor.getColumnIndex(IT_NAME) != -1) {
+            int categoryNameIndex = cursor.getColumnIndexOrThrow(IT_NAME);
+            category.setName(cursor.getString(categoryNameIndex));
         }
         return category;
     }
@@ -1459,23 +1408,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     private Ingredient mapIngredient(Cursor cursor) {
         Ingredient ingredient = new Ingredient();
-        try {
-            if (cursor != null && cursor.getCount() > 0) {
-                if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
-                    int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
-                    ingredient.setKeyID((cursor.getInt(idIndex)));
-                }
-                if (cursor.getColumnIndex(IT_NAME) != -1) {
-                    int categoryNameIndex = cursor.getColumnIndexOrThrow(IT_NAME);
-                    ingredient.setName(cursor.getString(categoryNameIndex));
-                }
-
-            }
-        } catch (CursorIndexOutOfBoundsException ex) {
-            return null;
+        if (cursor.getColumnIndex(IT_KEY_ID) != -1) {
+            int idIndex = cursor.getColumnIndexOrThrow(IT_KEY_ID);
+            ingredient.setKeyID((cursor.getInt(idIndex)));
         }
-        if (ingredient.getKeyID() == -1) {
-            return null;
+        if (cursor.getColumnIndex(IT_NAME) != -1) {
+            int categoryNameIndex = cursor.getColumnIndexOrThrow(IT_NAME);
+            ingredient.setName(cursor.getString(categoryNameIndex));
         }
         return ingredient;
     }
@@ -1490,30 +1429,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         RecipeIngredient recipeIngredient = new RecipeIngredient();
         //had to take this out so ingredient can set name
         int idIndex = -1;
-        try {
-            if (cursor != null && cursor.getCount() > 0) {
-                if (cursor.getColumnIndex(SC_KEY_ID) != -1) {
-                    idIndex = cursor.getColumnIndexOrThrow(SC_KEY_ID);
-                    recipeIngredient.setKeyID((cursor.getInt(idIndex)));
-                }
-                if (cursor.getColumnIndex(SC_INGREDIENT_ID) != -1) {
-                    int ingredientIdIndex = cursor.getColumnIndexOrThrow(SC_INGREDIENT_ID);
-                    recipeIngredient.setIngredientID(cursor.getInt(ingredientIdIndex));
-                }
-                if (cursor.getColumnIndex(SC_QUANTITY) != -1) {
-                    int quantityIndex = cursor.getColumnIndexOrThrow(SC_QUANTITY);
-                    recipeIngredient.setQuantity(cursor.getDouble(quantityIndex));
-                }
-                if (cursor.getColumnIndex(SC_UNIT) != -1) {
-                    int unitIndex = cursor.getColumnIndexOrThrow(SC_UNIT);
-                    recipeIngredient.setUnit(cursor.getString(unitIndex));
-                }
-            }
-        } catch (CursorIndexOutOfBoundsException ex) {
-            return null;
+        if (cursor.getColumnIndex(SC_KEY_ID) != -1) {
+            idIndex = cursor.getColumnIndexOrThrow(SC_KEY_ID);
+            recipeIngredient.setKeyID((cursor.getInt(idIndex)));
         }
-        if (recipeIngredient.getKeyID() == -1) {
-            return null;
+        if (cursor.getColumnIndex(SC_INGREDIENT_ID) != -1) {
+            int ingredientIdIndex = cursor.getColumnIndexOrThrow(SC_INGREDIENT_ID);
+            recipeIngredient.setIngredientID(cursor.getInt(ingredientIdIndex));
+        }
+        if (cursor.getColumnIndex(SC_QUANTITY) != -1) {
+            int quantityIndex = cursor.getColumnIndexOrThrow(SC_QUANTITY);
+            recipeIngredient.setQuantity(cursor.getDouble(quantityIndex));
+        }
+        if (cursor.getColumnIndex(SC_UNIT) != -1) {
+            int unitIndex = cursor.getColumnIndexOrThrow(SC_UNIT);
+            recipeIngredient.setUnit(cursor.getString(unitIndex));
         }
         return recipeIngredient;
 

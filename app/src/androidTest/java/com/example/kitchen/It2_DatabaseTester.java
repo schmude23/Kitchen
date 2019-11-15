@@ -1298,7 +1298,7 @@ public class It2_DatabaseTester {
         listOfDirections.add(recipeDirection2);
         testRecipe = new Recipe(recipeTitle, 1.0, 30, 60, false, listOfIngredients, listOfDirections, listOfCategories);
         boolean edited = testDatabase.editRecipe(testRecipe);
-        assertEquals(false, edited);
+        assertEquals("editRecipe - Returns False BC Category",false, edited);
         tearDown();
     }
 
@@ -1327,7 +1327,7 @@ public class It2_DatabaseTester {
         listOfDirections.add(recipeDirection2);
         testRecipe = new Recipe(recipeTitle, 1.0, 30, 60, false, listOfIngredients, listOfDirections, listOfCategories);
         boolean edited = testDatabase.editRecipe(testRecipe);
-        assertEquals(false, edited);
+        assertEquals("editRecipe - Returns False BC Ingredient",false, edited);
         tearDown();
     }
 
@@ -1356,7 +1356,22 @@ public class It2_DatabaseTester {
         List<RecipeDirection> listOfDirections = new ArrayList<RecipeDirection>();
         testRecipe = new Recipe(recipeTitle, 1.0, 30, 60, false, listOfIngredients, listOfDirections, listOfCategories);
         boolean edited = testDatabase.editRecipe(testRecipe);
-        assertEquals(false, edited);
+        assertEquals("editRecipe - Returns False BC Direction", false, edited);
+        tearDown();
+    }
+
+    /**
+     * This method attempts to get recipes by an ingredient list when the first ingredient ID passed in
+     * is not in any recipes. Expect null
+     */
+    @Test
+    public void getRecipeByIngredientIdList_OtherNullCase() {
+        setUp();
+        Ingredient i = new Ingredient(-1, "Egg");
+        int iID = testDatabase.addIngredient(i);
+        int[] ingredientIDs = {iID, ingredientID};
+        ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientIdList(ingredientIDs);
+        assertEquals("getRecipeByIngredientIdList returns null", null, returned);
         tearDown();
     }
 
@@ -1368,7 +1383,7 @@ public class It2_DatabaseTester {
     @Test
     public void onCreate_Database(){
         DatabaseHelper nonNull = new DatabaseHelper(appContext.getApplicationContext());
-        assertNotEquals(null, nonNull);
+        assertNotEquals("onCreate returns a nonNull database", null, nonNull);
     }
 
     // Helper Methods:
