@@ -689,10 +689,17 @@ public class It1_DatabaseTester {
     /**
      * This method checks that getRecipe(RecipeTitle) returns all the correct information of the previously exisitng Recipe
      */
-    /*@Test
+    @Test
     public void getRecipeByName_CorrectInformation(){
+        // Get clean recipe database
+        ArrayList<Recipe> allRecipes = testDatabase.getAllRecipes();
+        for(int i = 0; i < allRecipes.size(); i++){
+            testDatabase.deleteRecipe(allRecipes.get(i).getKeyID());
+        }
+
         int returned = testDatabase.addRecipe(testRecipe);
         Recipe retrieved = testDatabase.getRecipe(recipeTitle);
+        assertEquals(returned, retrieved.getKeyID());
         assertEquals("getRecipeByName - Correct Title", recipeTitle, retrieved.getTitle());
         assertEquals("getRecipeByName - Correct Servings", 1, retrieved.getServings(), 0);
         assertEquals("getRecipeByName - Correct Prep Time", 30, retrieved.getPrep_time(), 0);
@@ -705,7 +712,7 @@ public class It1_DatabaseTester {
         assertEquals("getRecipeByName - First Direction Text", "TestDirection1", retrieved.getDirectionsList().get(0).getDirectionText());
         assertEquals("getRecipeByName - Second Direction Number", 2, retrieved.getDirectionsList().get(1).getDirectionNumber());
         assertEquals("getRecipeByName - Second Direction Text", "TestDirection2", retrieved.getDirectionsList().get(1).getDirectionText());
-    }*/
+    }
 
     /**
      * This method checks that getRecipe(RecipeTitle) returns null when attempting to retrieve a Recipe that doesn't exist
