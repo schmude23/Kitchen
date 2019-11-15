@@ -5,6 +5,10 @@ jacoco {
     toolVersion = '0.7.6.201602180812'
 }
 
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -24,11 +28,11 @@ android {
             testCoverageEnabled true
         }
         debug {
-            testCoverageEnabled true
+            testCoverageEnabled = true
         }
     }
     testOptions {
-        //  execution 'ANDROID_TEST_ORCHESTRATOR'
+        //execution 'ANDROID_TEST_ORCHESTRATOR'
         animationsDisabled true
 
         unitTests {

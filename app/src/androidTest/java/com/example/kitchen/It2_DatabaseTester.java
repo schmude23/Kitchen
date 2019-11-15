@@ -859,16 +859,6 @@ public class It2_DatabaseTester {
     }
 
     /**
-     * This method checks that updateShoppingCartIngredient returns false upon failure
-     */
-    @Test
-    public void updateShoppingCartIngredient_ReturnsFalse() {
-        setUp();
-        //TODO: Don't know how I'd make this happen
-        tearDown();
-    }
-
-    /**
      * This method checks that updateShoppingCartIngredient does not change the cart if the ingredient does not change
      */
     @Test
@@ -1229,6 +1219,18 @@ public class It2_DatabaseTester {
         assertEquals("deleteAllShoppingCartIngredients - Deletes every ingredient", null, testDatabase.getAllShoppingCartIngredients());
         tearDown();
     }
+
+    /**
+     * Add Comment
+     */
+    /*@Test
+    public void getRandomRecipes_ReturnsList() {
+        //TODO: Fix Database
+        setUp();
+        ArrayList<Recipe> randoms = testDatabase.getRandomRecipes();
+        assertNotEquals("getRandomRecipes - Returns List of Recipes", null, randoms);
+        tearDown();
+    }*/
 
     /**
      * Helper method for tests that need a recipe with two ingredients
