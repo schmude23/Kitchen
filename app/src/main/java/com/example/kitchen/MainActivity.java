@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     private DatabaseHelper database = new DatabaseHelper(this);
     private SearchView searchView;
     private RecipeAdapter recipeAdapter;
+    Boolean filter = false;
+    List<RecipeListItem> filteredList;
 
     /**
      * This method is run when the activity is created and sets up the activity
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
 
         // Display Toolbar
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if(!searchView.isIconified())
+                if (!searchView.isIconified())
                     searchView.setIconified(true);
                 menuItem.collapseActionView();
                 return false;
@@ -85,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
             @Override
             public boolean onQueryTextChange(String newText) {
                 final List<RecipeListItem> filteredRecipeList = filter(recipeListItems, newText);
+                filter = true;
+                filteredList = filteredRecipeList;
                 recipeAdapter.setFilter(filteredRecipeList);
                 return true;
             }
@@ -135,11 +140,14 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
 
-        int recipeId = recipes.get(position).getKeyID();
+
         Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
 
         //adding extra information from intent
-        intent.putExtra("recipeId", recipeId);
+        if (filter)
+            intent.putExtra("recipeId", filteredList.get(position).getRecipeId());
+        else
+            intent.putExtra("recipeId", recipes.get(position).getKeyID());
         startActivity(intent);
     }
 
@@ -849,23 +857,22 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                 int prep_time = recipes.get(i).getPrep_time();
                 int total_time = recipes.get(i).getTotal_time();
                 Bitmap image = recipes.get(i).getImage(this);
-                recipeListItems.add(new RecipeListItem(recipe_name, servings, prep_time, total_time, image, recipes.get(i).getFavorited()));
+                recipeListItems.add(new RecipeListItem(recipe_name, servings, prep_time, total_time, image, recipes.get(i).getFavorited(), recipes.get(i).getKeyID()));
             }
         }
     }
 
     /**
-     *
      * @param list
      * @param query
      * @return
      */
-    private List<RecipeListItem> filter(List<RecipeListItem> list, String query){
-        query=query.toLowerCase();
+    private List<RecipeListItem> filter(List<RecipeListItem> list, String query) {
+        query = query.toLowerCase();
         final List<RecipeListItem> filteredList = new ArrayList<>();
-        for(RecipeListItem recipe: list){
+        for (RecipeListItem recipe : list) {
             final String text = recipe.getRecipeName().toLowerCase();
-            if(text.contains(query))
+            if (text.contains(query))
                 filteredList.add(recipe);
         }
         return filteredList;

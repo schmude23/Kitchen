@@ -74,8 +74,10 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
     }
     public void setFilter(List<RecipeListItem> filteredRecipeList) {
         recipes = new ArrayList<>();
+
         recipes.addAll(filteredRecipeList);
         notifyDataSetChanged();
+       notifyItemRangeChanged(0, recipes.size());
     }
 
     /**
@@ -135,6 +137,7 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
          */
         @Override
         public void onClick(View v) {
+//            recipes.notifyAll();
             listener.onClick(getAdapterPosition());
         }
     }
