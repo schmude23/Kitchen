@@ -9,14 +9,16 @@ public class RecipeListItem {
     private String total_time;
     private Bitmap image;
     private boolean favorited;
+    private int recipeId;
 
-    RecipeListItem(String recipe_name, double servings,  int prep_time, int total_time, Bitmap image, boolean favorited){
+    RecipeListItem(String recipe_name, double servings,  int prep_time, int total_time, Bitmap image, boolean favorited, int recipeId){
         this.recipe_name = recipe_name;
         this.servings = servings + " Servings";
         this.prep_time = prep_time + " min";
         this.total_time = total_time + " min";
         this.image = image;
         this.favorited = favorited;
+        this.recipeId = recipeId;
     }
 
     public String getRecipeName() {
@@ -65,4 +67,5 @@ public class RecipeListItem {
     public void setFavorited(boolean favorited) {
         this.favorited = favorited;
     }
+    public int getRecipeId(){return recipeId;}
 }

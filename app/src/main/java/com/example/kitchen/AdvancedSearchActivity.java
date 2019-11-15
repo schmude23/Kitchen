@@ -92,6 +92,13 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
     }
 
     private void search() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("recipeRadio", recipeRadioGroup.getCheckedRadioButtonId());
+        int [] ingredientId = new int[ingredientList.size()];
+        for(int i = 0; i < ingredientList.size(); i++)
+            ingredientId[i] = database.getIngredient(ingredientList.get(i));
+        intent.putExtra("ingredientArray", ingredientId);
+        intent.putExtra("categoryId", database.getCategory(categoryList.get(0)) );
         Toast.makeText(this,  "." + searchEditText.getText().toString() + ".", Toast.LENGTH_SHORT).show();
         if(searchEditText.getText().toString().compareTo("") != 0) {
             switch (recipeRadioGroup.getCheckedRadioButtonId()) {
@@ -116,33 +123,9 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
                     break;
                 case R.id.radio_servings:
                     Toast.makeText(this, "Search by servings not implemented", Toast.LENGTH_SHORT).show();
-                    //recipes = database.getRecipeByPrepTime(Integer.valueOf(searchEditText.getText().toString()));
-                    //getRecipeListItems();
-                    //recipeAdapter = new RecipeAdapter(recipeListItems, this);
-                    //recyclerView.setAdapter(recipeAdapter);
             }
         }
-        if(ingredientList.size() > 0){
-            if(ingredientList.size() == 1){
-                int ingredientId = database.getIngredient(ingredientList.get(0));
-                recipes = database.getRecipeByIngredientId(ingredientId);
-            }else {
-                int [] ingredientId = new int[ingredientList.size()];
-                for(int i =0; i < ingredientList.size(); i++){
-                    ingredientId[i] = database.getIngredient(ingredientList.get(i));
-                }
-                recipes = database.getRecipeByIngredientIdList(ingredientId);
-            }
-        }
-        if(categoryList.size() > 0){
-            if(categoryList.size() == 1){
-                int categoryId = database.getCategory(categoryList.get(0));
-                recipes = database.getRecipeByCategoryId(categoryId);
-            }
-        }
-        getRecipeListItems();
-        recipeAdapter = new RecipeAdapter(recipeListItems, this);
-        recyclerView.setAdapter(recipeAdapter);
+
     }
 
     private void getRecipeListItems() {
@@ -154,7 +137,7 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
                 int prep_time = recipes.get(i).getPrep_time();
                 int total_time = recipes.get(i).getTotal_time();
                 Bitmap image = recipes.get(i).getImage(this);
-                recipeListItems.add(new RecipeListItem(recipe_name, servings, prep_time, total_time, image, recipes.get(i).getFavorited()));
+                recipeListItems.add(new RecipeListItem(recipe_name, servings, prep_time, total_time, image, recipes.get(i).getFavorited(), recipes.get(i).getKeyID()));
             }
         }
     }

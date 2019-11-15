@@ -25,5 +25,8 @@
     <item
         android:id="@+id/action_settings"
         android:title="Settings" />
+    <item
+        android:id="@+id/action_retrieve_recipe"
+        android:title="@string/share_recipe"/>
 
 </menu>
