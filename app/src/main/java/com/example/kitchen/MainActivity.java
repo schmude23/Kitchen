@@ -136,6 +136,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                 viewCart.putExtra("recipeId", -1);
                 startActivity(viewCart);
                 return true;
+            case R.id.action_home:
+                Intent home = new Intent(this, MainActivity.class);
+                startActivity(home);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -864,16 +868,21 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
      *
      */
     private void getRecipeListItems() {
-        if (recipes != null) {
-            recipeListItems = new ArrayList<>();
-            for (int i = 0; i < recipes.size(); i++) {
-                String recipe_name = recipes.get(i).getTitle();
-                double servings = recipes.get(i).getServings();
-                int prep_time = recipes.get(i).getPrep_time();
-                int total_time = recipes.get(i).getTotal_time();
-                Bitmap image = recipes.get(i).getImage(this);
-                recipeListItems.add(new RecipeListItem(recipe_name, servings, prep_time, total_time, image, recipes.get(i).getFavorited(), recipes.get(i).getKeyID()));
+        try {
+            if (recipes != null) {
+                recipeListItems = new ArrayList<>();
+                for (int i = 0; i < recipes.size(); i++) {
+                    String recipe_name = recipes.get(i).getTitle();
+                    double servings = recipes.get(i).getServings();
+                    int prep_time = recipes.get(i).getPrep_time();
+                    int total_time = recipes.get(i).getTotal_time();
+                    Bitmap image = recipes.get(i).getImage(this);
+                    recipeListItems.add(new RecipeListItem(recipe_name, servings, prep_time, total_time, image, recipes.get(i).getFavorited(), recipes.get(i).getKeyID()));
+                }
             }
+        }catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(), "No Recipes Found", Toast.LENGTH_SHORT).show();
         }
     }
 

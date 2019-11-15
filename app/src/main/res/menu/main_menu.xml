@@ -9,6 +9,7 @@
         android:title="search here..."
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always|collapseActionView"/>
+
     <item
         android:id="@+id/action_add_recipe"
         android:icon="@drawable/ic_add_2"
@@ -19,6 +20,11 @@
         android:icon="@drawable/ic_cart"
         android:title="@string/cart"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_home"
+        android:icon="@drawable/ic_home"
+        android:title="home"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/advanced_search_item"
         android:title="Advanced Search" />
