@@ -744,7 +744,6 @@ public class It2_DatabaseTester {
     @Test
     public void addRecipeToCart_NoDuplicateIngredients() {
         setUp();
-        //TODO Zander fixing
         testDatabase.addRecipeToCart(recipeID);
         testDatabase.addRecipeToCart(recipeID);
         ArrayList<RecipeIngredient> shoppingCart = testDatabase.getAllShoppingCartIngredients();
@@ -756,20 +755,58 @@ public class It2_DatabaseTester {
     }
 
     /**
-     * This method checks that getShoppingCartIngredients returns correct information
-     * if there's only one instance of an ingredient that was added to the shopping cart
+     * This method checks that getShoppingCartIngredient returns null if the ingredient doesn't exist in the
+     * shopping cart
+     */
+    @Test
+    public void getShoppingCartIngredient_ReturnsNull() {
+        setUp();
+        assertEquals("getShoppingCartIngredient - Returns Null", null, testDatabase.getShoppingCartIngredient(Integer.MAX_VALUE));
+        tearDown();
+    }
+
+    /**
+     * This method checks that getShoppingCartIngredient returns a non-null ingredient when getting an
+     * ingredient that already existed in the shopping cart
+     */
+    @Test
+    public void getShoppingCartIngredient_ReturnsIngredient() {
+        setUp();
+        testDatabase.addRecipeToCart(recipeID);
+        RecipeIngredient returned = testDatabase.getShoppingCartIngredient(recipeIngredient.getIngredientID());
+        assertNotEquals("getShoppingCartIngredient - Returns Ingredient", null, returned);
+        tearDown();
+    }
+
+    /**
+     * This method checks that getShoppingCartIngredient returns correct ingredient information
+     * if the ingredient was previously added to the shopping cart
+     */
+    @Test
+    public void getShoppingCartIngredient_CorrectInfo() {
+        setUp();
+        testDatabase.addRecipeToCart(recipeID);
+        RecipeIngredient returned = testDatabase.getShoppingCartIngredient(recipeIngredient.getIngredientID());
+        assertEquals("getShoppingCartIngredient - Correct ingredientID", ingredientID, returned.getIngredientID());
+        assertEquals("getShoppingCartIngredient - Correct Quantity", 2, returned.getQuantity(), 0);
+        assertEquals("getShoppingCartIngredient - Correct Unit", "cup(s)", returned.getUnit());
+        tearDown();
+    }
+
+    /**
+     * This method checks that getAllShoppingCartIngredients returns null when the shopping cart is empty
      */
     @Test
     public void getAllShoppingCartIngredients_ReturnsNull() {
         setUp();
         testDatabase.deleteAllShoppingCartIngredients();
         ArrayList<RecipeIngredient> shoppingCart = testDatabase.getAllShoppingCartIngredients();
-        assertEquals("getShoppingCartIngredients - Returns Null", null, shoppingCart);
+        assertEquals("getAllShoppingCartIngredients - Returns Null", null, shoppingCart);
         tearDown();
     }
 
     /**
-     * This method checks that getShoppingCartIngredients returns correct information
+     * This method checks that getAllShoppingCartIngredients returns correct information
      * if there's only one instance of an ingredient that was added to the shopping cart
      */
     @Test
@@ -777,14 +814,14 @@ public class It2_DatabaseTester {
         setUp();
         testDatabase.addRecipeToCart(recipeID);
         ArrayList<RecipeIngredient> newShoppingCart = testDatabase.getAllShoppingCartIngredients();
-        assertEquals("getShoppingCartIngredients - Correct ingredientID", ingredientID, newShoppingCart.get(newShoppingCart.size()-1).getIngredientID());
-        assertEquals("getShoppingCartIngredients - Correct Quantity", 2, newShoppingCart.get(newShoppingCart.size()-1).getQuantity(), 0);
-        assertEquals("getShoppingCartIngredients - Correct Unit", "cup(s)", newShoppingCart.get(newShoppingCart.size()-1).getUnit());
+        assertEquals("getAllShoppingCartIngredients - Correct ingredientID", ingredientID, newShoppingCart.get(newShoppingCart.size()-1).getIngredientID());
+        assertEquals("getAllShoppingCartIngredients - Correct Quantity", 2, newShoppingCart.get(newShoppingCart.size()-1).getQuantity(), 0);
+        assertEquals("getAllShoppingCartIngredients - Correct Unit", "cup(s)", newShoppingCart.get(newShoppingCart.size()-1).getUnit());
         tearDown();
     }
 
     /**
-     * This method checks that getShoppingCartIngredients returns correct information
+     * This method checks that getAllShoppingCartIngredients returns correct information
      * if there were multiple instances of an ingredient that were added to the shopping cart
      */
     @Test
@@ -816,9 +853,8 @@ public class It2_DatabaseTester {
         setUp();
         testDatabase.addRecipeToCart(recipeID);
         recipeIngredient.setQuantity(6);
-        recipeIngredient.setDetails("N/A");
         recipeIngredient.setUnit("tablespoon(s)");
-        assertEquals(true, testDatabase.updateShoppingCartIngredient(recipeIngredient));
+        assertEquals("updateShoppingCart - Returns True",true, testDatabase.updateShoppingCartIngredient(recipeIngredient));
         tearDown();
     }
 
@@ -833,16 +869,17 @@ public class It2_DatabaseTester {
     }
 
     /**
-     * ADD COMMENT
+     * This method checks that updateShoppingCartIngredient does not change the cart if the ingredient does not change
      */
     @Test
     public void updateShoppingCartIngredient_NoChange() {
         setUp();
-        //TODO: Finish Implement
         testDatabase.addRecipeToCart(recipeID);
         testDatabase.updateShoppingCartIngredient(recipeIngredient);
-        ArrayList<RecipeIngredient> allIngredients = testDatabase.getAllShoppingCartIngredients();
-
+        RecipeIngredient returned = testDatabase.getShoppingCartIngredient(recipeIngredient.getIngredientID());
+        assertEquals("updateShoppingCartIngredient - No Change ID", recipeIngredient.getIngredientID(), returned.getIngredientID());
+        assertEquals("updateShoppingCartIngredient - No Change Quantity", 2, returned.getQuantity(), 0);
+        assertEquals("updateShoppingCartIngredient - No Change Unit", "cup(s)", returned.getUnit());
         tearDown();
     }
 
@@ -853,7 +890,14 @@ public class It2_DatabaseTester {
     @Test
     public void updateShoppingCartIngredient_Updates() {
         setUp();
-        //TODO: Implement
+        testDatabase.addRecipeToCart(recipeID);
+        recipeIngredient.setQuantity(6);
+        recipeIngredient.setUnit("tablespoon(s)");
+        testDatabase.updateShoppingCartIngredient(recipeIngredient);
+        RecipeIngredient returned = testDatabase.getShoppingCartIngredient(recipeIngredient.getIngredientID());
+        assertEquals("updateShoppingCartIngredient - Updates, Doesn't Change ID", recipeIngredient.getIngredientID(), returned.getIngredientID());
+        assertEquals("updateShoppingCartIngredient - Updates Quantity", 6, returned.getQuantity(), 0);
+        assertEquals("updateShoppingCartIngredient - Updates Unit", "tablespoon(s)", returned.getUnit());
         tearDown();
     }
 
@@ -873,7 +917,6 @@ public class It2_DatabaseTester {
     @Test
     public void deleteShoppingCartIngredient_ReturnsFalse() {
         setUp();
-        //TODO: Zander is fixing
         assertEquals("deleteShoppingCartIngredient - Returns false", false, testDatabase.deleteShoppingCartIngredient(Integer.MAX_VALUE));
         tearDown();
     }
@@ -924,16 +967,16 @@ public class It2_DatabaseTester {
         createRecipe_DifferentUnits("teaspoon(s)");
         Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "teaspoon(s)", "tablespoon(s)");
         Recipe updated = testDatabase.getRecipe(testRecipe2.getKeyID());
-        assertEquals("getRecipeByPrepTime - Correct Recipe Title", "TestRecipe2", updated.getTitle());
-        assertEquals("getRecipeByPrepTime - Correct Recipe Servings", 4, updated.getServings(), 0);
-        assertEquals("getRecipeByPrepTime - Correct Recipe Prep_Time", 5, updated.getPrep_time(), 0);
-        assertEquals("getRecipeByPrepTime - Correct Recipe Total_Time", 15, updated.getTotal_time(), 0);
-        assertEquals("getRecipeByPrepTime - Correct Recipe Favorited", false, updated.getFavorited());
-        assertEquals("getRecipeByPrepTime - Correct RecipeIngredient Units", "teaspoon(s)", updated.getIngredientList().get(0).getUnit());
-        assertEquals("getRecipeByPrepTime - Correct RecipeIngredient Quantity", 6, updated.getIngredientList().get(0).getQuantity(), 0);
-        assertEquals("getRecipeByPrepTime - Correct RecipeIngredient Details", "", updated.getIngredientList().get(0).getDetails());
-        assertEquals("getRecipeByPrepTime - Correct RecipeDirection Number", 1, updated.getDirectionsList().get(0).getDirectionNumber());
-        assertEquals("getRecipeByPrepTime - Correct RecipeDirection Text", "TestDirection", updated.getDirectionsList().get(0).getDirectionText());
+        assertEquals("convertRecipeIngredientUnits - Correct Recipe Title", "TestRecipe2", updated.getTitle());
+        assertEquals("convertRecipeIngredientUnits - Correct Recipe Servings", 4, updated.getServings(), 0);
+        assertEquals("convertRecipeIngredientUnits - Correct Recipe Prep_Time", 5, updated.getPrep_time(), 0);
+        assertEquals("convertRecipeIngredientUnits - Correct Recipe Total_Time", 15, updated.getTotal_time(), 0);
+        assertEquals("convertRecipeIngredientUnits - Correct Recipe Favorited", false, updated.getFavorited());
+        assertEquals("convertRecipeIngredientUnits - Correct RecipeIngredient Units", "teaspoon(s)", updated.getIngredientList().get(0).getUnit());
+        assertEquals("convertRecipeIngredientUnits - Correct RecipeIngredient Quantity", 6, updated.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits - Correct RecipeIngredient Details", "", updated.getIngredientList().get(0).getDetails());
+        assertEquals("convertRecipeIngredientUnits - Correct RecipeDirection Number", 1, updated.getDirectionsList().get(0).getDirectionNumber());
+        assertEquals("convertRecipeIngredientUnits - Correct RecipeDirection Text", "TestDirection", updated.getDirectionsList().get(0).getDirectionText());
         tearDown();
     }
 

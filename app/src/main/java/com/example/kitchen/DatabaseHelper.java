@@ -313,7 +313,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return The recipe corresponding to the provided recipe Title, or null if one is not found.
      */
     public ArrayList<Recipe> getRecipeByPrepTime(int prepTime) {
-        //TODO: TEST
         ArrayList<Recipe> recipeList = getAllRecipes();
         ArrayList<Recipe> newRecipeList = new ArrayList<>();
         for(int i = 0; i < recipeList.size(); i++){
@@ -334,7 +333,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return The recipe corresponding to the provided recipe Title, or null if one is not found.
      */
     public ArrayList<Recipe> getRecipeByTotalTime(int totalTime) {
-        //TODO: TEST
         ArrayList<Recipe> recipeList = getAllRecipes();
         ArrayList<Recipe> newRecipeList = new ArrayList<>();
         for (int i = 0; i < recipeList.size(); i++) {
@@ -355,7 +353,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return The recipes corresponding to the provided ingredient id, or null if one is not found.
      */
     public ArrayList<Recipe> getRecipeByIngredientId(int ingredientId) {
-        //TODO: TEST
         RecipeIngredient recipeIngredient;
         ArrayList<RecipeIngredient> recipeIngredientList = new ArrayList<RecipeIngredient>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -406,18 +403,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return The recipe corresponding to the provided ingredient id, or null if one is not found.
      */
     public ArrayList<Recipe> getRecipeByIngredientIdList(int[] ingredientIdList) {
-        //TODO: TEST
         //could this be possible by just reusing getRecipeByIngredientId() and returning the
         //recipes that had matched through all of the tests?
-
-        System.out.println("Testing, 1, 2, 3");
 
         ArrayList<Recipe> recipeList = getRecipeByIngredientId(ingredientIdList[0]);
         if (recipeList == null) {
             return null;
         }
-
-        System.out.println("Hello hello? is this thing working?");
 
         //cycle through all ingredient ids
         for (int i = 1; i < ingredientIdList.length; i++) {
@@ -450,7 +442,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return The recipe corresponding to the provided category id, or null if one is not found.
      */
     public ArrayList<Recipe> getRecipeByCategoryId(int categoryId) {
-        //TODO: Test
         RecipeCategory recipeCategory;
         ArrayList<RecipeCategory> recipeCategoryList = new ArrayList<RecipeCategory>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -680,7 +671,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return true if the operation was successful, false otherwise
      */
     public boolean addRecipeToCart(int recipeId) {
-        //TODO: Test
         Recipe recipe = getRecipe(recipeId);
         if (recipe == null) {
             return false;
@@ -726,7 +716,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return true if the operation was successful, false otherwise
      */
     public ArrayList<RecipeIngredient> getAllShoppingCartIngredients() {
-        //TODO: CORRECT/TEST
         RecipeIngredient recipeIngredient;
         ArrayList<RecipeIngredient> shoppingCartList = new ArrayList<RecipeIngredient>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -754,7 +743,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return true if the operation was successful, false otherwise
      */
     public boolean updateShoppingCartIngredient(RecipeIngredient ingredient) {
-        //TODO: Correct/Test
         int id = ingredient.getIngredientID();
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
@@ -800,8 +788,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return true if the operation was successful, false otherwise
      */
     public boolean deleteShoppingCartIngredient(int ingredientId) {
-        //TODO: Michaela ball is in your court/ Finishin' testin'
-
         if (getIngredient(ingredientId) == null) {
             return false;
         }
@@ -818,7 +804,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return true if the operation was successful, false otherwise
      */
     public void deleteAllShoppingCartIngredients(){
-        //TODO: Correct/Test
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_SHOPPING_CART_LIST);
         //Shopping Cart Table
@@ -950,7 +935,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return The recipe corresponding to the provided ingredient Title, or -1 if one is not found.
      */
     public int getIngredient(String ingredientTitle) {
-        //TODO:Test
         Ingredient ingredient = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -1194,7 +1178,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return The recipe corresponding to the provided category Title, or -1 if one is not found.
      */
     public int getCategory(String categoryTitle) {
-        //TODO:Test
         Category category = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -1248,7 +1231,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful, will return a value of the quantity in the new unit
      */
     public Recipe convertRecipeIngredientUnits(Recipe recipe, String origUnit, String reqUnit) {
-        //TODO: Correct/Test
         List<RecipeIngredient> ingredientList = recipe.getIngredientList();
         for (int i = 0; i < ingredientList.size(); i++) {
             if (ingredientList.get(i).getUnit().contentEquals(origUnit)) {
@@ -1335,7 +1317,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful, will return true
      */
     public Recipe scaleRecipe(Recipe recipe, double desiredServing) {
-        //TODO: Test
         if(recipe.getKeyID() == -1)
             return null;
         double scalar = desiredServing / recipe.getServings();
