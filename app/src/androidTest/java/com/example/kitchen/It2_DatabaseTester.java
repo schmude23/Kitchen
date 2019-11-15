@@ -205,34 +205,34 @@ public class It2_DatabaseTester {
         int recipeID2 = testDatabase.addRecipe(testRecipe2);
 
         // Check that it returns both recipes
-        ArrayList<Recipe> returned = testDatabase.getRecipeByCategoryId(categoryID2);
-        assertEquals("getRecipeByCategoryId - Returns Multiple Recipes", 2, returned.size());
+        ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientId(ingredientID2);
+        assertEquals("getRecipeByIngredientId - Returns Multiple Recipes", 2, returned.size());
 
         // Check first Recipe
-        assertEquals("getRecipeByCategoryId - Multiple: Recipe1 Title", recipeTitle, returned.get(0).getTitle());
-        assertEquals("getRecipeByCategoryId - Multiple: Recipe1 Servings", 1, returned.get(0).getServings(), 0);
-        assertEquals("getRecipeByCategoryId - Multiple: Recipe1 Prep_Time", 30, returned.get(0).getPrep_time(), 0);
-        assertEquals("getRecipeByCategoryId - Multiple: Recipe1 Total_Time", 60, returned.get(0).getTotal_time(), 0);
-        assertEquals("getRecipeByCategoryId - Multiple: Recipe1 Favorited", false, returned.get(0).getFavorited());
-        assertEquals("getRecipeByCategoryId - Multiple: RecipeIngredient1 Units", "cup(s)", returned.get(0).getIngredientList().get(0).getUnit());
-        assertEquals("getRecipeByCategoryId - Multiple: RecipeIngredient1 Quantity", 2.0, returned.get(0).getIngredientList().get(0).getQuantity(), 0);
-        assertEquals("getRecipeByCategoryId - Multiple: RecipeIngredient1 Details", "White Flour", returned.get(0).getIngredientList().get(0).getDetails());
-        assertEquals("getRecipeByCategoryId - Multiple: RecipeDirection1.1 Number", 1, returned.get(0).getDirectionsList().get(0).getDirectionNumber());
-        assertEquals("getRecipeByCategoryId - Multiple: RecipeDirection1.1 Text", "TestDirection1", returned.get(0).getDirectionsList().get(0).getDirectionText());
-        assertEquals("getRecipeByCategoryId - Multiple: RecipeDirection1.2 Number", 2, returned.get(0).getDirectionsList().get(1).getDirectionNumber());
-        assertEquals("getRecipeByCategoryId - Multiple: RecipeDirection1.2 Text", "TestDirection2", returned.get(0).getDirectionsList().get(1).getDirectionText());
+        assertEquals("getRecipeByIngredientId - Multiple: Recipe1 Title", recipeTitle, returned.get(0).getTitle());
+        assertEquals("getRecipeByIngredientId - Multiple: Recipe1 Servings", 1, returned.get(0).getServings(), 0);
+        assertEquals("getRecipeByIngredientId - Multiple: Recipe1 Prep_Time", 30, returned.get(0).getPrep_time(), 0);
+        assertEquals("getRecipeByIngredientId - Multiple: Recipe1 Total_Time", 60, returned.get(0).getTotal_time(), 0);
+        assertEquals("getRecipeByIngredientId - Multiple: Recipe1 Favorited", false, returned.get(0).getFavorited());
+        assertEquals("getRecipeByIngredientId - Multiple: RecipeIngredient1 Units", "cup(s)", returned.get(0).getIngredientList().get(0).getUnit());
+        assertEquals("getRecipeByIngredientId - Multiple: RecipeIngredient1 Quantity", 2.0, returned.get(0).getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("getRecipeByIngredientId - Multiple: RecipeIngredient1 Details", "White Flour", returned.get(0).getIngredientList().get(0).getDetails());
+        assertEquals("getRecipeByIngredientId - Multiple: RecipeDirection1.1 Number", 1, returned.get(0).getDirectionsList().get(0).getDirectionNumber());
+        assertEquals("getRecipeByIngredientId - Multiple: RecipeDirection1.1 Text", "TestDirection1", returned.get(0).getDirectionsList().get(0).getDirectionText());
+        assertEquals("getRecipeByIngredientId - Multiple: RecipeDirection1.2 Number", 2, returned.get(0).getDirectionsList().get(1).getDirectionNumber());
+        assertEquals("getRecipeByIngredientId - Multiple: RecipeDirection1.2 Text", "TestDirection2", returned.get(0).getDirectionsList().get(1).getDirectionText());
 
         // Check second Recipe
-        assertEquals("getRecipeByCategoryId - Multiple: Recipe2 Title", "TestRecipe2", returned.get(1).getTitle());
-        assertEquals("getRecipeByCategoryId - Multiple: Recipe2 Servings", 4, returned.get(1).getServings(), 0);
-        assertEquals("getRecipeByCategoryId - Multiple: Recipe2 Prep_Time", 5, returned.get(1).getPrep_time(), 0);
-        assertEquals("getRecipeByCategoryId - Multiple: Recipe2 Total_Time", 15, returned.get(1).getTotal_time(), 0);
-        assertEquals("getRecipeByCategoryId - Multiple: Recipe2 Favorited", false, returned.get(1).getFavorited());
-        assertEquals("getRecipeByCategoryId - Multiple: RecipeIngredient2 Units", "cup(s)", returned.get(1).getIngredientList().get(0).getUnit());
-        assertEquals("getRecipeByCategoryId - Multiple: RecipeIngredient2 Quantity", 1, returned.get(1).getIngredientList().get(0).getQuantity(), 0);
-        assertEquals("getRecipeByCategoryId - Multiple: RecipeIngredient2 Details", "", returned.get(1).getIngredientList().get(0).getDetails());
-        assertEquals("getRecipeByCategoryId - Multiple: RecipeDirection2 Number", 1, returned.get(1).getDirectionsList().get(0).getDirectionNumber());
-        assertEquals("getRecipeByCategoryId - Multiple: RecipeDirection2 Text", "TestDirection", returned.get(1).getDirectionsList().get(0).getDirectionText());
+        assertEquals("getRecipeByIngredientId - Multiple: Recipe2 Title", "TestRecipe2", returned.get(1).getTitle());
+        assertEquals("getRecipeByIngredientId - Multiple: Recipe2 Servings", 4, returned.get(1).getServings(), 0);
+        assertEquals("getRecipeByIngredientId - Multiple: Recipe2 Prep_Time", 5, returned.get(1).getPrep_time(), 0);
+        assertEquals("getRecipeByIngredientId - Multiple: Recipe2 Total_Time", 15, returned.get(1).getTotal_time(), 0);
+        assertEquals("getRecipeByIngredientId - Multiple: Recipe2 Favorited", false, returned.get(1).getFavorited());
+        assertEquals("getRecipeByIngredientId - Multiple: RecipeIngredient2 Units", "cup(s)", returned.get(1).getIngredientList().get(0).getUnit());
+        assertEquals("getRecipeByIngredientId - Multiple: RecipeIngredient2 Quantity", 1, returned.get(1).getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("getRecipeByIngredientId - Multiple: RecipeIngredient2 Details", "", returned.get(1).getIngredientList().get(0).getDetails());
+        assertEquals("getRecipeByIngredientId - Multiple: RecipeDirection2 Number", 1, returned.get(1).getDirectionsList().get(0).getDirectionNumber());
+        assertEquals("getRecipeByIngredientId - Multiple: RecipeDirection2 Text", "TestDirection", returned.get(1).getDirectionsList().get(0).getDirectionText());
         tearDown();
     }
 
@@ -370,6 +370,18 @@ public class It2_DatabaseTester {
         int[] ingredientIDs = {ingredientID, ingredientID2};
         ArrayList<Recipe> returned = testDatabase.getRecipeByIngredientIdList(ingredientIDs);
         assertEquals("getRecipeByIngredientIdList returns null", null, returned);
+        tearDown();
+    }
+
+    /**
+     * This method checks that getRecipeByCategoryId returns null if there is no Category with the
+     * corresponding ID. This test is needed for branch coverage
+     */
+    @Test
+    public void getRecipeByCategoryId_ReturnsNull() {
+        setUp();
+        ArrayList<Recipe> returned = testDatabase.getRecipeByCategoryId(-1);
+        assertEquals("getRecipeByCategoryId returns null", null, returned);
         tearDown();
     }
 
@@ -859,6 +871,18 @@ public class It2_DatabaseTester {
     }
 
     /**
+     * This method checks that updateShoppingCartIngredient returns false if the ingredient does not exist in the
+     * shopping cart
+     */
+    @Test
+    public void updateShoppingCartIngredient_ReturnsFalse() {
+        setUp();
+        RecipeIngredient ri = new RecipeIngredient();
+        assertEquals("updateShoppingCart - Returns False",false, testDatabase.updateShoppingCartIngredient(ri));
+        tearDown();
+    }
+
+    /**
      * This method checks that updateShoppingCartIngredient does not change the cart if the ingredient does not change
      */
     @Test
@@ -1250,7 +1274,9 @@ public class It2_DatabaseTester {
     }
 
     /**
-     * ADD COMMENT
+     * This method tests that editRecipe will return false if category is the reason that it fails
+     *
+     * This test was added to increase branch coverage
      */
     @Test
     public void editRecipe_CategoryCausedFalse(){
@@ -1277,7 +1303,9 @@ public class It2_DatabaseTester {
     }
 
     /**
-     * ADD COMMENT
+     * This method tests that editRecipe will return false if ingredient is the reason that it fails
+     *
+     * This test was added to increase branch coverage
      */
     @Test
     public void editRecipe_IngredientCausedFalse(){
@@ -1304,7 +1332,9 @@ public class It2_DatabaseTester {
     }
 
     /**
-     * ADD COMMENT
+     * This method tests that editRecipe will return false if direction is the reason that it fails
+     *
+     * This test was added to increase branch coverage
      */
     @Test
     public void editRecipe_DirectionsCausedFalse(){
@@ -1331,7 +1361,9 @@ public class It2_DatabaseTester {
     }
 
     /**
-     * ADD COMMENT
+     * This method tests that onCreate creates a non-null database
+     *
+     * This test was added to increase statement coverage
      */
     @Test
     public void onCreate_Database(){

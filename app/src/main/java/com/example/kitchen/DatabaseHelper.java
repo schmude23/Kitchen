@@ -624,7 +624,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                 //check to make sure properly inserted
                 if (newRowId == -1) {
-                    //delete all things aready created
                     //TODO: if failure you need to delete ALL added ingredients using int[]
                     deleteShoppingCartIngredient(newRowId);
                     return false;
@@ -683,7 +682,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cVals.put(SC_UNIT, ingredient.getUnit());
 
         long returned = sqLiteDatabase.update(TABLE_SHOPPING_CART_LIST, cVals, SC_INGREDIENT_ID + " = ?", new String[]{String.valueOf(id)});
-        if (returned == -1) {
+        if (returned != 1) {
             return false;
         }
         return true;
