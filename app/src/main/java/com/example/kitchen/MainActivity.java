@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     private RecipeAdapter recipeAdapter;
     Boolean filter = false;
     List<RecipeListItem> filteredList;
+    public final int SEARCH_BY_NAME = 0;
+    public final int SEARCH_BY_PREP_TIME = 1;
+    public final int SEARCH_BY_TOTAL_TIME = 2;
 
     /**
      * This method is run when the activity is created and sets up the activity
@@ -59,17 +62,18 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
 
 
         if (getIntent().getBooleanExtra("advancedSearch", false)) {
-            int recipeRadioChecked = getIntent().getIntExtra("radioGroup", -1);
+            int recipeRadioChecked = getIntent().getIntExtra("recipeRadio", -1);
             String input = getIntent().getStringExtra("input");
             int[] ingredientId = getIntent().getIntArrayExtra("ingredientArray");
             int category = getIntent().getIntExtra("categoryId", -1);
-
-            advancedSearch(input, recipeRadioChecked, ingredientId, category);
+            boolean ascending = getIntent().getBooleanExtra("ascending", true);
+            advancedSearch(input, recipeRadioChecked, ingredientId, category, ascending);
         } else {
             recipes = database.getAllRecipes();
             fillDefaultRecipes();
+            recipes = database.getAllRecipes();
+            checkRecipes();
         }
-        checkRecipes();
         getRecipeListItems();
         recipeAdapter = new RecipeAdapter(recipeListItems, this);
         recyclerView.setAdapter(recipeAdapter);
@@ -889,38 +893,144 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         return filteredList;
     }
 
-    private void advancedSearch(String input, int checkedRecipeRadio, int ingredientId[], int catgeoryId) {
-        if (input.compareTo("") != 0 ) {
-            switch (checkedRecipeRadio) {
-                case R.id.radio_recipe_name:
-                    recipes = new ArrayList<>();
-                    recipes.add(database.getRecipe(input));
-                    //getRecipeListItems();
-                    //recipeAdapter = new RecipeAdapter(recipeListItems, this);
-                    //recyclerView.setAdapter(recipeAdapter);
-                    break;
-                case R.id.radio_prep_time:
-                    recipes = database.getRecipeByPrepTime(Integer.valueOf(input));
-                    //getRecipeListItems();
-                    //recipeAdapter = new RecipeAdapter(recipeListItems, this);
-                    //recyclerView.setAdapter(recipeAdapter);
-                    break;
-                case R.id.radio_total_time:
-                    recipes = database.getRecipeByTotalTime(Integer.valueOf(input));
-                    //getRecipeListItems();
-                   // recipeAdapter = new RecipeAdapter(recipeListItems, this);
-                    //recyclerView.setAdapter(recipeAdapter);
-                    break;
-            }
-        } else if (ingredientId.length > 0) {
+    private void advancedSearch(String input, int checkedRecipeRadio, int ingredientId[], int catgeoryId, boolean ascending) {
+        recipes = new ArrayList<>();
+        if (ingredientId.length > 0) {
             if (ingredientId.length == 1)
-                recipes = database.getRecipeByIngredientId(ingredientId[0]);
+                recipes.addAll(database.getRecipeByIngredientId(ingredientId[0]));
             else
-                recipes = database.getRecipeByIngredientIdList(ingredientId);
+                recipes.addAll(database.getRecipeByIngredientIdList(ingredientId));
         }
-        else if (catgeoryId != -1)
-            recipes = database.getRecipeByCategoryId(catgeoryId);
-        else
-            Toast.makeText(this, "No results", Toast.LENGTH_SHORT).show();
+        if (catgeoryId != -1) {
+            recipes.addAll(database.getRecipeByCategoryId(catgeoryId));
+        }
+        switch (checkedRecipeRadio) {
+            case SEARCH_BY_NAME:
+                if (input.compareTo("") != 0)
+                    recipes.add(database.getRecipe(input));
+                recipes = quickSortByTitle(recipes, ascending);
+
+                break;
+            case SEARCH_BY_PREP_TIME:
+                if (input.compareTo("") != 0) {
+                    recipes.addAll(database.getRecipeByPrepTime(Integer.valueOf(input)));
+                }
+                recipes = quickSortByPrepTime(recipes, ascending);
+
+                break;
+            case SEARCH_BY_TOTAL_TIME:
+                if (input.compareTo("") != 0)
+                    recipes.addAll(database.getRecipeByTotalTime(Integer.valueOf(input)));
+                recipes = quickSortByTotalTime(recipes, ascending);
+                break;
+        }
+
     }
+
+
+    public static List<Recipe> quickSortByTitle(List<Recipe> list, boolean ascending) {
+        List<Recipe> sorted;  // this shall be the sorted list to return, no needd to initialise
+        List<Recipe> smaller = new ArrayList<Recipe>(); // Vehicles smaller than pivot
+        List<Recipe> greater = new ArrayList<Recipe>(); // Vehicles greater than pivot
+
+        if (list.isEmpty())
+            return list; // start with recursion base case
+        Recipe pivot = list.get(0);  // first Vehicle in list, used as pivot
+        int i;
+        Recipe j;     // Variable used for Vehicles in the loop
+        for (i = 1; i < list.size(); i++) {
+            j = list.get(i);
+            if (ascending) {
+                if (j.getTitle().compareTo(pivot.getTitle()) < 0)   // make sure Vehicle has proper compareTo method
+                    smaller.add(j);
+                else
+                    greater.add(j);
+            } else {
+                if (j.getTitle().compareTo(pivot.getTitle()) > 0)   // make sure Vehicle has proper compareTo method
+                    smaller.add(j);
+                else
+                    greater.add(j);
+            }
+        }
+        smaller = quickSortByTitle(smaller, ascending);  // capitalise 's'
+        greater = quickSortByTitle(greater, ascending);  // sort both halfs recursively
+        smaller.add(pivot);          // add initial pivot to the end of the (now sorted) smaller Vehicles
+        smaller.addAll(greater);     // add the (now sorted) greater Vehicles to the smaller ones (now smaller is essentially your sorted list)
+        sorted = smaller;            // assign it to sorted; one could just as well do: return smaller
+
+        return sorted;
+
+
+    }
+
+    public static List<Recipe> quickSortByPrepTime(List<Recipe> list, boolean ascending) {
+        List<Recipe> sorted;  // this shall be the sorted list to return, no needd to initialise
+        List<Recipe> smaller = new ArrayList<Recipe>(); // Vehicles smaller than pivot
+        List<Recipe> greater = new ArrayList<Recipe>(); // Vehicles greater than pivot
+
+        if (list.isEmpty())
+            return list; // start with recursion base case
+        Recipe pivot = list.get(0);  // first Vehicle in list, used as pivot
+        int i;
+        Recipe j;     // Variable used for Vehicles in the loop
+        for (i = 1; i < list.size(); i++) {
+            j = list.get(i);
+            if (ascending) {
+                if (j.getPrep_time() < pivot.getPrep_time())   // make sure Vehicle has proper compareTo method
+                    smaller.add(j);
+                else
+                    greater.add(j);
+            } else {
+                if (j.getPrep_time() > pivot.getPrep_time())   // make sure Vehicle has proper compareTo method
+                    smaller.add(j);
+                else
+                    greater.add(j);
+            }
+        }
+        smaller = quickSortByPrepTime(smaller, ascending);  // capitalise 's'
+        greater = quickSortByPrepTime(greater, ascending);  // sort both halfs recursively
+        smaller.add(pivot);          // add initial pivot to the end of the (now sorted) smaller Vehicles
+        smaller.addAll(greater);     // add the (now sorted) greater Vehicles to the smaller ones (now smaller is essentially your sorted list)
+        sorted = smaller;            // assign it to sorted; one could just as well do: return smaller
+
+        return sorted;
+
+
+    }
+
+    public static List<Recipe> quickSortByTotalTime(List<Recipe> list, boolean ascending) {
+        List<Recipe> sorted;  // this shall be the sorted list to return, no needd to initialise
+        List<Recipe> smaller = new ArrayList<Recipe>(); // Vehicles smaller than pivot
+        List<Recipe> greater = new ArrayList<Recipe>(); // Vehicles greater than pivot
+
+        if (list.isEmpty())
+            return list; // start with recursion base case
+        Recipe pivot = list.get(0);  // first Vehicle in list, used as pivot
+        int i;
+        Recipe j;     // Variable used for Vehicles in the loop
+        for (i = 1; i < list.size(); i++) {
+            j = list.get(i);
+            if (ascending) {
+                if (j.getTotal_time() < pivot.getTotal_time())   // make sure Vehicle has proper compareTo method
+                    smaller.add(j);
+                else
+                    greater.add(j);
+            } else {
+                if (j.getTotal_time() > pivot.getTotal_time())   // make sure Vehicle has proper compareTo method
+                    smaller.add(j);
+                else
+                    greater.add(j);
+            }
+        }
+        smaller = quickSortByTotalTime(smaller, ascending);  // capitalise 's'
+        greater = quickSortByTotalTime(greater, ascending);  // sort both halfs recursively
+        smaller.add(pivot);          // add initial pivot to the end of the (now sorted) smaller Vehicles
+        smaller.addAll(greater);     // add the (now sorted) greater Vehicles to the smaller ones (now smaller is essentially your sorted list)
+        sorted = smaller;            // assign it to sorted; one could just as well do: return smaller
+
+        return sorted;
+
+
+    }
+
 }

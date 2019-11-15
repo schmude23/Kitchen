@@ -77,11 +77,11 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
         shoppingCartAdapter = new ShoppingCartAdapter(shoppingCart, new ShoppingCartAdapter.OnItemCheckListener() {
             @Override
             public void onItemCheck(ShoppingCartItem item) {
+                checkedItems.add(item);
                 if (editMode) {
                     editIngredientPopup(item);
+                }
 
-                } else
-                    checkedItems.add(item);
             }
 
             @Override

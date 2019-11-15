@@ -27,7 +27,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdvancedSearchActivity extends AppCompatActivity implements View.OnClickListener, RecipeAdapter.OnClickListener {
+public class AdvancedSearchActivity extends AppCompatActivity implements View.OnClickListener {
     DatabaseHelper database = new DatabaseHelper(this);
     Recipe recipe;
     private List<Recipe> recipes;
@@ -36,7 +36,7 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
     private RecyclerView recyclerView;
 
     private RadioGroup recipeRadioGroup, orderRadioGroup;
-    private RadioButton recipeTitle, servings, prepTime, totalTime, ascending, descending, random;
+
 
     private ListView ingredientListView;
     private ArrayList<String> ingredientList = new ArrayList<String>();
@@ -50,17 +50,6 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
     private Button btnAddCategory;
     private EditText editCategory;
 
-    private ListView excludeIngredientListView;
-    private ArrayList<String> excludeIngredientList = new ArrayList<String>();
-    private ArrayAdapter<String> excludeIngredientAdapter;
-    private Button excludeBtnAddIngredient;
-    private EditText excludeEditIngredient;
-
-    private ListView excludeCategoryListView;
-    private ArrayList<String> excludeCategoryList = new ArrayList<String>();
-    private ArrayAdapter<String> excludeCategoryAdapter;
-    private Button excludeBtnAddCategory;
-    private EditText excludeEditCategory;
     //private SearchView search;
     private EditText searchEditText;
     private Button searchButton;
@@ -69,6 +58,7 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
     public final int SEARCH_BY_PREP_TIME = 1;
     public final int SEARCH_BY_TOTAL_TIME = 2;
     private int recipeRadioSelected = 0;
+    private boolean ascending = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,20 +67,10 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
         initRadioGroups();
         limitToIngredientList();
         limitToCategoryList();
-        excludeIngredientList();
-        excludeCategoryList();
-        //search = findViewById(R.id.search);
         searchEditText = findViewById(R.id.search_edit_text);
         searchButton = findViewById(R.id.advanced_search_search_button);
         searchButton.setOnClickListener(this);
-        recyclerView = findViewById(R.id.advanced_search_recipe_list_recycler);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemViewCacheSize(20);
-        recyclerView.setDrawingCacheEnabled(true);
-        recyclerView.setLayoutManager(layoutManager);
 
 
     }
@@ -102,29 +82,17 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
         intent.putExtra("recipeRadio", recipeRadioSelected);
         int[] ingredientId = new int[ingredientList.size()];
         for (int i = 0; i < ingredientList.size(); i++)
-            ingredientId[i] = database.getIngredient(ingredientList.get(i));
+            ingredientId[i] = database.getIngredient(ingredientList.get(i).toLowerCase());
         intent.putExtra("ingredientArray", ingredientId);
         if(categoryList.size() >0)
-            intent.putExtra("categoryId", database.getCategory(categoryList.get(0)));
+            intent.putExtra("categoryId", database.getCategory(categoryList.get(0).toLowerCase()));
         intent.putExtra("advancedSearch", true);
+        intent.putExtra("ascending", ascending);
         startActivity(intent);
 
 
     }
 
-    private void getRecipeListItems() {
-        if (recipes != null) {
-            recipeListItems = new ArrayList<>();
-            for (int i = 0; i < recipes.size(); i++) {
-                String recipe_name = recipes.get(i).getTitle();
-                double servings = recipes.get(i).getServings();
-                int prep_time = recipes.get(i).getPrep_time();
-                int total_time = recipes.get(i).getTotal_time();
-                Bitmap image = recipes.get(i).getImage(this);
-                recipeListItems.add(new RecipeListItem(recipe_name, servings, prep_time, total_time, image, recipes.get(i).getFavorited(), recipes.get(i).getKeyID()));
-            }
-        }
-    }
 
     private void initRadioGroups() {
         recipeRadioGroup = (RadioGroup) findViewById(R.id.radio_group_recipe);
@@ -137,10 +105,13 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
                 {
                     case R.id.radio_recipe_name:
                         recipeRadioSelected = SEARCH_BY_NAME;
+                        break;
                     case R.id.radio_prep_time:
                         recipeRadioSelected = SEARCH_BY_PREP_TIME;
+                        break;
                     case R.id.radio_total_time:
                         recipeRadioSelected = SEARCH_BY_TOTAL_TIME;
+                        break;
 
                 }
 
@@ -153,8 +124,14 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                Toast.makeText(getApplicationContext(), "not implemented",
-                        Toast.LENGTH_SHORT).show();
+              switch(checkedId){
+                  case R.id.radio_ascending:
+                      ascending = true;
+                      break;
+                  case R.id.radio_descending:
+                      ascending = false;
+                      break;
+              }
 
             }
 
@@ -186,29 +163,6 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
         ingredientListView.setAdapter(ingredientAdapter);
     }
 
-    private void excludeIngredientList() {
-        excludeEditIngredient = (EditText) findViewById(R.id.exclude_edit_ingredient);
-        excludeBtnAddIngredient = (Button) findViewById(R.id.exclude_button_add_ingredient);
-        excludeBtnAddIngredient.setOnClickListener(this);
-
-        //ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
-        excludeIngredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, excludeIngredientList) {
-            @NonNull
-            @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
-                textView.setMinHeight(0); // Min Height
-                textView.setMinimumHeight(0); // Min Height
-                textView.setHeight(100); // Height
-                return view;
-            }
-        };
-
-        // set the ingredientListView variable to your ingredientList in the xml
-        excludeIngredientListView = (ListView) findViewById(R.id.exclude_ingredient_list);
-        excludeIngredientListView.setAdapter(excludeIngredientAdapter);
-    }
 
 
     private void limitToCategoryList() {
@@ -235,29 +189,6 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
         categoryListView.setAdapter(categoryAdapter);
     }
 
-    private void excludeCategoryList() {
-        excludeEditCategory = (EditText) findViewById(R.id.exclude_edit_category);
-        excludeBtnAddCategory = (Button) findViewById(R.id.exclude_button_add_category);
-        excludeBtnAddCategory.setOnClickListener(this);
-
-        //ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
-        excludeCategoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, excludeCategoryList) {
-            @NonNull
-            @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
-                textView.setMinHeight(0); // Min Height
-                textView.setMinimumHeight(0); // Min Height
-                textView.setHeight(100); // Height
-                return view;
-            }
-        };
-
-        // set the ingredientListView variable to your ingredientList in the xml
-        excludeCategoryListView = (ListView) findViewById(R.id.exclude_category_list);
-        excludeCategoryListView.setAdapter(excludeCategoryAdapter);
-    }
 
     @Override
     public void onClick(View v) {
@@ -279,6 +210,11 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
             case R.id.button_add_category:
                 input = editCategory.getText().toString();
                 if (input.length() > 0) {
+                    if(categoryList.size() == 1)
+                    {
+                        Toast.makeText(this, "Only one category allowed for Advanced Search", Toast.LENGTH_LONG).show();
+                        break;
+                    }
                     if (database.getCategory(input) != -1) {
                         categoryList.add(input);
                         categoryAdapter.notifyDataSetChanged();
@@ -288,36 +224,6 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
                         Toast.makeText(this, input + " is not a valid category", Toast.LENGTH_LONG).show();
                 }
                 editCategory.getText().clear();
-                break;
-            case R.id.exclude_button_add_ingredient:
-                Toast.makeText(getApplicationContext(), "not implemented",
-                        Toast.LENGTH_SHORT).show();
-                input = excludeEditIngredient.getText().toString();
-                if (input.length() > 0) {
-                    if (database.getIngredient(input) != -1) {
-                        excludeIngredientList.add(input);
-                        excludeIngredientAdapter.notifyDataSetChanged();
-                        excludeIngredientListView.setAdapter(excludeIngredientAdapter);
-                        setListViewHeightBasedOnItems(excludeIngredientListView);
-                    } else
-                        Toast.makeText(this, input + " is not a valid ingredient", Toast.LENGTH_LONG).show();
-                }
-                excludeEditIngredient.getText().clear();
-                break;
-            case R.id.exclude_button_add_category:
-                Toast.makeText(getApplicationContext(), "not implemented",
-                        Toast.LENGTH_SHORT).show();
-                input = excludeEditCategory.getText().toString();
-                if (input.length() > 0) {
-                    if (database.getCategory(input) != -1) {
-                        excludeCategoryList.add(input);
-                        excludeCategoryAdapter.notifyDataSetChanged();
-                        excludeCategoryListView.setAdapter(excludeCategoryAdapter);
-                        setListViewHeightBasedOnItems(excludeCategoryListView);
-                    } else
-                        Toast.makeText(this, input + " is not a valid category", Toast.LENGTH_LONG).show();
-                }
-                excludeEditCategory.getText().clear();
                 break;
             case R.id.advanced_search_search_button:
                 search();
@@ -367,26 +273,4 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
 
     }
 
-
-    /**
-     * This is the onclick method for the recipe adapter.
-     *
-     * @param position the position of the item clicked on within the dataset
-     */
-    @Override
-    public void onClick(int position) {
-        Context context = getApplicationContext();
-        CharSequence text = "Retrieving recipe";
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-
-        int recipeId = recipes.get(position).getKeyID();
-        Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
-
-        //adding extra information from intent
-        intent.putExtra("recipeId", recipeId);
-        startActivity(intent);
-    }
 }
