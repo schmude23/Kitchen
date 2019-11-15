@@ -401,6 +401,14 @@ class Recipe {
         this.categoryList = categoryList;
     }
 
+    public int compareTo(Recipe obj) {
+        //TODO: TEst (used only in getAllRecipeSorted()
+        //sort in ascending order
+        return this.getTitle().compareToIgnoreCase(obj.getTitle());
+        //sort in descending order
+        //return obj.age-this.age;
+    }
+
     /**
      * This method converts the recipe to a string format for debugging
      *

@@ -10,7 +10,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 //create read update delete
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -128,7 +130,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + RC_CATEGORY_ID + " INTEGER" + ")";
         sqLiteDatabase.execSQL(CREATE_RECIPE_CATEGORY_TABLE);
 
-        //Recipe Category Table
+        //Recipe Shopping Cart Table
         String CREATE_SHOPPING_CART_TABLE = "CREATE TABLE " + TABLE_SHOPPING_CART_LIST + "("
                 + SC_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + SC_INGREDIENT_ID + " INTEGER, "
@@ -521,6 +523,59 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method returns a list of all recipes
+     *
+     * @return If successful in fetching the recipes this method will return an Array list of
+     * recipes, if not this method will return null.
+     */
+    public ArrayList<Recipe> getAllRecipesSorted() {
+        //TODO: TEST CORRECT
+        ArrayList<Recipe> recipeList = getAllRecipes();
+
+        if(recipeList == null){
+            return null;
+        }
+        //Collections.sort(recipeList);
+
+        return recipeList;
+    }
+
+    /**
+     * This method returns a list of 50 max randomly assorted recipes
+     *
+     * @return If successful in fetching the recipes this method will return an Array list of
+     * randomly assorted recipes, if not this method will return null.
+     */
+    public ArrayList<Recipe> getRandomRecipes() {
+        //TODO: TEST/CORRECT
+        ArrayList<Recipe> recipeList = getAllRecipes();
+
+        if(recipeList == null){
+            return null;
+        }
+
+        ArrayList<Recipe> randList = new ArrayList<Recipe>();
+        Random r = new Random();
+
+        //I dont think we need to check for size as above would be negative.
+        int size = recipeList.size();
+        int checkSize = 50;
+        if (size < 50){
+            checkSize = size;
+        }
+
+        for(int i = 0; i < checkSize; i++){
+            int randInt = r.nextInt((size + 1 - i) - 0);
+            //add random recipe to randList
+            randList.add(recipeList.get(randInt));
+            //delete specific recipe to avoid duplicates.
+            recipeList.remove(recipeList.get(randInt));
+        }
+
+        return recipeList;
+    }
+
+    /**
      * This method modifies the recipe in the recipe table with the same recipeId as the recipe provided
      * to be the recipe provided
      *
@@ -634,23 +689,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         for (int i = 0; i < recipeIngredientList.size(); i++) {
-            RecipeIngredient ingredient = recipeIngredientList.get(i);
+            RecipeIngredient recipeIngredient = recipeIngredientList.get(i);
+            RecipeIngredient existCheck = getShoppingCartIngredient(recipeIngredient.getIngredientID());
+            if( existCheck == null) {
+                //Create a new map of values, where column names are the keys
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(SC_INGREDIENT_ID, recipeIngredient.getIngredientID());
+                contentValues.put(SC_QUANTITY, recipeIngredient.getQuantity());
+                contentValues.put(SC_UNIT, recipeIngredient.getUnit());
 
-            //Create a new map of values, where column names are the keys
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(SC_INGREDIENT_ID, ingredient.getIngredientID());
-            contentValues.put(SC_QUANTITY, ingredient.getQuantity());
-            contentValues.put(SC_UNIT, ingredient.getUnit());
+                // Insert the new row, returning the primary key value of the new row
+                int newRowId = (int) sqLiteDatabase.insert(TABLE_SHOPPING_CART_LIST, null, contentValues);
 
-            // Insert the new row, returning the primary key value of the new row
-            int newRowId = (int) sqLiteDatabase.insert(TABLE_SHOPPING_CART_LIST, null, contentValues);
-
-            //check to make sure properly inserted
-            if (newRowId == -1) {
-                //delete all things aready created
-                //TODO: if failure you need to delete ALL added ingredients using int[]
-                deleteShoppingCartIngredient(newRowId);
-                return false;
+                //check to make sure properly inserted
+                if (newRowId == -1) {
+                    //delete all things aready created
+                    //TODO: if failure you need to delete ALL added ingredients using int[]
+                    deleteShoppingCartIngredient(newRowId);
+                    return false;
+                }
+            }
+            else{
+                double quantity = existCheck.getQuantity();
+                recipeIngredient.setQuantity(recipeIngredient.getQuantity()+ quantity);
+                updateShoppingCartIngredient(recipeIngredient);
             }
         }
 
@@ -687,13 +749,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method updates the recipe information in the shopping cart
+     * This method adds the recipe information to the shopping cart
      *
      * @return true if the operation was successful, false otherwise
      */
     public boolean updateShoppingCartIngredient(RecipeIngredient ingredient) {
         //TODO: Correct/Test
-        int id = ingredient.getKeyID();
+        int id = ingredient.getIngredientID();
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         ContentValues cVals = new ContentValues();
@@ -701,12 +763,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cVals.put(SC_QUANTITY, ingredient.getQuantity());
         cVals.put(SC_UNIT, ingredient.getUnit());
 
-        long returned = sqLiteDatabase.update(TABLE_SHOPPING_CART_LIST, cVals, IT_KEY_ID + " = ?", new String[]{String.valueOf(id)});
+        long returned = sqLiteDatabase.update(TABLE_SHOPPING_CART_LIST, cVals, SC_INGREDIENT_ID + " = ?", new String[]{String.valueOf(id)});
         if (returned == -1) {
             return false;
         }
         return true;
 
+    }
+
+    /**
+     * This method returns an Ingredient using the specified ingredient ID
+     *
+     * @param ingredientID
+     * @return If successful in fetching the ingredient return, if not, this method will return null.
+     */
+    public RecipeIngredient getShoppingCartIngredient(int ingredientID) {
+        RecipeIngredient recipeIngredient = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SHOPPING_CART_LIST + "  WHERE " + SC_INGREDIENT_ID + " = ? ", new String[]{String.valueOf(ingredientID)});
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            recipeIngredient = mapRecipeIngredient(cursor);
+            cursor.moveToNext();
+
+            cursor.close();
+        }
+
+        return recipeIngredient;
     }
 
     /**
@@ -716,12 +800,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return true if the operation was successful, false otherwise
      */
     public boolean deleteShoppingCartIngredient(int ingredientId) {
-        //TODO: Zander fix/ Finish testing
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        long returned = sqLiteDatabase.delete(TABLE_SHOPPING_CART_LIST, SC_INGREDIENT_ID + " = ?", new String[]{String.valueOf(ingredientId)});
-        if (returned == -1) {
+        //TODO: Michaela ball is in your court/ Finishin' testin'
+
+        if (getIngredient(ingredientId) == null) {
             return false;
         }
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        long returned = sqLiteDatabase.delete(TABLE_SHOPPING_CART_LIST, SC_INGREDIENT_ID + " = ?", new String[]{String.valueOf(ingredientId)});
+
         return true;
     }
 
@@ -1245,13 +1332,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * This method does NOT update the database
      *
      * @param recipe, desiredServing
-     * @return If successful, will return an updated Recipe
+     * @return If successful, will return true
      */
     public Recipe scaleRecipe(Recipe recipe, double desiredServing) {
-        //TODO: Should recipe scalar be within a recipe?
-        if (recipe.getKeyID() == -1) {
+        //TODO: Test
+        if(recipe.getKeyID() == -1)
             return null;
-        }
         double scalar = desiredServing / recipe.getServings();
         List<RecipeIngredient> ingredientList = recipe.getIngredientList();
         for (int i = 0; i < ingredientList.size(); i++) {
