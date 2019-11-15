@@ -65,6 +65,10 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
     private EditText searchEditText;
     private Button searchButton;
 
+    public final int SEARCH_BY_NAME = 0;
+    public final int SEARCH_BY_PREP_TIME = 1;
+    public final int SEARCH_BY_TOTAL_TIME = 2;
+    private int recipeRadioSelected = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,39 +96,19 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
     }
 
     private void search() {
+        Toast.makeText(this, "Searching...", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("recipeRadio", recipeRadioGroup.getCheckedRadioButtonId());
-        int [] ingredientId = new int[ingredientList.size()];
-        for(int i = 0; i < ingredientList.size(); i++)
+        intent.putExtra("input", searchEditText.getText().toString());
+        intent.putExtra("recipeRadio", recipeRadioSelected);
+        int[] ingredientId = new int[ingredientList.size()];
+        for (int i = 0; i < ingredientList.size(); i++)
             ingredientId[i] = database.getIngredient(ingredientList.get(i));
         intent.putExtra("ingredientArray", ingredientId);
-        intent.putExtra("categoryId", database.getCategory(categoryList.get(0)) );
-        Toast.makeText(this,  "." + searchEditText.getText().toString() + ".", Toast.LENGTH_SHORT).show();
-        if(searchEditText.getText().toString().compareTo("") != 0) {
-            switch (recipeRadioGroup.getCheckedRadioButtonId()) {
-                case R.id.radio_recipe_name:
-                    recipes = new ArrayList<>();
-                    recipes.add(database.getRecipe(searchEditText.getText().toString()));
-                    getRecipeListItems();
-                    recipeAdapter = new RecipeAdapter(recipeListItems, this);
-                    recyclerView.setAdapter(recipeAdapter);
-                    break;
-                case R.id.radio_prep_time:
-                    recipes = database.getRecipeByPrepTime(Integer.valueOf(searchEditText.getText().toString()));
-                    getRecipeListItems();
-                    recipeAdapter = new RecipeAdapter(recipeListItems, this);
-                    recyclerView.setAdapter(recipeAdapter);
-                    break;
-                case R.id.radio_total_time:
-                    recipes = database.getRecipeByTotalTime(Integer.valueOf(searchEditText.getText().toString()));
-                    getRecipeListItems();
-                    recipeAdapter = new RecipeAdapter(recipeListItems, this);
-                    recyclerView.setAdapter(recipeAdapter);
-                    break;
-                case R.id.radio_servings:
-                    Toast.makeText(this, "Search by servings not implemented", Toast.LENGTH_SHORT).show();
-            }
-        }
+        if(categoryList.size() >0)
+            intent.putExtra("categoryId", database.getCategory(categoryList.get(0)));
+        intent.putExtra("advancedSearch", true);
+        startActivity(intent);
+
 
     }
 
@@ -144,14 +128,33 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
 
     private void initRadioGroups() {
         recipeRadioGroup = (RadioGroup) findViewById(R.id.radio_group_recipe);
+        recipeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                switch(checkedId)
+                {
+                    case R.id.radio_recipe_name:
+                        recipeRadioSelected = SEARCH_BY_NAME;
+                    case R.id.radio_prep_time:
+                        recipeRadioSelected = SEARCH_BY_PREP_TIME;
+                    case R.id.radio_total_time:
+                        recipeRadioSelected = SEARCH_BY_TOTAL_TIME;
+
+                }
+
+            }
+
+        });
         orderRadioGroup = (RadioGroup) findViewById(R.id.radio_group_order);
         orderRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                        Toast.makeText(getApplicationContext(), "not implemented",
-                                Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "not implemented",
+                        Toast.LENGTH_SHORT).show();
 
             }
 

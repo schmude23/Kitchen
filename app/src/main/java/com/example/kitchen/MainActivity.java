@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import android.os.Bundle;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 
@@ -55,9 +56,19 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         recyclerView.setItemViewCacheSize(20);
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setLayoutManager(layoutManager);
-        recipes = database.getAllRecipes();
-        fillDefaultRecipes();
-        recipes = database.getAllRecipes();
+
+
+        if (getIntent().getBooleanExtra("advancedSearch", false)) {
+            int recipeRadioChecked = getIntent().getIntExtra("radioGroup", -1);
+            String input = getIntent().getStringExtra("input");
+            int[] ingredientId = getIntent().getIntArrayExtra("ingredientArray");
+            int category = getIntent().getIntExtra("categoryId", -1);
+
+            advancedSearch(input, recipeRadioChecked, ingredientId, category);
+        } else {
+            recipes = database.getAllRecipes();
+            fillDefaultRecipes();
+        }
         checkRecipes();
         getRecipeListItems();
         recipeAdapter = new RecipeAdapter(recipeListItems, this);
@@ -877,5 +888,39 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         }
         return filteredList;
     }
-}
 
+    private void advancedSearch(String input, int checkedRecipeRadio, int ingredientId[], int catgeoryId) {
+        if (input.compareTo("") != 0 ) {
+            switch (checkedRecipeRadio) {
+                case R.id.radio_recipe_name:
+                    recipes = new ArrayList<>();
+                    recipes.add(database.getRecipe(input));
+                    //getRecipeListItems();
+                    //recipeAdapter = new RecipeAdapter(recipeListItems, this);
+                    //recyclerView.setAdapter(recipeAdapter);
+                    break;
+                case R.id.radio_prep_time:
+                    recipes = database.getRecipeByPrepTime(Integer.valueOf(input));
+                    //getRecipeListItems();
+                    //recipeAdapter = new RecipeAdapter(recipeListItems, this);
+                    //recyclerView.setAdapter(recipeAdapter);
+                    break;
+                case R.id.radio_total_time:
+                    recipes = database.getRecipeByTotalTime(Integer.valueOf(input));
+                    //getRecipeListItems();
+                   // recipeAdapter = new RecipeAdapter(recipeListItems, this);
+                    //recyclerView.setAdapter(recipeAdapter);
+                    break;
+            }
+        } else if (ingredientId.length > 0) {
+            if (ingredientId.length == 1)
+                recipes = database.getRecipeByIngredientId(ingredientId[0]);
+            else
+                recipes = database.getRecipeByIngredientIdList(ingredientId);
+        }
+        else if (catgeoryId != -1)
+            recipes = database.getRecipeByCategoryId(catgeoryId);
+        else
+            Toast.makeText(this, "No results", Toast.LENGTH_SHORT).show();
+    }
+}
