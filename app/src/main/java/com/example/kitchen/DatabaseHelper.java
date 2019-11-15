@@ -194,9 +194,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         recipe.setKeyID(res);
 
         if (res == -1) {
-            if (IS_IN_TESTING_MODE) {
-                System.out.println("updating recipe table failed");
-            }
             return -1;
         }
 
@@ -204,30 +201,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         for (int i = 0; i < recipeIngredientList.size(); i++) {
             recipeIngredientList.get(i).setRecipeID(res);
             int result = addRecipeIngredient(recipeIngredientList.get(i));
-
-            if (result == -1) {
-                //Inserting recipeIngredient didn't work.
-            }
         }
 
         //add new categorys from recipeCategoryList
         for (int i = 0; i < recipeCategoryList.size(); i++) {
             recipeCategoryList.get(i).setRecipeID(res);
             int result = addRecipeCategory(recipeCategoryList.get(i));
-
-            if (result == -1) {
-                //Inserting recipeCategory didn't work
-            }
         }
 
         //add new directions from recipeDirectionList
         for (int i = 0; i < recipeDirectionList.size(); i++) {
             recipeDirectionList.get(i).setRecipeID(res);
             int result = addRecipeDirection(recipeDirectionList.get(i));
-
-            if (result == -1) {
-                //Inserting recipeDirection didn't work
-            }
         }
 
         return res;
@@ -514,59 +499,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method returns a list of all recipes
-     *
-     * @return If successful in fetching the recipes this method will return an Array list of
-     * recipes, if not this method will return null.
-     */
-    public ArrayList<Recipe> getAllRecipesSorted() {
-        //TODO: TEST CORRECT
-        ArrayList<Recipe> recipeList = getAllRecipes();
-
-        if(recipeList == null){
-            return null;
-        }
-        //Collections.sort(recipeList);
-
-        return recipeList;
-    }
-
-    /**
-     * This method returns a list of 50 max randomly assorted recipes
-     *
-     * @return If successful in fetching the recipes this method will return an Array list of
-     * randomly assorted recipes, if not this method will return null.
-     */
-    public ArrayList<Recipe> getRandomRecipes() {
-        //TODO: TEST/CORRECT
-        ArrayList<Recipe> recipeList = getAllRecipes();
-
-        if(recipeList == null){
-            return null;
-        }
-
-        ArrayList<Recipe> randList = new ArrayList<Recipe>();
-        Random r = new Random();
-
-        //I dont think we need to check for size as above would be negative.
-        int size = recipeList.size();
-        int checkSize = 50;
-        if (size < 50){
-            checkSize = size;
-        }
-
-        for(int i = 0; i < checkSize; i++){
-            int randInt = r.nextInt((size + 1 - i) - 0);
-            //add random recipe to randList
-            randList.add(recipeList.get(randInt));
-            //delete specific recipe to avoid duplicates.
-            recipeList.remove(recipeList.get(randInt));
-        }
-
-        return recipeList;
-    }
-
-    /**
      * This method modifies the recipe in the recipe table with the same recipeId as the recipe provided
      * to be the recipe provided
      *
@@ -612,7 +544,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         for (int i = 0; i < recipeCategoryList.size(); i++) {
             recipeCategoryList.get(i).setRecipeID(recipeId);
             int recipeCategoryResult = addRecipeCategory(recipeCategoryList.get(i));
-
             if (recipeCategoryResult == -1) {
                 return false;
             }
@@ -889,9 +820,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ingredient.setKeyID(res);
 
         if (res == -1) {
-            if (IS_IN_TESTING_MODE) {
-                System.out.println("updating ingredient table failed");
-            }
             return -1;
         }
 

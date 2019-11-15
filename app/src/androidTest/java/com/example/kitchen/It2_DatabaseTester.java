@@ -1220,17 +1220,126 @@ public class It2_DatabaseTester {
         tearDown();
     }
 
+    // Tests to increase branch converage:
+
     /**
-     * Add Comment
+     * This method checks that getRecipe(RecipeID) returns all the correct information of a previously existing Recipe
+     * that was favorited
+     *
+     * This test was added to increase branch coverage
      */
-    /*@Test
-    public void getRandomRecipes_ReturnsList() {
-        //TODO: Fix Database
+    @Test
+    public void getRecipeByID_Favorited(){
         setUp();
-        ArrayList<Recipe> randoms = testDatabase.getRandomRecipes();
-        assertNotEquals("getRandomRecipes - Returns List of Recipes", null, randoms);
+        testRecipe.setFavorited(true);
+        int returned = testDatabase.addRecipe(testRecipe);
+        Recipe retrieved = testDatabase.getRecipe(returned);
+        assertEquals("getRecipeByID - Correct Title", recipeTitle, retrieved.getTitle());
+        assertEquals("getRecipeByID - Correct Servings", 1, retrieved.getServings(), 0);
+        assertEquals("getRecipeByID - Correct Prep Time", 30, retrieved.getPrep_time(), 0);
+        assertEquals("getRecipeByID - Correct Total Time", 60, retrieved.getTotal_time(), 0);
+        assertEquals("getRecipeByID - Correct Favorited", true, retrieved.getFavorited());
+        assertEquals("getRecipeByID - Ingredient Unit", "cup(s)", retrieved.getIngredientList().get(0).getUnit());
+        assertEquals("getRecipeByID - Ingredient Quantity", 2.0, retrieved.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("getRecipeByID - Ingredient Details", "White Flour", retrieved.getIngredientList().get(0).getDetails());
+        assertEquals("getRecipeByID - First Direction Number", 1, retrieved.getDirectionsList().get(0).getDirectionNumber());
+        assertEquals("getRecipeByID - First Direction Text", "TestDirection1", retrieved.getDirectionsList().get(0).getDirectionText());
+        assertEquals("getRecipeByID - Second Direction Number", 2, retrieved.getDirectionsList().get(1).getDirectionNumber());
+        assertEquals("getRecipeByID - Second Direction Text", "TestDirection2", retrieved.getDirectionsList().get(1).getDirectionText());
         tearDown();
-    }*/
+    }
+
+    /**
+     * ADD COMMENT
+     */
+    @Test
+    public void editRecipe_CategoryCausedFalse(){
+        setUp();
+        int returned = testDatabase.addRecipe(testRecipe);
+        recipeCategory = new RecipeCategory(-1, -1, -1);
+        List<RecipeCategory> listOfCategories = new ArrayList<RecipeCategory>();
+
+        ingredient = new Ingredient(-1, "Flour");
+        ingredientID = testDatabase.addIngredient(ingredient);
+        recipeIngredient = new RecipeIngredient(-1, -1, ingredientID, 2.0, "cup(s)", "White Flour");
+        List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
+        listOfIngredients.add(recipeIngredient);
+
+        RecipeDirection recipeDirection1 = new RecipeDirection(-1, -1, "TestDirection1", 1);
+        RecipeDirection recipeDirection2 = new RecipeDirection(-1, -1, "TestDirection2", 2);
+        List<RecipeDirection> listOfDirections = new ArrayList<RecipeDirection>();
+        listOfDirections.add(recipeDirection1);
+        listOfDirections.add(recipeDirection2);
+        testRecipe = new Recipe(recipeTitle, 1.0, 30, 60, false, listOfIngredients, listOfDirections, listOfCategories);
+        boolean edited = testDatabase.editRecipe(testRecipe);
+        assertEquals(false, edited);
+        tearDown();
+    }
+
+    /**
+     * ADD COMMENT
+     */
+    @Test
+    public void editRecipe_IngredientCausedFalse(){
+        setUp();
+        int returned = testDatabase.addRecipe(testRecipe);
+        category = new Category(-1, "Lunch");
+        categoryID = testDatabase.addCategory(category);
+        recipeCategory = new RecipeCategory(-1, -1, categoryID);
+        List<RecipeCategory> listOfCategories = new ArrayList<RecipeCategory>();
+        listOfCategories.add(recipeCategory);
+
+        recipeIngredient = new RecipeIngredient(-1, -1, -1, 2.0, "cup(s)", "White Flour");
+        List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
+
+        RecipeDirection recipeDirection1 = new RecipeDirection(-1, -1, "TestDirection1", 1);
+        RecipeDirection recipeDirection2 = new RecipeDirection(-1, -1, "TestDirection2", 2);
+        List<RecipeDirection> listOfDirections = new ArrayList<RecipeDirection>();
+        listOfDirections.add(recipeDirection1);
+        listOfDirections.add(recipeDirection2);
+        testRecipe = new Recipe(recipeTitle, 1.0, 30, 60, false, listOfIngredients, listOfDirections, listOfCategories);
+        boolean edited = testDatabase.editRecipe(testRecipe);
+        assertEquals(false, edited);
+        tearDown();
+    }
+
+    /**
+     * ADD COMMENT
+     */
+    @Test
+    public void editRecipe_DirectionsCausedFalse(){
+        setUp();
+        int returned = testDatabase.addRecipe(testRecipe);
+        category = new Category(-1, "Lunch");
+        categoryID = testDatabase.addCategory(category);
+
+        recipeCategory = new RecipeCategory(-1, -1, categoryID);
+        List<RecipeCategory> listOfCategories = new ArrayList<RecipeCategory>();
+        listOfCategories.add(recipeCategory);
+
+        ingredient = new Ingredient(-1, "Flour");
+        ingredientID = testDatabase.addIngredient(ingredient);
+        recipeIngredient = new RecipeIngredient(-1, -1, ingredientID, 2.0, "cup(s)", "White Flour");
+        List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
+        listOfIngredients.add(recipeIngredient);
+
+        List<RecipeDirection> listOfDirections = new ArrayList<RecipeDirection>();
+        testRecipe = new Recipe(recipeTitle, 1.0, 30, 60, false, listOfIngredients, listOfDirections, listOfCategories);
+        boolean edited = testDatabase.editRecipe(testRecipe);
+        assertEquals(false, edited);
+        tearDown();
+    }
+
+    /**
+     * ADD COMMENT
+     */
+    @Test
+    public void onCreate_Database(){
+        DatabaseHelper nonNull = new DatabaseHelper(appContext.getApplicationContext());
+        assertNotEquals(null, nonNull);
+    }
+
+    // Helper Methods:
 
     /**
      * Helper method for tests that need a recipe with two ingredients
