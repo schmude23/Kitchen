@@ -681,7 +681,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method adds the recipe information to the shopping cart
+     * This method updates the recipe information in the shopping cart
      *
      * @return true if the operation was successful, false otherwise
      */
@@ -1239,11 +1239,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * This method does NOT update the database
      *
      * @param recipe, desiredServing
-     * @return If successful, will return true
+     * @return If successful, will return an updated Recipe
      */
     public Recipe scaleRecipe(Recipe recipe, double desiredServing) {
-        //TODO: implement should recipe scaler be within a recipe?
-        //TODO: Test
+        //TODO: Should recipe scalar be within a recipe?
+        if (recipe.getKeyID() == -1) {
+            return null;
+        }
         double scalar = desiredServing / recipe.getServings();
         List<RecipeIngredient> ingredientList = recipe.getIngredientList();
         for (int i = 0; i < ingredientList.size(); i++) {

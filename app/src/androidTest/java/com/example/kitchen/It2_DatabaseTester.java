@@ -705,6 +705,26 @@ public class It2_DatabaseTester {
     }
 
     /**
+     * This method checks that addRecipeToCart returns true upon success
+     */
+    @Test
+    public void addRecipeToCart_ReturnsTrue() {
+        setUp();
+        assertEquals("addRecipeToCart - Returns True", true, testDatabase.addRecipeToCart(recipeID));
+        tearDown();
+    }
+
+    /**
+     * This method checks that addRecipeToCart returns false if the recipe doesn't exist
+     */
+    @Test
+    public void addRecipeToCart_ReturnsFalse() {
+        setUp();
+        assertEquals("addRecipeToCart - Returns False", false, testDatabase.addRecipeToCart(Integer.MAX_VALUE));
+        tearDown();
+    }
+
+    /**
      * This method checks that addRecipeToCart updates the shopping cart correctly
      */
     @Test
@@ -720,12 +740,19 @@ public class It2_DatabaseTester {
     }
 
     /**
-     * This method checks that addRecipeToCart returns true upon success
+     * This method checks that addRecipeToCart updates the shopping cart correctly
      */
     @Test
-    public void addRecipeToCart_ReturnsTrue() {
+    public void addRecipeToCart_NoDuplicateIngredients() {
         setUp();
-        assertEquals("addRecipeToCart - Returns True", true, testDatabase.addRecipeToCart(recipeID));
+        //TODO Zander fixing
+        testDatabase.addRecipeToCart(recipeID);
+        testDatabase.addRecipeToCart(recipeID);
+        ArrayList<RecipeIngredient> shoppingCart = testDatabase.getAllShoppingCartIngredients();
+        assertEquals("addRecipeToCart - Adds one ingredient", 1, shoppingCart.size());
+        assertEquals("addRecipeToCart - Correct ingredientID", ingredientID, shoppingCart.get(0).getIngredientID());
+        assertEquals("addRecipeToCart - Correct Quantity", 4, shoppingCart.get(0).getQuantity(), 0);
+        assertEquals("addRecipeToCart - Correct Unit", "cup(s)", shoppingCart.get(0).getUnit());
         tearDown();
     }
 
@@ -787,7 +814,11 @@ public class It2_DatabaseTester {
     @Test
     public void updateShoppingCartIngredient_ReturnsTrue() {
         setUp();
-        //TODO: Implement
+        testDatabase.addRecipeToCart(recipeID);
+        recipeIngredient.setQuantity(6);
+        recipeIngredient.setDetails("N/A");
+        recipeIngredient.setUnit("tablespoon(s)");
+        assertEquals(true, testDatabase.updateShoppingCartIngredient(recipeIngredient));
         tearDown();
     }
 
@@ -797,7 +828,19 @@ public class It2_DatabaseTester {
     @Test
     public void updateShoppingCartIngredient_ReturnsFalse() {
         setUp();
-        //TODO: Implement
+        //TODO: Don't know how I'd make this happen
+        tearDown();
+    }
+
+    /**
+     * ADD COMMENT
+     */
+    @Test
+    public void updateShoppingCartIngredient_NoChange() {
+        setUp();
+        //TODO: Finish Implement
+        testDatabase.addRecipeToCart(recipeID);
+        testDatabase.updateShoppingCartIngredient(recipeIngredient);
         tearDown();
     }
 
@@ -1058,7 +1101,78 @@ public class It2_DatabaseTester {
         tearDown();
     }
 
-    //TODO: Add tests for scaleRecipe
+    /**
+     * This method checks that scaleRecipe returns null if the Recipe doesn't exist
+     */
+    @Test
+    public void scaleRecipe_ReturnsNull() {
+        setUp();
+        Recipe recipe = new Recipe();
+        assertEquals("scaleRecipe - Returns Null", null, testDatabase.scaleRecipe(recipe, 1));
+        tearDown();
+    }
+
+    /**
+     * This method checks that scaleRecipe returns a non-null Recipe
+     */
+    @Test
+    public void scaleRecipe_ReturnsRecipe() {
+        setUp();
+        assertNotEquals("scaleRecipe - Returns a Recipe", null, testDatabase.scaleRecipe(testRecipe, 2));
+        tearDown();
+    }
+
+    /**
+     * This method checks that scaleRecipe returns a Recipe with the updated servings and ingredient quantities
+     * This method is specifically to check the case where the Recipe only has one ingredient
+     * The method also checks that no other part of the Recipe was changed
+     */
+    @Test
+    public void scaleRecipe_CorrectW1Ingredient() {
+        setUp();
+        Recipe scaled = testDatabase.scaleRecipe(testRecipe, 2);
+        assertEquals("scaleRecipe - Recipe Title", recipeTitle, scaled.getTitle());
+        assertEquals("scaleRecipe - Recipe Servings", 2, scaled.getServings(), 0);
+        assertEquals("scaleRecipe - Recipe Prep_Time", 30, scaled.getPrep_time(), 0);
+        assertEquals("scaleRecipe - Recipe Total_Time", 60, scaled.getTotal_time(), 0);
+        assertEquals("scaleRecipe - Recipe Favorited", false, scaled.getFavorited());
+        assertEquals("scaleRecipe - RecipeIngredient Units", "cup(s)", scaled.getIngredientList().get(0).getUnit());
+        assertEquals("scaleRecipe - RecipeIngredient Quantity", 4.0, scaled.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("scaleRecipe - RecipeIngredient Details", "White Flour", scaled.getIngredientList().get(0).getDetails());
+        assertEquals("scaleRecipe - RecipeDirection1 Number", 1, scaled.getDirectionsList().get(0).getDirectionNumber());
+        assertEquals("scaleRecipe - RecipeDirection1 Text", "TestDirection1", scaled.getDirectionsList().get(0).getDirectionText());
+        assertEquals("scaleRecipe - RecipeDirection2 Number", 2, scaled.getDirectionsList().get(1).getDirectionNumber());
+        assertEquals("scaleRecipe - RecipeDirection2 Text", "TestDirection2", scaled.getDirectionsList().get(1).getDirectionText());
+        tearDown();
+    }
+
+    /**
+     * This method checks that scaleRecipe returns a Recipe with the updated servings and ingredient quantities
+     * This method is specifically to check the case where the Recipe only has multiple ingredients
+     * The method also checks that no other part of the Recipe was changed
+     */
+    @Test
+    public void scaleRecipe_CorrectWMultipleIngredients() {
+        setUp();
+        createRecipe_TwoIngredients();
+        Recipe scaled = testDatabase.scaleRecipe(testRecipe2, 2);
+
+        assertEquals("scaleRecipe - Recipe Title", "TestRecipe2", scaled.getTitle());
+        assertEquals("scaleRecipe - Recipe Servings", 2, scaled.getServings(), 0);
+        assertEquals("scaleRecipe - Recipe Prep_Time", 5, scaled.getPrep_time(), 0);
+        assertEquals("scaleRecipe - Recipe Total_Time", 15, scaled.getTotal_time(), 0);
+        assertEquals("scaleRecipe - Recipe Favorited", false, scaled.getFavorited());
+        assertEquals("scaleRecipe - RecipeIngredient1 Units", "cup(s)", scaled.getIngredientList().get(0).getUnit());
+        assertEquals("scaleRecipe - RecipeIngredient1 Quantity", 0.5, scaled.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("scaleRecipe - RecipeIngredient1 Details", "", scaled.getIngredientList().get(0).getDetails());
+        assertEquals("scaleRecipe - RecipeIngredient2 Units", "cup(s)", scaled.getIngredientList().get(1).getUnit());
+        assertEquals("scaleRecipe - RecipeIngredient2 Quantity", 1.5, scaled.getIngredientList().get(1).getQuantity(), 0);
+        assertEquals("scaleRecipe - RecipeIngredient2 Details", "White Flour", scaled.getIngredientList().get(1).getDetails());
+        assertEquals("scaleRecipe - RecipeDirection Number", 1, scaled.getDirectionsList().get(0).getDirectionNumber());
+        assertEquals("scaleRecipe - RecipeDirection Text", "TestDirection", scaled.getDirectionsList().get(0).getDirectionText());
+        tearDown();
+    }
+
 
     /**
      * This method checks that deleteAllShoppingCartIngredients works
