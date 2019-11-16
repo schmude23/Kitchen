@@ -292,6 +292,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method retrieves the recipe for the given recipe Title
+     *
+     * @param recipeTitle
+     * @return The recipe List corresponding to the provided recipe Title, or null if one is not found.
+     */
+    public ArrayList<Recipe> getAllRecipesByTitle(String recipeTitle) {
+        Recipe recipe;
+        ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE lower(" + RT_TITLE + ") = ? ", new String[]{String.valueOf(recipeTitle)});
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                recipe = mapRecipe(cursor);
+                recipeList.add(recipe);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        if (recipeList.size() == 0) {
+            return null;
+        }
+        return recipeList;
+    }
+
+    /**
      * This method retrieves all recipes equal to or below the specified prep time
      *
      * @param prepTime
