@@ -23,7 +23,7 @@
     <item
         android:id="@+id/action_home"
         android:icon="@drawable/ic_home"
-        android:title="home"
+        android:title="Home"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/advanced_search_item"
