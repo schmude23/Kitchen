@@ -298,6 +298,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return The recipe List corresponding to the provided recipe Title, or null if one is not found.
      */
     public ArrayList<Recipe> getAllRecipesByTitle(String recipeTitle) {
+        recipeTitle = recipeTitle.toLowerCase();
         Recipe recipe;
         ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
         SQLiteDatabase db = this.getReadableDatabase();
