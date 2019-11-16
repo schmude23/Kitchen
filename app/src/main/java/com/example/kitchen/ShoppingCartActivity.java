@@ -167,7 +167,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
     public void onRemoveSelectedItemsSelected(MenuItem menuItem) {
         if (checkedItems.size() > 0) {
             for (int i = 0; i < checkedItems.size(); i++) {
-                shoppingCart.remove(i);
+                shoppingCart.remove(checkedItems.get(i));
                 database.deleteShoppingCartIngredient(checkedItems.get(i).getIngredientID());
             }
             checkedItems = new ArrayList<>();

@@ -8,18 +8,24 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.String.valueOf;
 
@@ -40,19 +46,17 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
     Dialog myDialog; // Dialog for popup window
 
     String ingredientName, ingredientDetails, ingredientQuantity, ingredientUnit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_ingredient);
-
-        int recipeID = getIntent().getIntExtra("recipeId", -1);
-        newRecipe = getIntent().getBooleanExtra("newRecipe", true);
-        recipe = database.getRecipe(recipeID);
+        setContentView(R.layout.activity_ingredient_list);
+        
 
         myDialog = new Dialog(this);
 
-        finishButton = findViewById(R.id.edit_ingredient_finish_button);
-
+        finishButton = findViewById(R.id.activity_ingredient_list_cancel_button);
+        getIngredients();
         ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
 
         // set the ingredientListView variable to your ingredientList in the xml
@@ -70,71 +74,105 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
     /**
      *
      */
-    private void addRecipe() {
-        recipe.setIngredientList(new ArrayList<RecipeIngredient>());
-        recipe.setDirectionsList(new ArrayList<RecipeDirection>());
-        recipe.setCategoryList(new ArrayList<RecipeCategory>());
-    }
-
-    /**
-     *
-     */
-    private void editRecipe() {
-        finishButton.setText("Finish");
-        for (int i = 0; i < recipe.getIngredientList().size(); i++) {
-            String quantity = String.valueOf(recipe.getIngredientList().get(i).getQuantity());
-            String unit = recipe.getIngredientList().get(i).getUnit();
-            int id = recipe.getIngredientList().get(i).getIngredientID();
-            Ingredient ingredient = database.getIngredient(id);
-            String name = ingredient.getName();
-            if (unit.compareTo("none") == 0)
-                ingredientAdapter.add(name + " [ " + quantity + " ]");
-            else
-                ingredientAdapter.add(name + " [ " + quantity + " " + unit + " ]");
-
+    private void getIngredients() {
+        // setup Ingredient List
+        //ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
+        ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientList) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
+                textView.setMinHeight(0); // Min Height
+                textView.setMinimumHeight(0); // Min Height
+                textView.setHeight(100); // Height
+                return view;
+            }
+        };
+        // set the ingredientListView variable to ingredientList in the xml
+        ingredientListView = (ListView) findViewById(R.id.ingredient_list);
+        ingredientListView.setAdapter(ingredientAdapter);
+        List<Recipe> recipes = database.getAllRecipes();
+        // Retrieve ingredients and add to ListView
+        for (int j = 0; j < recipes.size();j++) {
+            for (int i = 0; i < recipes.get(i).getIngredientList().size(); i++) {
+                int ingredientID = recipes.get(j).getIngredientList().get(i).getIngredientID();
+                Ingredient ingredient = database.getIngredient(ingredientID);
+                String name = ingredient.getName();
+                String quantity = String.valueOf(recipes.get(j).getIngredientList().get(i).getQuantity());
+                String unit = recipes.get(j).getIngredientList().get(i).getUnit();
+                String details = recipes.get(j).getIngredientList().get(i).getDetails();
+                // Add to ListView and update height
+                if (unit.compareTo("none") == 0) {
+                    if (details.compareTo("") != 0)
+                        ingredientList.add(name + " (" + details + ") " + " [ " + quantity + " ]");
+                    else
+                        ingredientList.add(name + " [ " + quantity + " ]");
+                } else {
+                    if (details.compareTo("") != 0)
+                        ingredientList.add(name + " (" + details + ") " + " [ " + quantity + " " + unit + " ]");
+                    else
+                        ingredientList.add(name + " [ " + quantity + " " + unit + " ]");
+                }
+                ingredientAdapter.notifyDataSetChanged();
+                ingredientListView.setAdapter(ingredientAdapter);
+                setListViewHeightBasedOnItems(ingredientListView);
+            }
         }
-    }
-
-    /**
-     * @param v
-     */
-    public void onIngredientListIngredientDoneButtonPressed(View v) {
-        if (recipe.getIngredientList().size() > 0) {
-            // Next Activity
-            database.editRecipe(recipe);
-            Intent intent = new Intent(this, EditDirectionActivity.class);
-            intent.putExtra("recipeId", recipe.getKeyID());
-            intent.putExtra("newRecipe", newRecipe);
-            startActivity(intent);
-        }
-    }
-
-    /**
-     * @param v
-     */
-    public void onIngredientListCancelButtonPressed(View v) {
-        if (newRecipe) {
-            database.deleteRecipe(recipe.getKeyID());
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        } else {
-            if (database.editRecipe(recipe)) {
+        ingredientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Context context = getApplicationContext();
 
-                CharSequence text = "Recipe Updated!";
+                CharSequence text = "Details: " + recipe.getIngredientList().get(position).getDetails();
                 int duration = Toast.LENGTH_SHORT;
 
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
             }
-            Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
-            intent.putExtra("recipeId", recipe.getKeyID());
-            startActivity(intent);
-        }
+        });
     }
-
     /**
+     * Sets the size of ListView based on the number of items in the list
      *
+     * @param listView to be updated
+     * @return true on success, otherwise false
+     */
+    public boolean setListViewHeightBasedOnItems(ListView listView) {
+
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter != null) {
+
+            int numberOfItems = listAdapter.getCount();
+
+            // Get total height of all items.
+            int totalItemsHeight = 0;
+            for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
+                View item = listAdapter.getView(itemPos, null, listView);
+                float px = 500 * (listView.getResources().getDisplayMetrics().density);
+                item.measure(View.MeasureSpec.makeMeasureSpec((int) px, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                totalItemsHeight += item.getMeasuredHeight();
+            }
+
+            // Get total height of all item dividers.
+            int totalDividersHeight = listView.getDividerHeight() *
+                    (numberOfItems - 1);
+            // Get padding
+            int totalPadding = listView.getPaddingTop() + listView.getPaddingBottom();
+
+            // Set list height.
+            ViewGroup.LayoutParams params = listView.getLayoutParams();
+            params.height = totalItemsHeight + totalDividersHeight + totalPadding;
+            listView.setLayoutParams(params);
+            listView.requestLayout();
+            return true;
+
+        } else {
+            return false;
+        }
+
+    }
+    /**
      * @param v
      */
     public void onEditIngredientPopupOkayButtonPressed(View v) {
@@ -142,17 +180,12 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
         ingredientDetails = editIngredientPopupIngredientDetailsEditText.getText().toString();
         ingredientQuantity = editIngredientPopupQuantityEditText.getText().toString();
         if (ingredientName.length() > 0 && ingredientQuantity.length() > 0) {
-
-            if (position != -1) {
-                // edit (position) recipe ingredient
-                editIngredient(position);
-            } else {
-                newIngredient();
-            }
+            editIngredient(position);
             myDialog.dismiss();
         }
     }
-    public void onEditIngredientPopupRemoveButtonPressed(View v){
+
+    public void onEditIngredientPopupRemoveButtonPressed(View v) {
         database.deleteIngredient(recipe.getIngredientList().get(position).getIngredientID());
         recipe.getIngredientList().remove(position);
         ingredientList.remove(position);
@@ -180,7 +213,7 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
             Ingredient i = database.getIngredient(recipe.getIngredientList().get(position).getIngredientID());
             editIngredientPopupIngredientEditText.setText(i.getName());
             String details = recipe.getIngredientList().get(position).getDetails();
-            if(details != null)
+            if (details != null)
                 editIngredientPopupIngredientDetailsEditText.setText(details);
             editIngredientPopupQuantityEditText.setText(valueOf(recipe.getIngredientList().get(position).getQuantity()));
         } else {
@@ -209,34 +242,6 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
     }
 
     /**
-     *
-     */
-    public void newIngredient() {
-        // new ingredient
-        Ingredient ingredient = new Ingredient(-1, ingredientName);
-        int ingredientID = database.addIngredient(ingredient);
-
-        RecipeIngredient recipeIngredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, Double.valueOf(ingredientQuantity), ingredientUnit, ingredientDetails);
-        int ret = database.addRecipeIngredient(recipeIngredient);
-        if (ret == -1) {
-            Context context = getApplicationContext();
-            CharSequence text = "Error adding ingredient";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-        }
-        // add ingredient
-        if (ingredientUnit.compareTo("none") == 0)
-            ingredientAdapter.add(editIngredientPopupIngredientEditText.getText().toString() + " [ " + ingredientQuantity + " ]");
-        else
-            //ingredientAdapter.add(editIngredientIngredientEditText.getText().toString() + " [ " + ingredientQuantity + " " + ingredientUnit + " ]");
-        recipe.getIngredientList().add(recipeIngredient);
-        //editIngredientIngredientEditText.getText().clear();
-    }
-
-    /**
-     *
      * @param position
      */
     public void editIngredient(int position) {

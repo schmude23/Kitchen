@@ -32,7 +32,7 @@
         android:id="@+id/action_settings"
         android:title="Settings" />
     <item
-        android:id="@+id/action_retrieve_recipe"
-        android:title="@string/share_recipe"/>
+        android:id="@+id/action_ingredient_list"
+        android:title="View All Ingredients"/>
 
 </menu>

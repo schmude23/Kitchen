@@ -140,6 +140,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                 Intent home = new Intent(this, MainActivity.class);
                 startActivity(home);
                 return true;
+            case R.id.action_ingredient_list:
+                Intent intent = new Intent(this, IngredientListActivity.class);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

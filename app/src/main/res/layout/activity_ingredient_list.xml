@@ -31,7 +31,6 @@
             android:layout_weight="0.25"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
-            android:onClick="onEditIngredientFinishButtonPressed"
             android:background="@drawable/button_style"/>
         <View
             android:layout_width="0dp"
@@ -39,12 +38,11 @@
             android:layout_weight=".5"/>
 
         <Button
-            android:id="@+id/activity_ingredient_list_done_button"
+            android:id="@+id/activity_ingredient_list_donace_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
             android:textColor="@color/black"
-            android:onClick="onEditIngredientNextButtonPressed"
             android:background="@drawable/button_style"
             android:text="@string/done" />
 
