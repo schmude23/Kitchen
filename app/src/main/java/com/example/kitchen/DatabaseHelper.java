@@ -261,6 +261,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Recipe getRecipe(String recipeTitle) {
         Recipe recipe = null;
         SQLiteDatabase db = this.getReadableDatabase();
+        recipeTitle = recipeTitle.toLowerCase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE lower(" + RT_TITLE + ") = ? ", new String[]{String.valueOf(recipeTitle)});
         if (cursor != null && cursor.getCount() > 0) {
