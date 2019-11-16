@@ -920,7 +920,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         switch (checkedRecipeRadio) {
             case SEARCH_BY_NAME:
                 if (input.compareTo("") != 0)
-                    recipes.add(database.getRecipe(input));
+                    recipes.addAll(database.getAllRecipesByTitle(input));
                 recipes = quickSortByTitle(recipes, ascending);
 
                 break;
@@ -1044,6 +1044,17 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         return sorted;
 
 
+    }
+    public <Recipe> List<Recipe> intersection(List<Recipe> list1, List<Recipe> list2) {
+        List<Recipe> list = new ArrayList<Recipe>();
+
+        for (Recipe t : list1) {
+            if(list2.contains(t)) {
+                list.add(t);
+            }
+        }
+
+        return list;
     }
 
 }

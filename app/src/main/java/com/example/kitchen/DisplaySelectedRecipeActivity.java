@@ -192,18 +192,6 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
             ingredientListView.setAdapter(ingredientAdapter);
             setListViewHeightBasedOnItems(ingredientListView);
         }
-        ingredientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Context context = getApplicationContext();
-
-                CharSequence text = "Details: " + recipe.getIngredientList().get(position).getDetails();
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-            }
-        });
     }
 
     /**
@@ -397,6 +385,10 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
 
     public void onUnitConversionPopupOkayButtonPressed(View v) {
 
+        if(oldUnit.compareTo("none") == 0 || newUnit.compareTo("none") == 0|| oldUnit.compareTo(newUnit) == 0) {
+            Toast.makeText(this, "Cannot convert units", Toast.LENGTH_SHORT).show();
+            convertUnitDialog.dismiss();
+        }
         recipe = dbHandler.convertRecipeIngredientUnits(recipe, oldUnit, newUnit);
         ingredientList = new ArrayList<>();
         getIngredients();
