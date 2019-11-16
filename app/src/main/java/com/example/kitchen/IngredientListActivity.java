@@ -51,17 +51,16 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingredient_list);
-        
+
 
         myDialog = new Dialog(this);
 
         finishButton = findViewById(R.id.activity_ingredient_list_cancel_button);
         getIngredients();
-        ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
+       // ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
 
         // set the ingredientListView variable to your ingredientList in the xml
-        ingredientListView = (ListView) findViewById(R.id.activity_ingredient_list_ingredient_list);
-        ingredientListView.setAdapter(ingredientAdapter);
+//        ingredientListView.setAdapter(ingredientAdapter);
         ingredientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -90,18 +89,19 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
             }
         };
         // set the ingredientListView variable to ingredientList in the xml
-        ingredientListView = (ListView) findViewById(R.id.ingredient_list);
+        ingredientListView = (ListView) findViewById(R.id.activity_ingredient_list_ingredient_list);
         ingredientListView.setAdapter(ingredientAdapter);
         List<Recipe> recipes = database.getAllRecipes();
         // Retrieve ingredients and add to ListView
         for (int j = 0; j < recipes.size();j++) {
-            for (int i = 0; i < recipes.get(i).getIngredientList().size(); i++) {
-                int ingredientID = recipes.get(j).getIngredientList().get(i).getIngredientID();
+            recipe = database.getRecipe(recipes.get(j).getKeyID());
+            for (int i = 0; i < recipe.getIngredientList().size(); i++) {
+                int ingredientID = recipe.getIngredientList().get(i).getIngredientID();
                 Ingredient ingredient = database.getIngredient(ingredientID);
                 String name = ingredient.getName();
-                String quantity = String.valueOf(recipes.get(j).getIngredientList().get(i).getQuantity());
-                String unit = recipes.get(j).getIngredientList().get(i).getUnit();
-                String details = recipes.get(j).getIngredientList().get(i).getDetails();
+                String quantity = String.valueOf(recipe.getIngredientList().get(i).getQuantity());
+                String unit = recipe.getIngredientList().get(i).getUnit();
+                String details = recipe.getIngredientList().get(i).getDetails();
                 // Add to ListView and update height
                 if (unit.compareTo("none") == 0) {
                     if (details.compareTo("") != 0)
@@ -119,18 +119,6 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
                 setListViewHeightBasedOnItems(ingredientListView);
             }
         }
-        ingredientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Context context = getApplicationContext();
-
-                CharSequence text = "Details: " + recipe.getIngredientList().get(position).getDetails();
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-            }
-        });
     }
     /**
      * Sets the size of ListView based on the number of items in the list
