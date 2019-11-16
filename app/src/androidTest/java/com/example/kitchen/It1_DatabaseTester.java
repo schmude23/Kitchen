@@ -691,7 +691,7 @@ public class It1_DatabaseTester {
      */
     @Test
     public void getRecipeByName_CorrectInformation(){
-        // Get clean recipe databasegit
+        // Get clean recipe database
         ArrayList<Recipe> allRecipes = testDatabase.getAllRecipes();
         for(int i = 0; i < allRecipes.size(); i++){
             testDatabase.deleteRecipe(allRecipes.get(i).getKeyID());

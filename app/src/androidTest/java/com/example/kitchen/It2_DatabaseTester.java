@@ -57,10 +57,18 @@ public class It2_DatabaseTester {
         testDatabase.deleteCategory(categoryID);
         testDatabase.deleteIngredient(ingredientID);
         ArrayList<Recipe> allRecipes = testDatabase.getAllRecipes();
-        for(int i = 0; i < allRecipes.size(); i++){
-            testDatabase.deleteRecipe(allRecipes.get(i).getKeyID());
+        if(allRecipes != null) {
+            for (int i = 0; i < allRecipes.size(); i++) {
+                testDatabase.deleteRecipe(allRecipes.get(i).getKeyID());
+            }
         }
         testDatabase.deleteAllShoppingCartIngredients();
+        ArrayList<Ingredient> allIngredients = testDatabase.getAllIngredients();
+        if(allIngredients != null){
+            for(int i = 0; i < allIngredients.size(); i++){
+                testDatabase.deleteIngredient(allIngredients.get(i).getKeyID());
+            }
+        }
     }
 
 
@@ -1242,7 +1250,80 @@ public class It2_DatabaseTester {
         tearDown();
     }
 
-    // Tests to increase branch converage:
+    /**
+     * This method checks tht getAllRecipesByTitle returns null if passed a string that doesn't exist
+     * in any recipes
+     */
+    @Test
+    public void getAllRecipesByTitle_ReturnsNull(){
+        setUp();
+        assertEquals(null, testDatabase.getAllRecipesByTitle("Fail"));
+        tearDown();
+    }
+
+    /**
+     * This method checks tht getAllRecipesByTitle returns a list if passed a string that exists in at least one recipe
+     */
+    @Test
+    public void getAllRecipesByTitle_ReturnsList(){
+        setUp();
+        ArrayList<Recipe> recipes = testDatabase.getAllRecipesByTitle(recipeTitle);
+        assertNotEquals(null, recipes);
+        tearDown();
+    }
+
+    /**
+     * This method checks tht getAllRecipesByTitle returns the correct recipes
+     * when passed a string that exists in at least one recipe
+     */
+    @Test
+    public void getAllRecipesByTitle_CorrectInformation(){
+        tearDown();
+        setUp();
+        createRecipe_TwoIngredients();
+        ArrayList<Recipe> recipes = testDatabase.getAllRecipesByTitle("TestRecipe");
+        assertEquals("getAllRecipesByTitle - Number of Recipes",2, recipes.size());
+        assertEquals("getAllRecipesByTitle - Recipe 1 Title", recipeTitle, recipes.get(0).getTitle());
+        assertEquals("getAllRecipesByTitle - Recipe 2 Title", "TestRecipe2", recipes.get(1).getTitle());
+        tearDown();
+    }
+
+    /**
+     * This method checks that getAllIngredients returns null if no ingredients exist in the database
+     */
+    @Test
+    public void getAllIngredients_ReturnsNull(){
+        tearDown();
+        assertEquals("getAllIngredients returns null", null, testDatabase.getAllIngredients());
+    }
+
+    /**
+     * This method checks that getAllIngredients returns null if ingredients exist in the database
+     */
+    @Test
+    public void getAllIngredients_ReturnsList(){
+        setUp();
+        assertNotEquals("getAllIngredients returns list", null, testDatabase.getAllIngredients());
+        tearDown();
+    }
+
+    /**
+     * This method checks that getAllIngredients returns the correct information for ingredients that
+     * are in the database
+     */
+    @Test
+    public void getAllIngredients_CorrectInfo(){
+        setUp();
+        createRecipe_TwoIngredients();
+        ArrayList<Ingredient> allIngredients = testDatabase.getAllIngredients();
+        assertEquals("getAllIngredients - Number of Ingredients",3, allIngredients.size());
+        assertEquals("getAllIngredients - Ingredient 1", "Flour", allIngredients.get(0).getName());
+        assertEquals("getAllIngredients - Ingredient 2", "Sugar", allIngredients.get(1).getName());
+        assertEquals("getAllIngredients - Ingredient 3", "Oil", allIngredients.get(2).getName());
+        tearDown();
+    }
+
+    // Tests to increase branch coverage:
 
     /**
      * This method checks that getRecipe(RecipeID) returns all the correct information of a previously existing Recipe
