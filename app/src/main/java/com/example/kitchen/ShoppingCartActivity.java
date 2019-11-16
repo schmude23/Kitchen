@@ -224,6 +224,10 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
 
 
     public void onUnitConversionPopupOkayButtonPressed(View v) {
+        if(oldUnit.compareTo("none") == 0 || newUnit.compareTo("none") == 0|| oldUnit.compareTo(newUnit) == 0) {
+            Toast.makeText(this, "Cannot convert units", Toast.LENGTH_SHORT).show();
+            convertUnitDialog.dismiss();
+        }
         if (shoppingCart != null) {
             for (int i = 0; i < shoppingCart.size(); i++) {
                 if (shoppingCart.get(i).getUnit().compareTo(oldUnit) == 0) {
