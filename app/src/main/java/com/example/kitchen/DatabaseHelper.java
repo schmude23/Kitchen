@@ -901,6 +901,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method returns a list of all Ingredients
+     *
+     * @return If successful in fetching the Ingredients this method will return an Array list of
+     * Ingredients, if not this method will return null.
+     */
+    public ArrayList<Ingredient> getAllIngredients() {
+        Ingredient ingredient;
+        ArrayList<Ingredient> ingredientList = new ArrayList<Ingredient>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_INGREDIENT_LIST, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                ingredient = mapIngredient(cursor);
+                ingredientList.add(ingredient);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        if (ingredientList.size() == 0) {
+            return null;
+        }
+        return ingredientList;
+    }
+
+    /**
      * This method modifies the ingredient in the ingredients table with the same key id
      *
      * @param ingredient
