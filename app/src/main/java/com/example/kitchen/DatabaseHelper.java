@@ -303,7 +303,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE lower(" + RT_TITLE + ") LIKE %?% ", new String[]{String.valueOf(recipeTitle)});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE lower(" + RT_TITLE + ") LIKE ? ", new String[]{"%" + recipeTitle + "%"});
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
