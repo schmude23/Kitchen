@@ -88,12 +88,16 @@ class ShoppingCartAdapter extends RecyclerView.Adapter {
             ingredient = itemView.findViewById(R.id.ingredient_check_box);
             quantity = itemView.findViewById(R.id.ingredient_quantity_text);
             unit = itemView.findViewById(R.id.ingredient_unit_text);
+            ingredient.setClickable(false);
+            //ingredient.setChecked(false);
         }
 
         public void bind(ShoppingCartItem shoppingCartItem) {
             ingredient.setText(shoppingCartItem.getName());
             quantity.setText(String.valueOf(shoppingCartItem.getQuantity()));
             unit.setText(shoppingCartItem.getUnit());
+            ingredient.setChecked(false);
+
 
         }
 

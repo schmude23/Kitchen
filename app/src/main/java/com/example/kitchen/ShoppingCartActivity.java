@@ -88,8 +88,8 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
             public void onItemUncheck(ShoppingCartItem item) {
                 if (editMode) {
                     editIngredientPopup(item);
-                } else
-                    checkedItems.remove(item);
+                }
+                checkedItems.remove(item);
             }
         });
         recyclerView.setAdapter(shoppingCartAdapter);
@@ -168,9 +168,11 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
         if (checkedItems.size() > 0) {
             for (int i = 0; i < checkedItems.size(); i++) {
                 shoppingCart.remove(checkedItems.get(i));
-                database.deleteShoppingCartIngredient(checkedItems.get(i).getIngredientID());
             }
-            checkedItems = new ArrayList<>();
+            for(int i = checkedItems.size() - 1; i >= 0; i--){
+                database.deleteShoppingCartIngredient(checkedItems.get(i).getIngredientID());
+                checkedItems.remove(i);
+            }
             shoppingCartAdapter.notifyDataSetChanged();
         } else {
             Toast.makeText(getApplicationContext(), "No items selected", Toast.LENGTH_SHORT).show();
