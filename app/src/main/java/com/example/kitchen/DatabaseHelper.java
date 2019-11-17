@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.lang.reflect.Array;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -70,6 +72,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SC_QUANTITY = "QUANTITY";
     public static final String SC_UNIT = "UNIT";
 
+    //User Table (Uses prefix SC)
+    private static final String TABLE_USER_INFO = "USER_INFO";
+    public static final String UI_KEY_ID = "ID";
+    public static final String UI_USERNAME = "USERNAME";
+    public static final String UI_PASSWORD = "PASSWORD";
+    public static final String UI_HAND_CHOICE = "HAND_CHOICE";
+
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION_NUMBER);
@@ -130,13 +140,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + RC_CATEGORY_ID + " INTEGER" + ")";
         sqLiteDatabase.execSQL(CREATE_RECIPE_CATEGORY_TABLE);
 
-        //Recipe Shopping Cart Table
+        //Shopping Cart Table
         String CREATE_SHOPPING_CART_TABLE = "CREATE TABLE " + TABLE_SHOPPING_CART_LIST + "("
                 + SC_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + SC_INGREDIENT_ID + " INTEGER, "
                 + SC_QUANTITY + " INTEGER,"
                 + SC_UNIT + " TEXT" + ")";
         sqLiteDatabase.execSQL(CREATE_SHOPPING_CART_TABLE);
+
+        //User Info Table
+        String CREATE_USER_INFO_TABLE = "CREATE TABLE " + TABLE_USER_INFO + "("
+                + UI_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + UI_USERNAME + " TEXT,"
+                + UI_PASSWORD + " TEXT,"
+                + UI_HAND_CHOICE + " INTEGER" + ")";
+        sqLiteDatabase.execSQL(CREATE_USER_INFO_TABLE);
 
     }
 
@@ -160,7 +178,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPE_CATEGORY_LIST);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPE_DIRECTIONS_LIST);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_SHOPPING_CART_LIST);
-
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_INFO);
         //rebuild the database
         onCreate(sqLiteDatabase);
     }
@@ -1503,6 +1521,141 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return recipeIngredient;
 
+    }
+
+    /**
+     * This method adds a User to the User_Info table. Also, this method assumes the user is
+     * right handed. this can be updated using a editUser()
+     *
+     * @param username, password
+     * @return The id of the added User.
+     */
+    public int addUser(String username, String password) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        PasswordEncryption pE = new PasswordEncryption();
+
+        try {
+            password = pE.main(password);
+        }
+        catch(NoSuchAlgorithmException nsae){
+            return -1;
+        }
+        catch (NoSuchProviderException nspe){
+            return -1;
+        }
+
+        //adding user_Info
+        ContentValues cVals = new ContentValues();
+        cVals.put(UI_USERNAME, username);
+        cVals.put(UI_PASSWORD, password);
+        cVals.put(UI_HAND_CHOICE, 1);
+        int res = (int) sqLiteDatabase.insert(TABLE_USER_INFO, null, cVals);
+
+
+        return res;
+    }
+
+    /**
+     * This method returns a true or false on username and password match
+     *
+     * @return If successful in username and password matching, return true
+     * otherwise, return false
+     */
+    public int loginCheck(String username, String password){
+        //TODO: Test/Correct
+        String storedPass = null;
+        int userId = -1;
+        SQLiteDatabase db = this.getReadableDatabase();
+        PasswordEncryption pE = new PasswordEncryption();
+
+        //Checks if username exists
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USER_INFO + "  WHERE " + UI_USERNAME + " = ? ", new String[]{username});
+        if (cursor != null && cursor.getCount() > 0) {
+            if (cursor.getColumnIndex(UI_KEY_ID) != -1) {
+                int idIndex = cursor.getColumnIndexOrThrow(UI_KEY_ID);
+                userId = cursor.getInt(idIndex);
+            }
+            if (cursor.getColumnIndex(UI_PASSWORD) != -1) {
+                int passIndex = cursor.getColumnIndexOrThrow(UI_PASSWORD);
+                storedPass = cursor.getString(passIndex);
+            }
+        }else{
+            return -1;
+        }
+        //not sure if this is needed
+        if(storedPass == null || storedPass == "-1"){
+            return -1;
+        }
+
+        //update password with encryption for check
+        try {
+            password = pE.main(password);
+        }
+        catch(NoSuchAlgorithmException nsae){
+            return -1;
+        }
+        catch (NoSuchProviderException nspe){
+            return -1;
+        }
+
+        //checks if password is correct.
+       if(password.equals(storedPass)){
+           return userId;
+       }
+
+        return -1;
+    }
+
+    /**
+     * This method modifies the User details. must first pass through loginCheck()
+     *
+     * @param  userId, username, password, hand
+     * @return If successful in updating, will return true
+     */
+    public boolean editUser(int userId, String updateUsername, String updatePassword, int updateHand) {
+        //TODO: TEst correct. thinking about adding this to the username check.. tbd this doesnt seem "safe"
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        PasswordEncryption pE = new PasswordEncryption();
+
+
+        try {
+            updatePassword = pE.main(updatePassword);
+        }
+        catch(NoSuchAlgorithmException nsae){
+            return false;
+        }
+        catch (NoSuchProviderException nspe){
+            return false;
+        }
+
+        ContentValues cVals = new ContentValues();
+        cVals.put(UI_USERNAME, updateUsername);
+        cVals.put(UI_PASSWORD, updatePassword);
+        cVals.put(UI_HAND_CHOICE, updateHand);
+        long returned = sqLiteDatabase.update(TABLE_USER_INFO, cVals, UI_KEY_ID + " = ?", new String[]{String.valueOf(userId)});
+        if (returned == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * This method deletes the User in the User Info table using the userId gotten from
+     * passwordCheck
+     *
+     * @param userId
+     * @return If successful in updating, will return true
+     */
+    public boolean deleteUser(int userId) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        long returned = sqLiteDatabase.delete(TABLE_USER_INFO, UI_KEY_ID + " = ?", new String[]{String.valueOf(userId)});
+
+        if (returned == 0) {
+            return false;
+        }
+
+
+        return true;
     }
 }
 
