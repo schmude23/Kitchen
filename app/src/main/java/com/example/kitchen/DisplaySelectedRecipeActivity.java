@@ -307,7 +307,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
         deleteRecipeDialog = new Dialog(this);
         deleteRecipeDialog.setContentView(R.layout.delete_recipe_popup);
         deleteRecipeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        deleteRecipeDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
+        //deleteRecipeDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
         deleteRecipeDialog.show();
     }
 
