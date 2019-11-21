@@ -54,9 +54,31 @@ public class EditRecipeActivity extends AppCompatActivity {
         if (inputTitle.length() > 0 && inputServings.length() > 0 && inputPrepTime.length() > 0 && inputTotalTime.length() > 0) {
 
             recipe.setTitle(inputTitle);
-            recipe.setServings(Double.valueOf(inputServings));
-            recipe.setPrep_time(Integer.parseInt(inputPrepTime));
-            recipe.setTotal_time(Integer.parseInt(inputTotalTime));
+
+            //Try to get the servings
+            try {
+                recipe.setServings(Double.valueOf(inputServings));
+            } catch (NumberFormatException ex) {
+                Toast.makeText(this, "Servings is not a valid number", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            //Try to get the prep time
+            try {
+                recipe.setPrep_time(Integer.parseInt(inputPrepTime));
+            } catch (NumberFormatException ex) {
+                Toast.makeText(this, "Prep Time is not a valid number", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            //Try to get the Total Time
+            try {
+                recipe.setTotal_time(Integer.parseInt(inputTotalTime));
+            } catch (NumberFormatException ex) {
+                Toast.makeText(this, "Total time is not a valid number", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if(!database.editRecipe(recipe)) {
                 Context context = getApplicationContext();
                 CharSequence text = "Error creating recipe";
