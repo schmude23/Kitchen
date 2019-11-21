@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/edit_ingredient_finish_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="22dp"
+        android:layout_marginBottom="23dp"
+        android:clickable="true"
+        android:onClick="onEditIngredientFinishButtonPressed"
+        app:backgroundTint="@color/royal_blue"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_cancel" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/edit_ingredient_next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="23dp"
+        android:layout_marginRight="22dp"
+        android:clickable="true"
+        app:backgroundTint="@color/royal_blue"
+        android:onClick="onEditIngredientNextButtonPressed"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_arrow_right" />
+</RelativeLayout>

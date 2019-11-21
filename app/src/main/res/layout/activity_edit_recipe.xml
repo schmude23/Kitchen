@@ -76,31 +76,43 @@
             android:orientation="horizontal"
             android:weightSum="1">
 
-
-                <Button
-                    android:id="@+id/edit_recipe_cancel_button"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="0.25"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cancel"
-                    android:background="@drawable/button_style"
-                    android:onClick="onEditRecipeCancelButtonPressed"/>
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight=".5"/>
+                android:layout_weight="0.1"/>
 
-                <Button
-                    android:id="@+id/edit_recipe_next_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:text="@string/next"
-                    android:background="@drawable/button_style"
-                    android:onClick="onEditRecipeNextButtonPressed"/>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/edit_recipe_cancel_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:backgroundTint="@color/royal_blue"
+                app:srcCompat="@drawable/ic_cancel"
+                android:onClick="onEditRecipeCancelButtonPressed"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.8"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/edit_recipe_next_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:backgroundTint="@color/royal_blue"
+                app:srcCompat="@drawable/ic_arrow_right"
+                android:onClick="onEditRecipeNextButtonPressed" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"/>
 
 
         </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

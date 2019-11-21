@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,6 +20,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 
@@ -27,7 +30,7 @@ import static java.lang.String.valueOf;
 public class EditIngredientActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     DatabaseHelper database = new DatabaseHelper(this);
     Recipe recipe;
-    private Button finishButton;
+    private FloatingActionButton finishButton;
     private EditText editIngredientIngredientEditText,
             editIngredientPopupIngredientEditText,
             editIngredientPopupIngredientDetailsEditText,
@@ -89,7 +92,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
      *
      */
     private void editRecipe() {
-        finishButton.setText("Finish");
+        finishButton.setImageResource(R.drawable.ic_check_mark);
         for (int i = 0; i < recipe.getIngredientList().size(); i++) {
             String quantity = String.valueOf(recipe.getIngredientList().get(i).getQuantity());
             String unit = recipe.getIngredientList().get(i).getUnit();

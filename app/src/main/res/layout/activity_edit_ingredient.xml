@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="fill_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout1"
+    android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:context=".EditIngredientActivity">
+    android:orientation="vertical">
+
     <EditText
         android:id="@+id/edit_ingredient_ingredient_edit_text"
         android:layout_width="fill_parent"
@@ -17,10 +18,10 @@
         android:id="@+id/edit_ingredient_add_ingredient_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_ingredient"
-        android:onClick="onEditIngredientAddIngredientButtonPressed"
         android:layout_marginBottom="3dp"
-        android:background="@drawable/button_style"/>
+        android:background="@drawable/button_style"
+        android:onClick="onEditIngredientAddIngredientButtonPressed"
+        android:text="@string/add_ingredient" />
 
     <TextView
         android:id="@+id/edit_ingredient_ingredient_header"
@@ -31,43 +32,21 @@
         android:textColor="@color/white"
         android:textSize="14sp" />
 
-    <ListView
-        android:id="@+id/edit_ingredient_ingredient_list"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="15dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1">
+        android:layout_height="match_parent">
 
+        <ListView
+            android:id="@+id/edit_ingredient_ingredient_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/edit_ingredient_finish_button"
-            android:layout_width="wrap_content"
-            android:layout_weight="0.25"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel"
-            android:onClick="onEditIngredientFinishButtonPressed"
-            android:background="@drawable/button_style"/>
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight=".5"/>
+        <include
+            layout="@layout/utility_fab"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom" />
+    </FrameLayout>
 
-        <Button
-            android:id="@+id/edit_ingredient_next_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:textColor="@color/black"
-            android:onClick="onEditIngredientNextButtonPressed"
-            android:background="@drawable/button_style"
-            android:text="@string/next" />
-
-
-    </LinearLayout>
 
 </LinearLayout>
