@@ -553,7 +553,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * recipes, if not this method will return null.
      */
     public ArrayList<Recipe> getAllRecipesSorted() {
-        //TODO: TEST CORRECT
+        //TODO: TEST
         ArrayList<Recipe> recipeList = getAllRecipes();
 
         if(recipeList == null){
@@ -590,14 +590,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         for(int i = 0; i < checkSize; i++){
-            int randInt = r.nextInt((size + 1 - i) - 0);
+            int randInt = r.nextInt(recipeList.size());
             //add random recipe to randList
             randList.add(recipeList.get(randInt));
             //delete specific recipe to avoid duplicates.
             recipeList.remove(recipeList.get(randInt));
         }
 
-        return recipeList;
+        return randList;
     }
 
     /**
