@@ -1,64 +1,31 @@
 package com.example.kitchen;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
 
+public class PasswordEncryption {
+    private static byte[] encryptMD5(byte[] data) throws Exception {
 
-//TODO: how to doccument used code from https://howtodoinjava.com/security/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/
-public class PasswordEncryption
-{
-    public static String main(String password) throws NoSuchAlgorithmException, NoSuchProviderException
-    {
-        String passwordToHash = password;
-        byte[] salt = getSalt();
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        md5.update(data);
+        return md5.digest();
 
-        //String securePassword = getSecurePassword(passwordToHash, salt);
-        //System.out.println(securePassword); //Prints 83ee5baeea20b6c21635e4ea67847f66
-
-        //String regeneratedPassowrdToVerify = getSecurePassword(passwordToHash, salt);
-       // System.out.println(regeneratedPassowrdToVerify); //Prints 83ee5baeea20b6c21635e4ea67847f66
-
-        return getSecurePassword(password, salt);
     }
 
-    private static String getSecurePassword(String passwordToHash, byte[] salt)
-    {
-        String generatedPassword = null;
+    public String main(String password){
+        byte[] md5Input = password.getBytes();
+        BigInteger md5Data = null;
+
         try {
-            // Create MessageDigest instance for MD5
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            //Add password bytes to digest
-            md.update(salt);
-            //Get the hash's bytes
-            byte[] bytes = md.digest(passwordToHash.getBytes());
-            //This bytes[] has bytes in decimal format;
-            //Convert it to hexadecimal format
-            StringBuilder stringBuilder = new StringBuilder();
-            for(int i=0; i< bytes.length ;i++)
-            {
-                stringBuilder.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            //hex formatted hashed password
-            generatedPassword = stringBuilder.toString();
+            md5Data = new BigInteger(1,encryptMD5(md5Input));
         }
-        catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+        catch(Exception e){
+            return null;
         }
-        return generatedPassword;
-    }
-
-    //Add salt
-    private static byte[] getSalt() throws NoSuchAlgorithmException, NoSuchProviderException
-    {
-        //SecureRandom generator
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "SUN");
-        //Create array for salt
-        byte[] salt = new byte[16];
-        //Get a random salt
-        sr.nextBytes(salt);
-        //return salt
-        return salt;
+        String md5Str = md5Data.toString(16);
+        if(md5Str.length() < 32){
+            md5Str = 0 + md5Str;
+        }
+        return md5Str;
     }
 }

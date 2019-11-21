@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.lang.reflect.Array;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.ArrayList;
@@ -1587,17 +1588,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public int addUser(String username, String password) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        PasswordEncryption pE = new PasswordEncryption();
+        PasswordEncryption md5 = new PasswordEncryption();
 
-        try {
-            password = pE.main(password);
-        }
-        catch(NoSuchAlgorithmException nsae){
+        password = md5.main(password);
+
+        if(password == null){
             return -1;
         }
-        catch (NoSuchProviderException nspe){
+
+        //if the user already exists
+        if(getUser(username) != -1){
             return -1;
         }
+
 
         //adding user_Info
         ContentValues cVals = new ContentValues();
@@ -1611,6 +1614,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method returns a -1 or userId depending on if the user already exists
+     *
+     * @return If successful in username match, return the userId
+     * otherwise, return -1
+     */
+    public int getUser(String username){
+
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+
+        //if User already Exists
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_USER_INFO + "  WHERE " + UI_USERNAME + " = ? ", new String[]{String.valueOf(username)});
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            if (cursor.getColumnIndex(UI_KEY_ID) != -1) {
+                int idIndex = cursor.getColumnIndexOrThrow(UI_KEY_ID);
+                int userId = cursor.getInt(idIndex);
+                return userId;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * This method returns a true or false on username and password match
      *
      * @return If successful in username and password matching, return true
@@ -1621,11 +1647,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String storedPass = null;
         int userId = -1;
         SQLiteDatabase db = this.getReadableDatabase();
-        PasswordEncryption pE = new PasswordEncryption();
+        PasswordEncryption md5 = new PasswordEncryption();
 
         //Checks if username exists
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USER_INFO + "  WHERE " + UI_USERNAME + " = ? ", new String[]{username});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USER_INFO + "  WHERE " + UI_USERNAME + " = ? ", new String[]{String.valueOf(username)});
         if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
             if (cursor.getColumnIndex(UI_KEY_ID) != -1) {
                 int idIndex = cursor.getColumnIndexOrThrow(UI_KEY_ID);
                 userId = cursor.getInt(idIndex);
@@ -1643,18 +1670,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         //update password with encryption for check
-        try {
-            password = pE.main(password);
-        }
-        catch(NoSuchAlgorithmException nsae){
-            return -1;
-        }
-        catch (NoSuchProviderException nspe){
-            return -1;
-        }
+        password = md5.main(password);
 
         //checks if password is correct.
-       if(password.equals(storedPass)){
+       if(password != null && password.equals(storedPass)){
            return userId;
        }
 
@@ -1664,24 +1683,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * This method modifies the User details. must first pass through loginCheck()
      *
-     * @param  userId, username, password, hand
+     * @param  username, password, updateUsername, updatePassword
      * @return If successful in updating, will return true
      */
-    public boolean editUser(int userId, String updateUsername, String updatePassword, int updateHand) {
-        //TODO: Test correct. thinking about adding this to the username check.. tbd this doesnt seem "safe"
+    public boolean editUser(String username, String password, String updateUsername, String updatePassword, int updateHand) {
+        //TODO: Test/Correct
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        PasswordEncryption pE = new PasswordEncryption();
+        PasswordEncryption md5 = new PasswordEncryption();
 
-
-        try {
-            updatePassword = pE.main(updatePassword);
-        }
-        catch(NoSuchAlgorithmException nsae){
+        int userId = getUser(username);
+        if(userId == -1){
             return false;
         }
-        catch (NoSuchProviderException nspe){
-            return false;
-        }
+
+        //update password with encryption for check
+        updatePassword = md5.main(updatePassword);
 
         ContentValues cVals = new ContentValues();
         cVals.put(UI_USERNAME, updateUsername);
