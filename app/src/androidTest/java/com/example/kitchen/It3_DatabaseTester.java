@@ -201,6 +201,43 @@ public class It3_DatabaseTester {
     }
 
     /**
+     * This method checks that deleteUser() returns true when passed a userId that exists in the database
+     */
+    @Test
+    public void deleteUser_ReturnsTrue(){
+        setUp();
+        userId = testDatabase.addUser("user", "pass");
+        assertEquals("deleteUser - Returns True", true, testDatabase.deleteUser(userId));
+        tearDown();
+    }
+
+    /**
+     * This method checks that deleteUser() returns false when passed a userId that does not exist
+     * in the database
+     */
+    @Test
+    public void deleteUser_ReturnsFalse(){
+        setUp();
+        assertEquals("deleteUser - Returns False", false, testDatabase.deleteUser(Integer.MAX_VALUE));
+        tearDown();
+    }
+
+    /**
+     * This method checks that deleteUser() deletes the user info from the table
+     */
+    @Test
+    public void deleteUser_Deletes(){
+        //TODO: IMPLEMENT
+        tearDown();
+        setUp();
+        userId = testDatabase.addUser("user", "pass");
+        testDatabase.deleteUser(userId);
+        //assertEquals("deleteUser - Deletes", -1, testDatabase.getUser("user"));
+        assertEquals("deleteUser - Deletes", -1, testDatabase.loginCheck("user", "pass"));
+        tearDown();
+    }
+
+    /**
      *
      */
     @Test

@@ -1601,14 +1601,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return -1;
         }
 
-
         //adding user_Info
         ContentValues cVals = new ContentValues();
         cVals.put(UI_USERNAME, username);
         cVals.put(UI_PASSWORD, password);
         cVals.put(UI_HAND_CHOICE, 1);
         int res = (int) sqLiteDatabase.insert(TABLE_USER_INFO, null, cVals);
-
 
         return res;
     }
@@ -1720,10 +1718,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         long returned = sqLiteDatabase.delete(TABLE_USER_INFO, UI_KEY_ID + " = ?", new String[]{String.valueOf(userId)});
 
-        if (returned == -1) {
+        if (returned == 0) {
             return false;
         }
-
 
         return true;
     }
