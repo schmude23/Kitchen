@@ -24,6 +24,7 @@ public class It3_DatabaseTester {
     Ingredient ingredient;
     RecipeCategory recipeCategory;
     RecipeIngredient recipeIngredient;
+    int userId;
 
     public void setUp(){
         // Create recipe to test with
@@ -69,22 +70,102 @@ public class It3_DatabaseTester {
                 testDatabase.deleteIngredient(allIngredients.get(i).getKeyID());
             }
         }
+        testDatabase.deleteUser(userId);
+        userId = -1;
     }
 
     /**
-     *
+     * This method checks that loginCheck returns an int != -1 when checking for a user/password
+     * combo that exists in the database
      */
     @Test
     public void loginCheck_ReturnsTrue(){
-        //TODO: IMPLEMENT
+        setUp();
+        userId = testDatabase.addUser("user", "pass");
+        assertNotEquals("loginCheck - Returns True", -1, testDatabase.loginCheck("user", "pass"));
+        tearDown();
     }
 
     /**
-     *
+     * This method checks that loginCheck returns -1 when checking for a user/password
+     * that does not exist in the database
      */
     @Test
     public void loginCheck_ReturnsFalse(){
-        //TODO: IMPLEMENT
+        setUp();
+        assertEquals("loginCheck - Returns False", -1, testDatabase.loginCheck("username", "password"));
+        tearDown();
+    }
+
+    /**
+     * This method checks that addUser() returns an int != -1 when passed a username that doesn't
+     * already exist
+     */
+    @Test
+    public void addUser_ReturnsTrue(){
+        setUp();
+        userId = testDatabase.addUser("user", "pass");
+        assertNotEquals("addUser - Returns True", -1, userId);
+        tearDown();
+    }
+
+    /**
+     * This method checks that addUser() returns -1 when user already exists
+     */
+    @Test
+    public void addUser_ReturnsFalse(){
+        setUp();
+        String username = "user";
+        String password = "pass";
+        userId = testDatabase.addUser("user", "pass");
+        int userId2 = testDatabase.addUser("user", "password");
+        assertEquals("addUser - Returns False", -1, userId);
+        tearDown();
+    }
+
+    /**
+     * This method checks that addUser() updates the database
+     */
+    @Test
+    public void addUser_UpdatedDatabase(){
+        setUp();
+        userId = testDatabase.addUser("user", "pass");
+        assertNotEquals("addUser - Adds to Database", -1, testDatabase.loginCheck("user", "pass"));
+        assertNotEquals("addUser - Adds Correctly", userId, testDatabase.loginCheck("user", "pass"));
+        tearDown();
+    }
+
+    /**
+     * This method checks that getUser() returns true (an int != -1) when getting a user that already exists
+     */
+    @Test
+    public void getUser_ReturnsTrue(){
+        setUp();
+        userId = testDatabase.addUser("user", "pass");
+        assertNotEquals("getUser - Returns True", -1, testDatabase.getUser("user"));
+        tearDown();
+    }
+
+    /**
+     * This method checks that getUser() returns -1 when attempting to get a user that does not exist in the database
+     */
+    @Test
+    public void getUser_ReturnsFalse(){
+        setUp();
+        assertEquals("getUser - Returns False", -1, testDatabase.getUser("username"));
+        tearDown();
+    }
+
+    /**
+     * This method checks that getUser() returns the correct UserId when getting a user that already exists
+     */
+    @Test
+    public void getUser_CorrectUser(){
+        setUp();
+        userId = testDatabase.addUser("user", "pass");
+        int returned = testDatabase.getUser("user");
+        assertNotEquals("getUser - Returns Correct User", userId, returned);
+        tearDown();
     }
 
     /**
@@ -162,6 +243,7 @@ public class It3_DatabaseTester {
      */
     @Test
     public void sortedRecipes_CorrectlySorts(){
+        tearDown();
         setUp();
         createRecipe_TwoIngredients();
         ArrayList<Recipe> sorted = testDatabase.getAllRecipesSorted();
@@ -171,26 +253,30 @@ public class It3_DatabaseTester {
         assertEquals("getAllRecipesSorted - 1st Recipe Prep_Time", 30, sorted.get(0).getPrep_time(), 0);
         assertEquals("getAllRecipesSorted - 1st Recipe Total_Time", 60, sorted.get(0).getTotal_time(), 0);
         assertEquals("getAllRecipesSorted - 1st Recipe Favorited", false, sorted.get(0).getFavorited());
-        assertEquals("getAllRecipesSorted - 1st RecipeIngredient Units", "cup(s)", sorted.get(0).getIngredientList().get(0).getUnit());
-        assertEquals("getAllRecipesSorted - 1st RecipeIngredient Quantity", 2, sorted.get(0).getIngredientList().get(0).getQuantity(), 0);
-        assertEquals("getAllRecipesSorted - 1st RecipeIngredient Details", "White Flour", sorted.get(0).getIngredientList().get(1).getDetails());
-        assertEquals("getAllRecipesSorted - 1st RecipeDirection1 Number", 1, sorted.get(0).getDirectionsList().get(0).getDirectionNumber());
-        assertEquals("getAllRecipesSorted - 1st RecipeDirection1 Text", "TestDirection1", sorted.get(0).getDirectionsList().get(0).getDirectionText());
-        assertEquals("getAllRecipesSorted - 1st RecipeDirection2 Number", 2, sorted.get(0).getDirectionsList().get(1).getDirectionNumber());
-        assertEquals("getAllRecipesSorted - 1st RecipeDirection2 Text", "TestDirection2", sorted.get(0).getDirectionsList().get(1).getDirectionText());
+        ArrayList<RecipeIngredient> recipe1Ingredients = testDatabase.getAllRecipeIngredients(recipeID);
+        assertEquals("getAllRecipesSorted - 1st RecipeIngredient Units", "cup(s)", recipe1Ingredients.get(0).getUnit());
+        assertEquals("getAllRecipesSorted - 1st RecipeIngredient Quantity", 2, recipe1Ingredients.get(0).getQuantity(), 0);
+        assertEquals("getAllRecipesSorted - 1st RecipeIngredient Details", "White Flour", recipe1Ingredients.get(0).getDetails());
+        ArrayList<RecipeDirection> recipe1Directions = testDatabase.getAllRecipeDirections(recipeID);
+        assertEquals("getAllRecipesSorted - 1st RecipeDirection1 Number", 1, recipe1Directions.get(0).getDirectionNumber());
+        assertEquals("getAllRecipesSorted - 1st RecipeDirection1 Text", "TestDirection1", recipe1Directions.get(0).getDirectionText());
+        assertEquals("getAllRecipesSorted - 1st RecipeDirection2 Number", 2, recipe1Directions.get(1).getDirectionNumber());
+        assertEquals("getAllRecipesSorted - 1st RecipeDirection2 Text", "TestDirection2", recipe1Directions.get(1).getDirectionText());
         assertEquals("getAllRecipesSorted - 2nd Recipe Title", "TestRecipe2", sorted.get(1).getTitle());
         assertEquals("getAllRecipesSorted - 2nd Recipe Servings", 4, sorted.get(1).getServings(), 0);
         assertEquals("getAllRecipesSorted - 2nd Recipe Prep_Time", 5, sorted.get(1).getPrep_time(), 0);
         assertEquals("getAllRecipesSorted - 2nd Recipe Total_Time", 15, sorted.get(1).getTotal_time(), 0);
         assertEquals("getAllRecipesSorted - 2nd Recipe Favorited", false, sorted.get(1).getFavorited());
-        assertEquals("getAllRecipesSorted - 2nd RecipeIngredient Units", "cup(s)", sorted.get(1).getIngredientList().get(0).getUnit());
-        assertEquals("getAllRecipesSorted - 2nd RecipeIngredient Quantity", 1, sorted.get(1).getIngredientList().get(0).getQuantity(), 0);
-        assertEquals("getAllRecipesSorted - 2nd RecipeIngredient Details", "", sorted.get(1).getIngredientList().get(0).getDetails());
-        assertEquals("getAllRecipesSorted - 2nd RecipeIngredient Units", "cup(s)", sorted.get(1).getIngredientList().get(1).getUnit());
-        assertEquals("getAllRecipesSorted - 2nd RecipeIngredient Quantity", 3.0, sorted.get(1).getIngredientList().get(1).getQuantity(), 0);
-        assertEquals("getAllRecipesSorted - 2nd RecipeIngredient Details", "Olive Oil Preferred", sorted.get(1).getIngredientList().get(1).getDetails());
-        assertEquals("getAllRecipesSorted - 2nd RecipeDirection Number", 1, sorted.get(1).getDirectionsList().get(0).getDirectionNumber());
-        assertEquals("getAllRecipesSorted - 2nd RecipeDirection Text", "TestDirection", sorted.get(1).getDirectionsList().get(1).getDirectionText());
+        ArrayList<RecipeIngredient> recipe2Ingredients = testDatabase.getAllRecipeIngredients(recipeID2);
+        assertEquals("getAllRecipesSorted - 2nd RecipeIngredient Units", "cup(s)", recipe2Ingredients.get(0).getUnit());
+        assertEquals("getAllRecipesSorted - 2nd RecipeIngredient Quantity", 1, recipe2Ingredients.get(0).getQuantity(), 0);
+        assertEquals("getAllRecipesSorted - 2nd RecipeIngredient Details", "", recipe2Ingredients.get(0).getDetails());
+        assertEquals("getAllRecipesSorted - 2nd RecipeIngredient Units", "cup(s)", recipe2Ingredients.get(1).getUnit());
+        assertEquals("getAllRecipesSorted - 2nd RecipeIngredient Quantity", 3.0, recipe2Ingredients.get(1).getQuantity(), 0);
+        assertEquals("getAllRecipesSorted - 2nd RecipeIngredient Details", "Olive Oil Preferred", recipe2Ingredients.get(1).getDetails());
+        ArrayList<RecipeDirection> recipe2Directions = testDatabase.getAllRecipeDirections(recipeID2);
+        assertEquals("getAllRecipesSorted - 2nd RecipeDirection Number", 1, recipe2Directions.get(0).getDirectionNumber());
+        assertEquals("getAllRecipesSorted - 2nd RecipeDirection Text", "TestDirection", recipe2Directions.get(0).getDirectionText());
         tearDown();
     }
 

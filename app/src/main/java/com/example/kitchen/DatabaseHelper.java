@@ -1581,7 +1581,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * This method adds a User to the User_Info table. Also, this method assumes the user is
-     * right handed. this can be updated using a editUser()
+     * right handed. this can be updated using editUser()
      *
      * @param username, password
      * @return The id of the added User.
@@ -1620,7 +1620,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * otherwise, return -1
      */
     public int getUser(String username){
-
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
         //if User already Exists
