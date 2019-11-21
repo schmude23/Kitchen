@@ -87,9 +87,10 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
+                android:onClick="onEditRecipeCancelButtonPressed"
                 app:backgroundTint="@color/royal_blue"
-                app:srcCompat="@drawable/ic_cancel"
-                android:onClick="onEditRecipeCancelButtonPressed"/>
+                app:fabSize="mini"
+                app:srcCompat="@drawable/ic_cancel" />
 
             <View
                 android:layout_width="0dp"
@@ -102,9 +103,10 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
+                android:onClick="onEditRecipeNextButtonPressed"
                 app:backgroundTint="@color/royal_blue"
-                app:srcCompat="@drawable/ic_arrow_right"
-                android:onClick="onEditRecipeNextButtonPressed" />
+                app:fabSize="mini"
+                app:srcCompat="@drawable/ic_arrow_right" />
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"

@@ -3,13 +3,7 @@ package com.example.kitchen;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,22 +12,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class AdvancedSearchActivity extends AppCompatActivity implements View.OnClickListener {
     DatabaseHelper database = new DatabaseHelper(this);
     Recipe recipe;
-    private List<Recipe> recipes;
-    private List<RecipeListItem> recipeListItems;
-    private RecipeAdapter recipeAdapter;
-    private RecyclerView recyclerView;
 
     private RadioGroup recipeRadioGroup, orderRadioGroup;
 
