@@ -13,6 +13,7 @@ import java.security.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -558,7 +559,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(recipeList == null){
             return null;
         }
-        //Collections.sort(recipeList);
+        //Arrays.sort(recipeList, new Comparator<Recipe>());
+        Collections.sort(recipeList);
 
         return recipeList;
     }

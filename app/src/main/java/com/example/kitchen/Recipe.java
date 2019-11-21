@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * This class models a Recipe
  */
-class Recipe {
+class Recipe implements Comparable<Recipe>{
     private int keyID;
     private String title;
     private double servings;
@@ -401,10 +401,11 @@ class Recipe {
         this.categoryList = categoryList;
     }
 
+    @Override
     public int compareTo(Recipe obj) {
         //TODO: TEst (used only in getAllRecipeSorted()
         //sort in ascending order
-        return this.getTitle().compareToIgnoreCase(obj.getTitle());
+        return this.getTitle().compareTo(obj.getTitle());
         //sort in descending order
         //return obj.age-this.age;
     }
