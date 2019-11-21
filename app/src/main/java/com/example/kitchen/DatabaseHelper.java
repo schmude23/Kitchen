@@ -1721,7 +1721,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         long returned = sqLiteDatabase.delete(TABLE_USER_INFO, UI_KEY_ID + " = ?", new String[]{String.valueOf(userId)});
 
-        if (returned == 0) {
+        if (returned == -1) {
             return false;
         }
 
