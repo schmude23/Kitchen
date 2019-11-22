@@ -1658,10 +1658,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }else{
             return -1;
         }
-        //not sure if this is needed
-        if(storedPass == null || storedPass == "-1"){
-            return -1;
-        }
 
         //update password with encryption for check
         password = md5.main(password);
@@ -1671,7 +1667,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
            return userId;
        }
 
-        return -1;
+       return -1;
     }
 
     /**
@@ -1697,9 +1693,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cVals.put(UI_PASSWORD, updatePassword);
         cVals.put(UI_HAND_CHOICE, updateHand);
         long returned = sqLiteDatabase.update(TABLE_USER_INFO, cVals, UI_KEY_ID + " = ?", new String[]{String.valueOf(userId)});
-        if (returned == 0) {
-            return false;
-        }
         return true;
     }
 

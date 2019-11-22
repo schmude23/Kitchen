@@ -24,7 +24,6 @@ public class It3_DatabaseTester {
     Ingredient ingredient;
     RecipeCategory recipeCategory;
     RecipeIngredient recipeIngredient;
-    int userId;
 
     public void setUp(){
         // Create recipe to test with
@@ -70,10 +69,6 @@ public class It3_DatabaseTester {
                 testDatabase.deleteIngredient(allIngredients.get(i).getKeyID());
             }
         }
-        int returned = testDatabase.getUser("user");
-        testDatabase.deleteUser(returned);
-        testDatabase.deleteUser(userId);
-        userId = -1;
     }
 
     /**
@@ -83,8 +78,10 @@ public class It3_DatabaseTester {
     @Test
     public void loginCheck_ReturnsTrue(){
         setUp();
-        userId = testDatabase.addUser("user", "pass");
+        testDatabase.deleteUser(testDatabase.getUser("user"));
+        int userId = testDatabase.addUser("user", "pass");
         assertNotEquals("loginCheck - Returns True", -1, testDatabase.loginCheck("user", "pass"));
+        testDatabase.deleteUser(userId);
         tearDown();
     }
 
@@ -105,10 +102,11 @@ public class It3_DatabaseTester {
      */
     @Test
     public void addUser_ReturnsTrue(){
-        tearDown();
         setUp();
-        userId = testDatabase.addUser("user", "pass");
+        testDatabase.deleteUser(testDatabase.getUser("user"));
+        int userId = testDatabase.addUser("user", "pass");
         assertNotEquals("addUser - Returns True", -1, userId);
+        testDatabase.deleteUser(userId);
         tearDown();
     }
 
@@ -117,11 +115,12 @@ public class It3_DatabaseTester {
      */
     @Test
     public void addUser_ReturnsFalse(){
-        tearDown();
         setUp();
-        userId = testDatabase.addUser("user", "pass");
+        testDatabase.deleteUser(testDatabase.getUser("user"));
+        int userId = testDatabase.addUser("user", "pass");
         int userId2 = testDatabase.addUser("user", "password");
         assertEquals("addUser - Returns False", -1, userId2);
+        testDatabase.deleteUser(userId);
         tearDown();
     }
 
@@ -131,7 +130,8 @@ public class It3_DatabaseTester {
     @Test
     public void addUser_UpdatedDatabase(){
         setUp();
-        userId = testDatabase.addUser("user1", "pass");
+        testDatabase.deleteUser(testDatabase.getUser("user1"));
+        int userId = testDatabase.addUser("user1", "pass");
         assertNotEquals("addUser - Adds to Database", -1, testDatabase.loginCheck("user1", "pass"));
         assertEquals("addUser - Adds Correctly", userId, testDatabase.loginCheck("user1", "pass"));
         testDatabase.deleteUser(userId);
@@ -144,8 +144,10 @@ public class It3_DatabaseTester {
     @Test
     public void getUser_ReturnsTrue(){
         setUp();
-        userId = testDatabase.addUser("user", "pass");
+        testDatabase.deleteUser(testDatabase.getUser("user"));
+        int userId = testDatabase.addUser("user", "pass");
         assertNotEquals("getUser - Returns True", -1, testDatabase.getUser("user"));
+        testDatabase.deleteUser(userId);
         tearDown();
     }
 
@@ -165,9 +167,11 @@ public class It3_DatabaseTester {
     @Test
     public void getUser_CorrectUser(){
         setUp();
+        testDatabase.deleteUser(testDatabase.getUser("u"));
         int user = testDatabase.addUser("u", "pass");
         int returned = testDatabase.getUser("u");
-        assertNotEquals("getUser - Returns Correct User", user, returned);
+        assertEquals("getUser - Returns Correct User", user, returned);
+        testDatabase.deleteUser(user);
         tearDown();
     }
 
@@ -177,8 +181,9 @@ public class It3_DatabaseTester {
     @Test
     public void editUser_ReturnsTrue(){
         setUp();
-        userId = testDatabase.addUser("user", "pass");
+        int userId = testDatabase.addUser("user", "pass");
         assertEquals("editUser - Returns True", true, testDatabase.editUser("user", "pass", "user", "pass", 1));
+        testDatabase.deleteUser(userId);
         tearDown();
     }
 
@@ -199,10 +204,11 @@ public class It3_DatabaseTester {
     public void editUser_Updates(){
         tearDown();
         setUp();
-        userId = testDatabase.addUser("testUser", "testPass");
+        int userId = testDatabase.addUser("testUser", "testPass");
         testDatabase.editUser("testUser", "testPass", "test", "test", 0);
         assertEquals("editUser - Deleted Old User/Pass", -1, testDatabase.loginCheck("testUser", "testPass"));
         assertNotEquals("editUser - Changed to New User/Pass", -1, testDatabase.loginCheck("test", "test"));
+        testDatabase.deleteUser(userId);
         tearDown();
     }
 
@@ -212,11 +218,11 @@ public class It3_DatabaseTester {
      */
     @Test
     public void editUser_DoesNotChange(){
-        tearDown();
         setUp();
-        userId = testDatabase.addUser("user", "pass");
+        int userId = testDatabase.addUser("user", "pass");
         testDatabase.editUser("user", "pass", "user", "pass", 1);
         assertNotEquals("editUser - Did Not Change User/Pass", -1, testDatabase.loginCheck("user", "pass"));
+        testDatabase.deleteUser(userId);
         tearDown();
     }
 
@@ -226,7 +232,7 @@ public class It3_DatabaseTester {
     @Test
     public void deleteUser_ReturnsTrue(){
         setUp();
-        userId = testDatabase.addUser("user", "pass");
+        int userId = testDatabase.addUser("user", "pass");
         assertEquals("deleteUser - Returns True", true, testDatabase.deleteUser(userId));
         tearDown();
     }
@@ -249,7 +255,7 @@ public class It3_DatabaseTester {
     public void deleteUser_Deletes(){
         tearDown();
         setUp();
-        userId = testDatabase.addUser("deleteUser", "pass");
+        int userId = testDatabase.addUser("deleteUser", "pass");
         testDatabase.deleteUser(userId);
         assertEquals("deleteUser - Deletes", -1, testDatabase.getUser("deleteUser"));
         assertEquals("deleteUser - Deletes", -1, testDatabase.loginCheck("deleteUser", "pass"));
