@@ -121,7 +121,7 @@ public class It3_DatabaseTester {
         setUp();
         userId = testDatabase.addUser("user", "pass");
         int userId2 = testDatabase.addUser("user", "password");
-        assertEquals("addUser - Returns False", -1, userId);
+        assertEquals("addUser - Returns False", -1, userId2);
         tearDown();
     }
 
@@ -131,9 +131,10 @@ public class It3_DatabaseTester {
     @Test
     public void addUser_UpdatedDatabase(){
         setUp();
-        userId = testDatabase.addUser("user", "pass");
-        assertNotEquals("addUser - Adds to Database", -1, testDatabase.loginCheck("user", "pass"));
-        assertNotEquals("addUser - Adds Correctly", userId, testDatabase.loginCheck("user", "pass"));
+        userId = testDatabase.addUser("user1", "pass");
+        assertNotEquals("addUser - Adds to Database", -1, testDatabase.loginCheck("user1", "pass"));
+        assertEquals("addUser - Adds Correctly", userId, testDatabase.loginCheck("user1", "pass"));
+        testDatabase.deleteUser(userId);
         tearDown();
     }
 
@@ -275,7 +276,6 @@ public class It3_DatabaseTester {
                 correct = true;
         }
         assertEquals("getRandomRecipes - Returns correct recipes if < 50", true, correct);
-
         tearDown();
     }
 
@@ -284,6 +284,7 @@ public class It3_DatabaseTester {
      */
     @Test
     public void chooseRandom_ReturnsNull(){
+        tearDown();
         assertEquals("getRandomRecipes - Returns Null", null, testDatabase.getRandomRecipes());
     }
 
