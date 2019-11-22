@@ -554,7 +554,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * recipes, if not this method will return null.
      */
     public ArrayList<Recipe> getAllRecipesSorted() {
-        //TODO: TEST
         ArrayList<Recipe> recipeList = getAllRecipes();
 
         if(recipeList == null){
@@ -573,7 +572,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * randomly assorted recipes, if not this method will return null.
      */
     public ArrayList<Recipe> getRandomRecipes() {
-        //TODO: TEST/CORRECT
         ArrayList<Recipe> recipeList = getAllRecipes();
 
         if(recipeList == null){
@@ -1640,7 +1638,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * otherwise, return false
      */
     public int loginCheck(String username, String password){
-        //TODO: Test/Correct
         String storedPass = null;
         int userId = -1;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -1684,7 +1681,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful in updating, will return true
      */
     public boolean editUser(String username, String password, String updateUsername, String updatePassword, int updateHand) {
-        //TODO: Test/Correct
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         PasswordEncryption md5 = new PasswordEncryption();
 

@@ -70,6 +70,8 @@ public class It3_DatabaseTester {
                 testDatabase.deleteIngredient(allIngredients.get(i).getKeyID());
             }
         }
+        int returned = testDatabase.getUser("user");
+        testDatabase.deleteUser(returned);
         testDatabase.deleteUser(userId);
         userId = -1;
     }
@@ -103,6 +105,7 @@ public class It3_DatabaseTester {
      */
     @Test
     public void addUser_ReturnsTrue(){
+        tearDown();
         setUp();
         userId = testDatabase.addUser("user", "pass");
         assertNotEquals("addUser - Returns True", -1, userId);
@@ -114,9 +117,8 @@ public class It3_DatabaseTester {
      */
     @Test
     public void addUser_ReturnsFalse(){
+        tearDown();
         setUp();
-        String username = "user";
-        String password = "pass";
         userId = testDatabase.addUser("user", "pass");
         int userId2 = testDatabase.addUser("user", "password");
         assertEquals("addUser - Returns False", -1, userId);
@@ -162,42 +164,59 @@ public class It3_DatabaseTester {
     @Test
     public void getUser_CorrectUser(){
         setUp();
-        userId = testDatabase.addUser("user", "pass");
-        int returned = testDatabase.getUser("user");
-        assertNotEquals("getUser - Returns Correct User", userId, returned);
+        int user = testDatabase.addUser("u", "pass");
+        int returned = testDatabase.getUser("u");
+        assertNotEquals("getUser - Returns Correct User", user, returned);
         tearDown();
     }
 
     /**
-     *
+     * This method checks that editUser returns true if the user exists
      */
     @Test
     public void editUser_ReturnsTrue(){
-        //TODO: IMPLEMENT
+        setUp();
+        userId = testDatabase.addUser("user", "pass");
+        assertEquals("editUser - Returns True", true, testDatabase.editUser("user", "pass", "user", "pass", 1));
+        tearDown();
     }
 
     /**
-     *
+     * This method checks that editUser() returns false if the user does not exist
      */
     @Test
     public void editUser_ReturnsFalse(){
-        //TODO: IMPLEMENT
+        setUp();
+        assertEquals("editUser - Returns False", false, testDatabase.editUser("username", "password", "username", "password", 0));
+        tearDown();
     }
 
     /**
-     *
+     * This method checks that editUser() updates the user's information in the database table correctly
      */
     @Test
     public void editUser_Updates(){
-        //TODO: IMPLEMENT
+        tearDown();
+        setUp();
+        userId = testDatabase.addUser("testUser", "testPass");
+        testDatabase.editUser("testUser", "testPass", "test", "test", 0);
+        assertEquals("editUser - Deleted Old User/Pass", -1, testDatabase.loginCheck("testUser", "testPass"));
+        assertNotEquals("editUser - Changed to New User/Pass", -1, testDatabase.loginCheck("test", "test"));
+        tearDown();
     }
 
     /**
-     *
+     * This method checks that the username and password did not get updated when passed the same
+     * username and password that previously existed
      */
     @Test
     public void editUser_DoesNotChange(){
-        //TODO: IMPLEMENT
+        tearDown();
+        setUp();
+        userId = testDatabase.addUser("user", "pass");
+        testDatabase.editUser("user", "pass", "user", "pass", 1);
+        assertNotEquals("editUser - Did Not Change User/Pass", -1, testDatabase.loginCheck("user", "pass"));
+        tearDown();
     }
 
     /**
@@ -227,23 +246,37 @@ public class It3_DatabaseTester {
      */
     @Test
     public void deleteUser_Deletes(){
-        //TODO: IMPLEMENT
         tearDown();
         setUp();
-        userId = testDatabase.addUser("user", "pass");
+        userId = testDatabase.addUser("deleteUser", "pass");
         testDatabase.deleteUser(userId);
-        //assertEquals("deleteUser - Deletes", -1, testDatabase.getUser("user"));
-        assertEquals("deleteUser - Deletes", -1, testDatabase.loginCheck("user", "pass"));
+        assertEquals("deleteUser - Deletes", -1, testDatabase.getUser("deleteUser"));
+        assertEquals("deleteUser - Deletes", -1, testDatabase.loginCheck("deleteUser", "pass"));
         tearDown();
     }
 
     /**
-     *
+     * This method checks that getRandomRecipes returns all recipes if <50 in a random order
      */
     @Test
     public void chooseRandom_ReturnsRecipes(){
-        //TODO: IMPLEMENT
+        tearDown();
+        setUp();
+        createRecipe_TwoIngredients();
         ArrayList<Recipe> randoms = testDatabase.getRandomRecipes();
+        assertEquals("getRandomRecipes - Returns all recipes if < 50", 2, randoms.size());
+        boolean correct = false;
+        if(randoms.get(0).getKeyID() == recipeID){
+            if(randoms.get(1).getKeyID() == recipeID2)
+                correct = true;
+        }
+        else if(randoms.get(1).getKeyID() == recipeID){
+            if(randoms.get(0).getKeyID() == recipeID2)
+                correct = true;
+        }
+        assertEquals("getRandomRecipes - Returns correct recipes if < 50", true, correct);
+
+        tearDown();
     }
 
     /**
