@@ -143,22 +143,148 @@ class Recipe implements Comparable<Recipe>{
         segments = string.split("RecipeIngredient{");
 
         for (int i = 1; i < segments.length; i++) {
-            //TODO: Finish implementing this method to get the ingredients list, directions list and category list
+
+            String[] partsOfIngredient = segments[i].split("[=,]");
+
+            int ingredientKeyID = -1;
+            int recipeId = -1;
+            int ingredientId = -1;
+            double quantity = -1;
+            String unit = "";
+            String details = "";
+
+            if (partsOfIngredient[0].trim().equals("keyID")) {
+                try {
+                    ingredientKeyID = Integer.parseInt(partsOfIngredient[1].trim());
+                } catch (NumberFormatException ex) {
+                    break;
+                }
+            }
+
+            if (partsOfIngredient[2].trim().equals("recipeID")) {
+                try {
+                    recipeId = Integer.parseInt(partsOfIngredient[3].trim());
+                } catch (NumberFormatException ex) {
+                    break;
+                }
+            }
+
+            if (partsOfIngredient[4].trim().equals("ingredientID")) {
+                try {
+                    ingredientId = Integer.parseInt(partsOfIngredient[5].trim());
+                } catch (NumberFormatException ex) {
+                    break;
+                }
+            }
+
+            if (partsOfIngredient[6].trim().equals("quantity")) {
+                try {
+                    quantity = Double.parseDouble(partsOfIngredient[7].trim());
+                } catch (NumberFormatException ex) {
+                    break;
+                }
+            }
+
+            if (partsOfIngredient[8].equals("unit")) {
+                unit = partsOfIngredient[9].trim();
+            }
+
+            if (partsOfIngredient[10].equals("details")) {
+                details = partsOfIngredient[11].trim();
+            }
+
+            RecipeIngredient ingredient = new RecipeIngredient(ingredientKeyID, recipeId, ingredientId, quantity, unit, details);
+
+            ingredientList.add(ingredient);
+
+            //TODO: Consider changing ingredientID in the printed version to the actual name of the ingredient..?
+            //TODO: also consider ignoring recipe id? This applies for directions and categories too
+
         }
 
-        /*
-        return "Recipe{" +
-                "keyID=" + keyID +
-                ", title='" + title + '\'' + "\n" +
-                ", servings=" + servings + "\n" +
-                ", prep_time=" + prep_time + "\n" +
-                ", total_time=" + total_time + "\n" +
-                ", favorited=" + favorited + "\n" +
-                strIngList +
-                strDirList +
-                strCatList +
-                '}';
- */
+        //Try to get the directions list
+
+        segments = string.split("RecipeDirection{");
+
+        for (int i = 1; i < segments.length; i++) {
+
+            String[] partsOfDirection = segments[i].split("[=,]");
+
+            int directionKeyId = -1;
+            int recipeId = -1;
+            String directionText = "";
+            int directionNumber = -1;
+
+            if (partsOfDirection[0].trim().equals("keyID")) {
+                try {
+                    directionKeyId = Integer.parseInt(partsOfDirection[1].trim());
+                } catch (NumberFormatException ex) {
+                    break;
+                }
+            }
+
+            if (partsOfDirection[2].trim().equals("recipeID")) {
+                try {
+                    recipeId = Integer.parseInt(partsOfDirection[3].trim());
+                } catch (NumberFormatException ex) {
+                    break;
+                }
+            }
+
+            if (partsOfDirection[4].trim().equals("directionText")) {
+                directionText = partsOfDirection[5].trim();
+            }
+
+            if (partsOfDirection[6].trim().equals("directionNumber")) {
+                try {
+                    directionNumber = Integer.parseInt(partsOfDirection[7].trim());
+                } catch (NumberFormatException ex) {
+                    break;
+                }
+            }
+
+            RecipeDirection direction = new RecipeDirection(directionKeyId, recipeId, directionText, directionNumber);
+
+            directionsList.add(direction);
+        }
+
+        //Try to get the categories
+        segments = string.split("RecipeCategory{");
+
+        for (int i = 1; i < segments.length; i++) {
+
+
+            String[] partsOfCategory = segments[i].split("[=,]");
+
+            int categoryKeyID = -1;
+            int recipeId = -1;
+            int categoryId = -1;
+
+            if (partsOfCategory[0].trim().equals("keyID")) {
+                try {
+                    categoryKeyID = Integer.parseInt(partsOfCategory[1].trim());
+                } catch (NumberFormatException ex) {
+                    break;
+                }
+            }
+
+            if (partsOfCategory[2].trim().equals("recipeID")) {
+                try {
+                    recipeId = Integer.parseInt(partsOfCategory[3].trim());
+                } catch (NumberFormatException ex) {
+                    break;
+                }
+            }
+
+            if (partsOfCategory[4].trim().equals("categoryID")) {
+                try {
+                    categoryId = Integer.parseInt(partsOfCategory[5].trim());
+                } catch (NumberFormatException ex) {
+                    break;
+                }
+            }
+
+        }
 
     }
 
