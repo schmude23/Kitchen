@@ -286,6 +286,17 @@ class Recipe implements Comparable<Recipe>{
 
         }
 
+        this.keyID = keyID;
+        this.title = title;
+        this.servings = servings;
+        this.prep_time = prep_time;
+        this.total_time = total_time;
+        this.favorited = favorited;
+        this.ingredientList = ingredientList;
+        this.directionsList = directionsList;
+        this.categoryList = categoryList;
+
+
     }
 
     /**
