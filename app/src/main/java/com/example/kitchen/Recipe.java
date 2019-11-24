@@ -48,7 +48,7 @@ class Recipe implements Comparable<Recipe>{
      *
      * @param string the string representation of the Recipe
      */
-    public Recipe(String string) {
+    public Recipe(String string, Context context) {
 
         this();
 
@@ -125,6 +125,8 @@ class Recipe implements Comparable<Recipe>{
             return;
         }
 
+
+        /* //This is not needed since favorited status should not be shared between devices.
         //Try to get favorited status
         if (segments[10].equals(" favorited")) {
 
@@ -139,6 +141,7 @@ class Recipe implements Comparable<Recipe>{
         } else {
             return;
         }
+        */
 
         //Try to get Ingredients List
 
@@ -171,12 +174,14 @@ class Recipe implements Comparable<Recipe>{
                 }
             }
 
-            if (partsOfIngredient[4].trim().equals("ingredientID")) {
-                try {
-                    ingredientId = Integer.parseInt(partsOfIngredient[5].trim());
-                } catch (NumberFormatException ex) {
-                    break;
-                }
+            if (partsOfIngredient[4].trim().equals("ingredientName")) {
+                    String ingredientName = partsOfIngredient[5].trim();
+                    DatabaseHelper db = new DatabaseHelper(context);
+                    ingredientId = db.getIngredient(ingredientName);
+
+                    if (ingredientId == -1) {
+                        ingredientId = db.addIngredient(new Ingredient(-1, ingredientName));
+                    }
             }
 
             if (partsOfIngredient[6].trim().equals("quantity")) {
@@ -202,9 +207,6 @@ class Recipe implements Comparable<Recipe>{
             RecipeIngredient ingredient = new RecipeIngredient(ingredientKeyID, recipeId, ingredientId, quantity, unit, details);
 
             ingredientList.add(ingredient);
-
-            //TODO: Consider changing ingredientID in the printed version to the actual name of the ingredient..?
-            //TODO: also consider ignoring recipe id? This applies for directions and categories too
 
         }
 
@@ -284,12 +286,15 @@ class Recipe implements Comparable<Recipe>{
             }
 
             if (partsOfCategory[4].trim().equals("categoryID")) {
-                try {
-                    String part = partsOfCategory[5].split("\\}")[0];
-                    categoryId = Integer.parseInt(part.trim());
-                } catch (NumberFormatException ex) {
-                    break;
-                }
+                    String categoryName = partsOfCategory[5].split("\\}")[0];
+                    DatabaseHelper db = new DatabaseHelper(context);
+                    categoryId = db.getCategory(categoryName);
+
+                    //Check for the category not being found
+                    if (categoryId == -1) {
+                        categoryId = db.addCategory(new Category(categoryName));
+                    }
+
             }
 
             RecipeCategory category = new RecipeCategory(categoryKeyID, recipeId, categoryId);
@@ -590,6 +595,53 @@ class Recipe implements Comparable<Recipe>{
         //creates list for category list
         while (i < catList) {
             strCatList = strCatList + categoryList.get(i).toString();
+            i++;
+        }
+
+        return "Recipe{" +
+                "keyID=" + keyID +
+                ", title=" + title + "\n" +
+                ", servings=" + servings + "\n" +
+                ", prep_time=" + prep_time + "\n" +
+                ", total_time=" + total_time + "\n" +
+                ", favorited=" + favorited + "\n" +
+                strIngList +
+                strDirList +
+                strCatList +
+                '}';
+    }
+
+    /**
+     * This method converts the recipe to a string format for sending to another device
+     *
+     * @return a string representation of all the data in the class
+     */
+    public String toString(Context context) {
+        int ingList = ingredientList.size();
+        int dirList = directionsList.size();
+        int catList = categoryList.size();
+        String strIngList = null;
+        String strDirList = null;
+        String strCatList = null;
+        int i = 0;
+
+        //creates list for ingredient list
+        while (i < ingList) {
+            strIngList = strIngList + ingredientList.get(i).toString(context);
+            i++;
+        }
+        i = 0;
+
+        //creates list for Direction list
+        while (i < dirList) {
+            strDirList = strDirList + directionsList.get(i).toString();
+            i++;
+        }
+        i = 0;
+
+        //creates list for category list
+        while (i < catList) {
+            strCatList = strCatList + categoryList.get(i).toString(context);
             i++;
         }
 

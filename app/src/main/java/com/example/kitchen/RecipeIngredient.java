@@ -1,5 +1,7 @@
 package com.example.kitchen;
 
+import android.content.Context;
+
 /**
  * This class models a Recipe Ingredient and contains all of the relevant information
  */
@@ -142,7 +144,26 @@ public class RecipeIngredient {
         return "RecipeIngredient{" +
                 "keyID=" + keyID +
                 ", recipeID=" + recipeID + "\n" +
-                ", ingredientID=" + ingredientID + "\n" +
+                ", ingredientName=" + ingredientID + "\n" +
+                ", quantity=" + quantity + "\n" +
+                ", unit=" + unit + "\n" +
+                ", details=" + details +
+                '}' + "\n";
+    }
+
+    /**
+     * This method produces the string needed for sending data between devices.
+     *
+     * @return a string representation of the contents of the class.
+     */
+    public String toString(Context context) {
+        DatabaseHelper db = new DatabaseHelper(context);
+        String ingredientName = db.getIngredient(ingredientID).getName();
+
+        return "RecipeIngredient{" +
+                "keyID=" + keyID +
+                ", recipeID=" + recipeID + "\n" +
+                ", ingredientName=" + ingredientName + "\n" +
                 ", quantity=" + quantity + "\n" +
                 ", unit=" + unit + "\n" +
                 ", details=" + details +

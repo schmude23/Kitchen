@@ -423,14 +423,13 @@ public class It3_DatabaseTester {
         setUp();
 
         String initialStr = testRecipe.toString();
-        Recipe retrieved = new Recipe(initialStr);
+        Recipe retrieved = new Recipe(initialStr, appContext);
 
         // Check all recipe fields are accurate
         assertEquals("testCreateRecipeUsingString - Correct Title", testRecipe.getTitle(), retrieved.getTitle());
         assertEquals("testCreateRecipeUsingString - Correct Servings", testRecipe.getServings(), retrieved.getServings(), 0);
         assertEquals("testCreateRecipeUsingString - Correct prep_time", testRecipe.getPrep_time(), retrieved.getPrep_time(), 0);
         assertEquals("testCreateRecipeUsingString - Correct total_time", testRecipe.getTotal_time(), retrieved.getTotal_time(), 0);
-        assertEquals("testCreateRecipeUsingString - Correct Favorited", testRecipe.getFavorited(), retrieved.getFavorited());
         assertEquals("testCreateRecipeUsingString - Correct Ingredient Unit", testRecipe.getIngredientList().get(0).getUnit(), retrieved.getIngredientList().get(0).getUnit());
         assertEquals("testCreateRecipeUsingString - Correct Ingredient Quantity", testRecipe.getIngredientList().get(0).getQuantity(), retrieved.getIngredientList().get(0).getQuantity(), 0);
         assertEquals("testCreateRecipeUsingString - Correct Ingredient Details", testRecipe.getIngredientList().get(0).getDetails(), retrieved.getIngredientList().get(0).getDetails());

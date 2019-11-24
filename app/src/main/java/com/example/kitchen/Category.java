@@ -15,6 +15,11 @@ public class Category {
     }
 
 
+    public Category(String name) {
+        keyID = -1;
+        this.name = name;
+    }
+
     public int getKeyID() { return keyID; }
 
     public void setKeyID(int keyID) { this.keyID = keyID; }

@@ -1,5 +1,7 @@
 package com.example.kitchen;
 
+import android.content.Context;
+
 import java.util.List;
 
 /**
@@ -97,6 +99,21 @@ public class RecipeCategory {
                 "keyID=" + keyID +
                 ", recipeID=" + recipeID + "\n" +
                 ", categoryID=" + categoryID +
+                '}' + "\n";
+    }
+
+    /**
+     * This method gives a string representation of the data in the class for sending to another device
+     *
+     * @return a string representation of all of the data in the class.
+     */
+    public String toString(Context context) {
+        DatabaseHelper db = new DatabaseHelper(context);
+        String categoryName = db.getCategory(categoryID).getName();
+        return "RecipeCategory{" +
+                "keyID=" + keyID +
+                ", recipeID=" + recipeID + "\n" +
+                ", categoryName=" + categoryName +
                 '}' + "\n";
     }
 }

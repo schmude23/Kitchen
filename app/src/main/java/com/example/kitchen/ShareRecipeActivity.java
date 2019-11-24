@@ -327,7 +327,7 @@ public class ShareRecipeActivity extends AppCompatActivity implements DeviceAdap
                 String recipeString = total.toString();
 
                 //Create recipe using that string and save it to the database
-                Recipe recipe = new Recipe(recipeString);
+                Recipe recipe = new Recipe(recipeString, context);
                 DatabaseHelper db = new DatabaseHelper(context);
                 db.addRecipe(recipe);
 
