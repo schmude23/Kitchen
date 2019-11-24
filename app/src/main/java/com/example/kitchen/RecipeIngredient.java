@@ -144,8 +144,8 @@ public class RecipeIngredient {
                 ", recipeID=" + recipeID + "\n" +
                 ", ingredientID=" + ingredientID + "\n" +
                 ", quantity=" + quantity + "\n" +
-                ", unit='" + unit + "\n" +
-                ", details='" + details +
+                ", unit=" + unit + "\n" +
+                ", details=" + details +
                 '}' + "\n";
     }
 }

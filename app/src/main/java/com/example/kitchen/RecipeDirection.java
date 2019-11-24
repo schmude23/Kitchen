@@ -115,8 +115,8 @@ public class RecipeDirection {
     public String toString() {
         return "RecipeDirection{" +
                 "keyID=" + keyID +
-                ", recipeID=" + recipeID + + '\'' +
-                ", directionText='" + directionText  + "\n" +
+                ", recipeID=" + recipeID  +
+                ", directionText=" + directionText  + "\n" +
                 ", directionNumber=" + directionNumber +
                 '}' + "\n";
     }

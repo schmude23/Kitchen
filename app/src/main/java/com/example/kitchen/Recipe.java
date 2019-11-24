@@ -49,6 +49,7 @@ class Recipe implements Comparable<Recipe>{
      * @param string the string representation of the Recipe
      */
     public Recipe(String string) {
+
         this();
 
         int keyID = -1;
@@ -64,6 +65,7 @@ class Recipe implements Comparable<Recipe>{
 
         //Split the string on some identifiers.
         String[] segments = string.split("[=,]");
+
 
         //Try to get KeyID
         if (segments[0].equals("Recipe{keyID")) {
@@ -114,7 +116,7 @@ class Recipe implements Comparable<Recipe>{
         if (segments[8].equals(" total_time")) {
 
             try {
-                total_time = Integer.parseInt(segments[9]);
+                total_time = Integer.parseInt(segments[9].trim());
             } catch (Exception e) {
                 return;
             }
@@ -140,7 +142,7 @@ class Recipe implements Comparable<Recipe>{
 
         //Try to get Ingredients List
 
-        segments = string.split("RecipeIngredient{");
+        segments = string.split("RecipeIngredient\\{");
 
         for (int i = 1; i < segments.length; i++) {
 
@@ -185,12 +187,16 @@ class Recipe implements Comparable<Recipe>{
                 }
             }
 
-            if (partsOfIngredient[8].equals("unit")) {
+            if (partsOfIngredient[8].trim().equals("unit")) {
                 unit = partsOfIngredient[9].trim();
             }
 
-            if (partsOfIngredient[10].equals("details")) {
-                details = partsOfIngredient[11].trim();
+            if (partsOfIngredient[10].trim().equals("details")) {
+
+                if (partsOfIngredient[11].length() != 0) {
+                    String part = partsOfIngredient[11].split("\\}")[0];
+                    details = part.trim();
+                }
             }
 
             RecipeIngredient ingredient = new RecipeIngredient(ingredientKeyID, recipeId, ingredientId, quantity, unit, details);
@@ -204,7 +210,7 @@ class Recipe implements Comparable<Recipe>{
 
         //Try to get the directions list
 
-        segments = string.split("RecipeDirection{");
+        segments = string.split("RecipeDirection\\{");
 
         for (int i = 1; i < segments.length; i++) {
 
@@ -237,7 +243,8 @@ class Recipe implements Comparable<Recipe>{
 
             if (partsOfDirection[6].trim().equals("directionNumber")) {
                 try {
-                    directionNumber = Integer.parseInt(partsOfDirection[7].trim());
+                    String part = partsOfDirection[7].split("\\}")[0];
+                    directionNumber = Integer.parseInt(part.trim());
                 } catch (NumberFormatException ex) {
                     break;
                 }
@@ -249,7 +256,7 @@ class Recipe implements Comparable<Recipe>{
         }
 
         //Try to get the categories
-        segments = string.split("RecipeCategory{");
+        segments = string.split("RecipeCategory\\{");
 
         for (int i = 1; i < segments.length; i++) {
 
@@ -278,11 +285,15 @@ class Recipe implements Comparable<Recipe>{
 
             if (partsOfCategory[4].trim().equals("categoryID")) {
                 try {
-                    categoryId = Integer.parseInt(partsOfCategory[5].trim());
+                    String part = partsOfCategory[5].split("\\}")[0];
+                    categoryId = Integer.parseInt(part.trim());
                 } catch (NumberFormatException ex) {
                     break;
                 }
             }
+
+            RecipeCategory category = new RecipeCategory(categoryKeyID, recipeId, categoryId);
+            categoryList.add(category);
 
         }
 
@@ -584,7 +595,7 @@ class Recipe implements Comparable<Recipe>{
 
         return "Recipe{" +
                 "keyID=" + keyID +
-                ", title='" + title + '\'' + "\n" +
+                ", title=" + title + "\n" +
                 ", servings=" + servings + "\n" +
                 ", prep_time=" + prep_time + "\n" +
                 ", total_time=" + total_time + "\n" +
