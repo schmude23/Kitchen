@@ -285,7 +285,7 @@ class Recipe implements Comparable<Recipe>{
                 }
             }
 
-            if (partsOfCategory[4].trim().equals("categoryID")) {
+            if (partsOfCategory[4].trim().equals("categoryName")) {
                     String categoryName = partsOfCategory[5].split("\\}")[0];
                     DatabaseHelper db = new DatabaseHelper(context);
                     categoryId = db.getCategory(categoryName);

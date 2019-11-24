@@ -422,7 +422,7 @@ public class It3_DatabaseTester {
     public void testCreateRecipeUsingString() {
         setUp();
 
-        String initialStr = testRecipe.toString();
+        String initialStr = testRecipe.toString(appContext);
         Recipe retrieved = new Recipe(initialStr, appContext);
 
         // Check all recipe fields are accurate
