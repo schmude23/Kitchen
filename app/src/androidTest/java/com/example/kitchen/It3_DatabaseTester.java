@@ -357,6 +357,33 @@ public class It3_DatabaseTester {
         tearDown();
     }
 
+    /**
+     * This method tests that the Recipe(String) constructor is working.
+     */
+    @Test
+    public void testCreateRecipeUsingString() {
+        setUp();
+
+        String initialStr = testRecipe.toString(appContext);
+        Recipe retrieved = new Recipe(initialStr, appContext);
+
+        // Check all recipe fields are accurate
+        assertEquals("testCreateRecipeUsingString - Correct Title", testRecipe.getTitle(), retrieved.getTitle());
+        assertEquals("testCreateRecipeUsingString - Correct Servings", testRecipe.getServings(), retrieved.getServings(), 0);
+        assertEquals("testCreateRecipeUsingString - Correct prep_time", testRecipe.getPrep_time(), retrieved.getPrep_time(), 0);
+        assertEquals("testCreateRecipeUsingString - Correct total_time", testRecipe.getTotal_time(), retrieved.getTotal_time(), 0);
+        assertEquals("testCreateRecipeUsingString - Correct Ingredient Unit", testRecipe.getIngredientList().get(0).getUnit(), retrieved.getIngredientList().get(0).getUnit());
+        assertEquals("testCreateRecipeUsingString - Correct Ingredient Quantity", testRecipe.getIngredientList().get(0).getQuantity(), retrieved.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("testCreateRecipeUsingString - Correct Ingredient Details", testRecipe.getIngredientList().get(0).getDetails(), retrieved.getIngredientList().get(0).getDetails());
+        assertEquals("testCreateRecipeUsingString - Correct First Direction Number", testRecipe.getDirectionsList().get(0).getDirectionNumber(), retrieved.getDirectionsList().get(0).getDirectionNumber());
+        assertEquals("testCreateRecipeUsingString - Correct First Direction Text", testRecipe.getDirectionsList().get(0).getDirectionText(), retrieved.getDirectionsList().get(0).getDirectionText());
+        assertEquals("testCreateRecipeUsingString - Correct Second Direction Number", testRecipe.getDirectionsList().get(1).getDirectionNumber(), retrieved.getDirectionsList().get(1).getDirectionNumber());
+        assertEquals("testCreateRecipeUsingString - Correct Second Direction Text", testRecipe.getDirectionsList().get(1).getDirectionText(), retrieved.getDirectionsList().get(1).getDirectionText());
+        assertEquals("testCreateRecipeUsingString - Correct Category", testRecipe.getCategoryList().get(0).getCategoryID(), retrieved.getCategoryList().get(0).getCategoryID());
+
+        tearDown();
+    }
+
     // Helper Methods:
 
     /**
@@ -413,32 +440,6 @@ public class It3_DatabaseTester {
 
         testRecipe2 = new Recipe("TestRecipe2", 4, 5, 15, false, listOfIngredients, listOfDirections, listOfCategories);
         recipeID2 = testDatabase.addRecipe(testRecipe2);
-    }
-
-    /**
-     * This method tests that the Recipe(String) constructor is working.
-     */
-    @Test
-    public void testCreateRecipeUsingString() {
-        setUp();
-
-        String initialStr = testRecipe.toString(appContext);
-        Recipe retrieved = new Recipe(initialStr, appContext);
-
-        // Check all recipe fields are accurate
-        assertEquals("testCreateRecipeUsingString - Correct Title", testRecipe.getTitle(), retrieved.getTitle());
-        assertEquals("testCreateRecipeUsingString - Correct Servings", testRecipe.getServings(), retrieved.getServings(), 0);
-        assertEquals("testCreateRecipeUsingString - Correct prep_time", testRecipe.getPrep_time(), retrieved.getPrep_time(), 0);
-        assertEquals("testCreateRecipeUsingString - Correct total_time", testRecipe.getTotal_time(), retrieved.getTotal_time(), 0);
-        assertEquals("testCreateRecipeUsingString - Correct Ingredient Unit", testRecipe.getIngredientList().get(0).getUnit(), retrieved.getIngredientList().get(0).getUnit());
-        assertEquals("testCreateRecipeUsingString - Correct Ingredient Quantity", testRecipe.getIngredientList().get(0).getQuantity(), retrieved.getIngredientList().get(0).getQuantity(), 0);
-        assertEquals("testCreateRecipeUsingString - Correct Ingredient Details", testRecipe.getIngredientList().get(0).getDetails(), retrieved.getIngredientList().get(0).getDetails());
-        assertEquals("testCreateRecipeUsingString - Correct First Direction Number", testRecipe.getDirectionsList().get(0).getDirectionNumber(), retrieved.getDirectionsList().get(0).getDirectionNumber());
-        assertEquals("testCreateRecipeUsingString - Correct First Direction Text", testRecipe.getDirectionsList().get(0).getDirectionText(), retrieved.getDirectionsList().get(0).getDirectionText());
-        assertEquals("testCreateRecipeUsingString - Correct Second Direction Number", testRecipe.getDirectionsList().get(1).getDirectionNumber(), retrieved.getDirectionsList().get(1).getDirectionNumber());
-        assertEquals("testCreateRecipeUsingString - Correct Second Direction Text", testRecipe.getDirectionsList().get(1).getDirectionText(), retrieved.getDirectionsList().get(1).getDirectionText());
-        assertEquals("testCreateRecipeUsingString - Correct Category", testRecipe.getCategoryList().get(0).getCategoryID(), retrieved.getCategoryList().get(0).getCategoryID());
-
     }
 
 }
