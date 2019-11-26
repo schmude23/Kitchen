@@ -442,4 +442,41 @@ public class It3_DatabaseTester {
         recipeID2 = testDatabase.addRecipe(testRecipe2);
     }
 
+    /**
+     * This method tests that the Recipe Copy Paste Creator constructor is working.
+     */
+    @Test
+    public void testRecipeCopyPasteCreator() {
+        RecipeCopyPasteCreator rcp = new RecipeCopyPasteCreator();
+        String test = "Overnight Apple Cinnamon French Toast\n" +
+                "Rated as 4.53 out of 5 Stars\n" +
+                "Prep\n" +
+                "\n" +
+                "20 m\n" +
+                "Cook\n" +
+                "\n" +
+                "1 h 30 m\n" +
+                "Ready In\n" +
+                "\n" +
+                "15 h\n" +
+                "Recipe By:CALJAKE\n" +
+                "\"This is a great brunch recipe, it's perfect for large gatherings. A yummy bread casserole baked with sweet apple filling.\"\n" +
+                "Ingredients\n" +
+                "3/4 cup butter, melted\n" +
+                "1 cup brown sugar\n" +
+                "1 teaspoon ground cinnamon\n" +
+                "2 (21 ounce) cans apple pie filling\n" +
+                "20 slices white bread\n" +
+                " \n" +
+                "6 eggs\n" +
+                "1 1/2 cups milk\n" +
+                "1 teaspoon vanilla extract\n" +
+                "1/2 cup maple syrup\n" +
+                "Directions\n" +
+                "Grease a 9x13 inch baking pan. In a small bowl, stir together the melted butter, brown sugar and cinnamon.\n" +
+                "Spread the sugar mixture into the bottom of the prepared pan. Spread the apple pie filling evenly over the sugar mixture. Layer the bread slices on top of the filling, pressing down as you go. In a medium bowl, beat the eggs with the milk and vanilla. Slowly pour this mixture over the bread, making sure that it is completely absorbed. Cover the pan with aluminum foil and refrigerate overnight.\n" +
+                "In the morning, preheat oven to 350 degrees F (175 degrees C).\n" +
+                "Place covered pan into the oven and bake at 350 degrees F (175 degrees C) for 60 to 75 minutes. When done remove from oven and turn on broiler. Remove foil and drizzle maple syrup on top of the egg topping; broil for 2 minutes, or until the syrup begins to caramelize. Remove from the oven and let stand for 10 minutes, then cut into squares. Invert the pan onto a serving tray or baking sheet so the apple filling is on top. Serve hot.";
+        rcp.main(test);
+    }
 }

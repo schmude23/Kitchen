@@ -1296,13 +1296,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method check to make sure that either volume or mass and will return -1 a unit type of
+     * none is given or a type mismatch occures
+     *
+     * @param origUnit, reqUnit, quantity
+     * @return If successful, will return a value of the quantity in the new unit, else -1
+     */
+    public double convertUnit(String origUnit, String reqUnit, double quantity){
+
+        if(origUnit.equalsIgnoreCase("none")|| reqUnit.equalsIgnoreCase("none")){
+            return -1;
+        }
+
+        //for checking Mass units
+        if((origUnit.equalsIgnoreCase("tablespoon(s)") || origUnit.equalsIgnoreCase("teaspoon(s)") ||
+                origUnit.equalsIgnoreCase("pint(s)") || origUnit.equalsIgnoreCase("fluid ounce(s)") ||
+                origUnit.equalsIgnoreCase("quart(s)") || origUnit.equalsIgnoreCase("gallon(s)") ||
+                origUnit.equalsIgnoreCase("pinch(es)"))
+                &&
+                (reqUnit.equalsIgnoreCase("tablespoon(s)") || reqUnit.equalsIgnoreCase("teaspoon(s)") ||
+                reqUnit.equalsIgnoreCase("pint(s)") || reqUnit.equalsIgnoreCase("fluid ounce(s)") ||
+                reqUnit.equalsIgnoreCase("quart(s)") || reqUnit.equalsIgnoreCase("gallon(s)") ||
+                reqUnit.equalsIgnoreCase("pinch(es)"))){
+            return convertUnitMass(origUnit, reqUnit, quantity);
+        }
+
+        //for checking Volume units
+        if((origUnit.equalsIgnoreCase("grain(s)") || origUnit.equalsIgnoreCase("ounce(s)") ||
+                origUnit.equalsIgnoreCase("pound(s)") || origUnit.equalsIgnoreCase("kilogram(s)") ||
+                origUnit.equalsIgnoreCase("milligram(s)"))
+                &&
+                (reqUnit.equalsIgnoreCase("grain(s)") || reqUnit.equalsIgnoreCase("ounce(s)") ||
+                reqUnit.equalsIgnoreCase("pound(s)") || reqUnit.equalsIgnoreCase("kilogram(s)") ||
+                reqUnit.equalsIgnoreCase("milligram(s)"))){
+            return convertUnitVolume(origUnit, reqUnit, quantity);
+        }
+
+        //if both are not mass or both are not volume then there must be a mismatch
+        return -1;
+
+    }
+
+
+    /**
      * This method returns the updated quantity. First, the measurement is reduced
      * to the base unit of cups. Then rescaled back to the requested unit.
      *
      * @param origUnit, reqUnit, quantity
      * @return If successful, will return a value of the quantity in the new unit
      */
-    public double convertUnit(String origUnit, String reqUnit, double quantity) {
+    public double convertUnitVolume(String origUnit, String reqUnit, double quantity) {
+        //TODO: Test/Correct
         //converting all values to cups
         if (origUnit.contentEquals("tablespoon(s)")) {
             quantity = quantity * 0.0625;
@@ -1313,14 +1357,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (origUnit.contentEquals("pint(s)")) {
             quantity = quantity * 2;
         }
+        if (origUnit.contentEquals("fluid ounce(s)")) {
+            //TODO: update
+        }
         if (origUnit.contentEquals("quart(s)")) {
             quantity = quantity * 4;
         }
         if (origUnit.contentEquals("gallon(s)")) {
             quantity = quantity * 16;
-        }
-        if (origUnit.contentEquals("pound(s)")) {
-            quantity = quantity * 1.917222837;
         }
         if (origUnit.contentEquals("pinch(es)")) {
             quantity = quantity / 768;
@@ -1329,7 +1373,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return -1;
         }
 
-        //converting quantity to desired unit
+        //converting quantity to cups
         if (reqUnit.contentEquals("tablespoon(s)")) {
             quantity = quantity / 0.0625;
         }
@@ -1342,11 +1386,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (reqUnit.contentEquals("quart(s)")) {
             quantity = quantity / 4;
         }
+        if (reqUnit.contentEquals("fluid ounce(s)")) {
+            //TODO: update
+        }
         if (reqUnit.contentEquals("gallon(s)")) {
             quantity = quantity / 16;
-        }
-        if (reqUnit.contentEquals("pound(s)")) {
-            quantity = quantity / 1.917222837;
         }
         if (reqUnit.contentEquals("pinch(es)")) {
             quantity = quantity * 768;
@@ -1358,14 +1402,67 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return Double.parseDouble(String.format("%.2f", quantity));
     }
 
-
     /**
-     * This method scales and updates all ingredients as well as the recipe objects serving size.
-     * This method does NOT update the database
+     * This method returns the updated quantity. First, the measurement is reduced
+     * to the base unit of grams. Then rescaled back to the requested unit.
      *
-     * @param recipe, desiredServing
-     * @return If successful, will return true
+     * @param origUnit, reqUnit, quantity
+     * @return If successful, will return a value of the quantity in the new unit
      */
+    public double convertUnitMass(String origUnit, String reqUnit, double quantity) {
+        //TODO: Test/Correct
+        if (origUnit.contentEquals("grain(s)")) {
+            quantity = quantity *  0.06479891;
+        }
+        if (origUnit.contentEquals("ounce(s)")) {
+            quantity = quantity * 28.3495231;
+        }
+        if (origUnit.contentEquals("pound(s)")) {
+            quantity = quantity * 453.59237;
+        }
+        if (origUnit.contentEquals("kilogram(s)")) {
+            quantity = quantity * 1000;
+        }
+        if (origUnit.contentEquals("milligram(s)")) {
+            quantity = quantity / 1000;
+        }
+        if (origUnit.contentEquals("none")) {
+            return -1;
+        }
+
+
+
+        //converting quantity to grams
+        if (reqUnit.contentEquals("grain(s)")) {
+            quantity = quantity /  0.06479891;
+        }
+        if (reqUnit.contentEquals("ounce(s)")) {
+            quantity = quantity / 28.3495231;
+        }
+        if (reqUnit.contentEquals("pound(s)")) {
+            quantity = quantity / 453.59237;
+        }
+        if (reqUnit.contentEquals("kilogram(s)")) {
+            quantity = quantity / 1000;
+        }
+        if (reqUnit.contentEquals("milligram(s)")) {
+            quantity = quantity * 1000;
+        }
+        if (reqUnit.contentEquals("none")) {
+            return -1;
+        }
+
+        //converts the Double to have 2 decimal places
+        return Double.parseDouble(String.format("%.2f", quantity));
+    }
+
+        /**
+         * This method scales and updates all ingredients as well as the recipe objects serving size.
+         * This method does NOT update the database
+         *
+         * @param recipe, desiredServing
+         * @return If successful, will return true
+         */
     public Recipe scaleRecipe(Recipe recipe, double desiredServing) {
         if (recipe.getKeyID() == -1)
             return null;
