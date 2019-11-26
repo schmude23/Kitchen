@@ -945,14 +945,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * This method retrieves the ingredient for the given ingredient Title
-     * Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_TITLE + " = ? ", new String[]{String.valueOf(recipeTitle)});
-     * if (cursor != null) {
-     * cursor.moveToFirst();
-     * recipe = mapRecipe(cursor);
-     * cursor.moveToNext();
-     * <p>
-     * cursor.close();
-     * }
      *
      * @param ingredientTitle
      * @return The recipe corresponding to the provided ingredient Title, or -1 if one is not found.
@@ -1008,6 +1000,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public boolean editIngredient(Ingredient ingredient) {
         int id = ingredient.getKeyID();
+
+        //TODO: TEST/CORRECT
+        if(getIngredient(ingredient.getName()) != -1){
+            return false;
+        }
+        
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues cVals = new ContentValues();
         cVals.put(IT_NAME, ingredient.getName());
