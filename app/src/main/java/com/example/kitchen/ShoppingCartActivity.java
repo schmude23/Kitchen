@@ -216,7 +216,6 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
         // Apply the adapter to the spinner
         newUnitSpinner.setAdapter(newUnitAdapter);
         newUnitSpinner.setOnItemSelectedListener(this);
-
         convertUnitDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         convertUnitDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
         convertUnitDialog.show();
@@ -233,7 +232,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
                 if (shoppingCart.get(i).getUnit().compareTo(oldUnit) == 0) {
                     shoppingCart.get(i).setUnit(newUnit);
                     double newQuantity = database.convertUnit(oldUnit, newUnit, shoppingCart.get(i).getQuantity());
-                    Toast.makeText(this, " " + newQuantity, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, " " + newQuantity, Toast.LENGTH_SHORT).show();
                     shoppingCart.get(i).setQuantity(newQuantity);
                 }
 
@@ -241,7 +240,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
             shoppingCartAdapter.notifyDataSetChanged();
         }
 
-        //double quanitity = database.convertUnit(oldUnit, newUnit, originalQuantity);
+//        double quanitity = database.convertUnit(oldUnit, newUnit, originalQuantity);
         Context context = getApplicationContext();
 
         CharSequence text = oldUnit + " converted to " + newUnit;

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -74,6 +75,16 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
                 ShowPopup(view, position);
             }
         });
+
+        ArrayList<Ingredient> ingredients = database.getAllIngredients();
+        String [] ingredientStrings = new String [ingredients.size()];
+        for(int i = 0;i < ingredients.size(); i++){
+            ingredientStrings[i] = ingredients.get(i).getName();
+        }
+        ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, ingredientStrings);
+        AutoCompleteTextView textView =  findViewById(R.id.edit_ingredient_ingredient_edit_text);
+        textView.setAdapter(autoCompleteAdapter);
+
 
 
     }
@@ -193,6 +204,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
         Button popupRemoveButton;
         this.position = position;
         myDialog.setContentView(R.layout.edit_ingredient_popup);
+
         editIngredientPopupIngredientEditText = myDialog.findViewById(R.id.edit_ingredient_popup_ingredient_edit_text);
         editIngredientPopupIngredientDetailsEditText = myDialog.findViewById(R.id.edit_ingredient_popup_ingredient_details_edit_text);
         editIngredientPopupQuantityEditText = myDialog.findViewById(R.id.edit_ingredient_popup_ingredient_quantity_edit_text);

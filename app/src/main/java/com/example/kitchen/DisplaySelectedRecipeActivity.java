@@ -286,6 +286,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
                 Intent shareRecipe = new Intent(this, ShareRecipeActivity.class);
                 shareRecipe.putExtra("recipeId", recipe.getKeyID());
                 startActivity(shareRecipe);
+                return true;
             case R.id.action_view_cart:
                 Intent viewCart = new Intent(this, ShoppingCartActivity.class);
                 viewCart.putExtra("recipeId", -1);

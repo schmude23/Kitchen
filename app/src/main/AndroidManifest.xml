@@ -3,6 +3,10 @@
     package="com.example.kitchen">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -20,6 +24,7 @@
         <activity android:name=".DisplaySelectedRecipeActivity" />
         <activity android:name=".RecipeListActivity" />
         <activity android:name=".IngredientListActivity"/>
+        <activity android:name=".ShareRecipeActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
