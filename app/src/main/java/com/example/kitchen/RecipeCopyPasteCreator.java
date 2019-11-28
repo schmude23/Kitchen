@@ -1,5 +1,6 @@
 package com.example.kitchen;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Scanner;
 import java.util.List;
@@ -11,9 +12,7 @@ public class RecipeCopyPasteCreator {
     private ArrayList<RecipeDirection> recipeDirectionList;
     private Recipe recipe = new Recipe();
     //TODO: how do you set up the database?
-    Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-    DatabaseHelper database = new DatabaseHelper(appContext.getApplicationContext());
-
+    DatabaseHelper database = new DatabaseHelper(CopyPasteRecipeActivity);
     /**
      * This method creates takes a string made from a found recipe and converts and normalizes the
      * string. then creates a properly formatted recipe.
@@ -22,7 +21,7 @@ public class RecipeCopyPasteCreator {
      * @return true if the operation was successful, false otherwise
      */
     public Boolean main(String recipeTxt) {
-        //TODO: implement
+        //TODO: Test/Correct
         recipeScanner = new Scanner(recipeTxt);
         List<String> tokens = new ArrayList<>();
         String recipeTitle = "";
@@ -86,7 +85,8 @@ public class RecipeCopyPasteCreator {
         if(tokens.get(0).equalsIgnoreCase("total")){
             totalMapper(tokens);
         }
-        if(tokens.get(0).equalsIgnoreCase("Ingredient")){
+        if(tokens.get(0).equalsIgnoreCase("Ingredient") ||
+                tokens.get(0).equalsIgnoreCase("Ingredients") ){
             ingredinetsMapper();
         }
         if(tokens.get(0).equalsIgnoreCase("Directions")){
