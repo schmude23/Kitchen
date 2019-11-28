@@ -1005,7 +1005,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(getIngredient(ingredient.getName()) != -1){
             return false;
         }
-        
+
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues cVals = new ContentValues();
         cVals.put(IT_NAME, ingredient.getName());
@@ -1306,7 +1306,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return -1;
         }
 
-        //for checking Mass units
+        //for checking Volume units
         if((origUnit.equalsIgnoreCase("tablespoon(s)") || origUnit.equalsIgnoreCase("teaspoon(s)") ||
                 origUnit.equalsIgnoreCase("pint(s)") || origUnit.equalsIgnoreCase("fluid ounce(s)") ||
                 origUnit.equalsIgnoreCase("quart(s)") || origUnit.equalsIgnoreCase("gallon(s)") ||
@@ -1316,10 +1316,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 reqUnit.equalsIgnoreCase("pint(s)") || reqUnit.equalsIgnoreCase("fluid ounce(s)") ||
                 reqUnit.equalsIgnoreCase("quart(s)") || reqUnit.equalsIgnoreCase("gallon(s)") ||
                 reqUnit.equalsIgnoreCase("pinch(es)"))){
-            return convertUnitMass(origUnit, reqUnit, quantity);
+
+            return convertUnitVolume(origUnit, reqUnit, quantity);
         }
 
-        //for checking Volume units
+        //for checking Mass units
         if((origUnit.equalsIgnoreCase("grain(s)") || origUnit.equalsIgnoreCase("ounce(s)") ||
                 origUnit.equalsIgnoreCase("pound(s)") || origUnit.equalsIgnoreCase("kilogram(s)") ||
                 origUnit.equalsIgnoreCase("milligram(s)"))
@@ -1327,7 +1328,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 (reqUnit.equalsIgnoreCase("grain(s)") || reqUnit.equalsIgnoreCase("ounce(s)") ||
                 reqUnit.equalsIgnoreCase("pound(s)") || reqUnit.equalsIgnoreCase("kilogram(s)") ||
                 reqUnit.equalsIgnoreCase("milligram(s)"))){
-            return convertUnitVolume(origUnit, reqUnit, quantity);
+            return convertUnitMass(origUnit, reqUnit, quantity);
         }
 
         //if both are not mass or both are not volume then there must be a mismatch
@@ -1346,17 +1347,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public double convertUnitVolume(String origUnit, String reqUnit, double quantity) {
         //TODO: Test/Correct
         //converting all values to cups
+        if (origUnit.contentEquals("pinch(es)")) {
+            quantity = quantity / 768;
+        }
         if (origUnit.contentEquals("tablespoon(s)")) {
             quantity = quantity * 0.0625;
         }
         if (origUnit.contentEquals("teaspoon(s)")) {
             quantity = quantity * 0.0208333;
         }
+        if (origUnit.contentEquals("fluid ounce(s)")) {
+            quantity = quantity / 8;
+        }
         if (origUnit.contentEquals("pint(s)")) {
             quantity = quantity * 2;
-        }
-        if (origUnit.contentEquals("fluid ounce(s)")) {
-            //TODO: update
         }
         if (origUnit.contentEquals("quart(s)")) {
             quantity = quantity * 4;
@@ -1364,19 +1368,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (origUnit.contentEquals("gallon(s)")) {
             quantity = quantity * 16;
         }
-        if (origUnit.contentEquals("pinch(es)")) {
-            quantity = quantity / 768;
-        }
-        if (origUnit.contentEquals("none")) {
-            return -1;
-        }
+
 
         //converting quantity to cups
-        if (reqUnit.contentEquals("tablespoon(s)")) {
-            quantity = quantity / 0.0625;
+        if (reqUnit.contentEquals("pinch(es)")) {
+            quantity = quantity * 768;
         }
         if (reqUnit.contentEquals("teaspoon(s)")) {
             quantity = quantity / 0.0208333;
+        }
+        if (reqUnit.contentEquals("tablespoon(s)")) {
+            quantity = quantity / 0.0625;
+        }
+        if (reqUnit.contentEquals("fluid ounce(s)")) {
+            quantity = quantity * 8;
         }
         if (reqUnit.contentEquals("pint(s)")) {
             quantity = quantity / 2;
@@ -1384,18 +1389,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (reqUnit.contentEquals("quart(s)")) {
             quantity = quantity / 4;
         }
-        if (reqUnit.contentEquals("fluid ounce(s)")) {
-            //TODO: update
-        }
         if (reqUnit.contentEquals("gallon(s)")) {
             quantity = quantity / 16;
         }
-        if (reqUnit.contentEquals("pinch(es)")) {
-            quantity = quantity * 768;
-        }
-        if (reqUnit.contentEquals("none")) {
-            return -1;
-        }
+
         //converts the Double to have 2 decimal places
         return Double.parseDouble(String.format("%.2f", quantity));
     }
@@ -1424,11 +1421,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (origUnit.contentEquals("milligram(s)")) {
             quantity = quantity / 1000;
         }
-        if (origUnit.contentEquals("none")) {
-            return -1;
-        }
-
-
 
         //converting quantity to grams
         if (reqUnit.contentEquals("grain(s)")) {
@@ -1445,9 +1437,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         if (reqUnit.contentEquals("milligram(s)")) {
             quantity = quantity * 1000;
-        }
-        if (reqUnit.contentEquals("none")) {
-            return -1;
         }
 
         //converts the Double to have 2 decimal places
