@@ -1,6 +1,5 @@
 package com.example.kitchen;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Scanner;
 import java.util.List;
@@ -11,8 +10,20 @@ public class RecipeCopyPasteCreator {
     private ArrayList<RecipeIngredient> recipeIngredientList;
     private ArrayList<RecipeDirection> recipeDirectionList;
     private Recipe recipe = new Recipe();
-    //TODO: how do you set up the database?
-    DatabaseHelper database = new DatabaseHelper(CopyPasteRecipeActivity);
+    Context appContext;
+    DatabaseHelper database;
+
+    /**
+     * This is the constructor for this class.
+     *
+     * @param context The application context. This is needed for database access.
+     */
+    public RecipeCopyPasteCreator(Context context) {
+        recipe = new Recipe();
+        appContext = context;
+        database = new DatabaseHelper(appContext);
+    }
+
     /**
      * This method creates takes a string made from a found recipe and converts and normalizes the
      * string. then creates a properly formatted recipe.
@@ -21,7 +32,7 @@ public class RecipeCopyPasteCreator {
      * @return true if the operation was successful, false otherwise
      */
     public Boolean main(String recipeTxt) {
-        //TODO: Test/Correct
+        //TODO: implement
         recipeScanner = new Scanner(recipeTxt);
         List<String> tokens = new ArrayList<>();
         String recipeTitle = "";
@@ -42,7 +53,9 @@ public class RecipeCopyPasteCreator {
             while (lineScanner.hasNext()) {
                 tokens.add(lineScanner.next());
             }
-            tokenChecker(tokens);
+            if(tokens.size() > 0) {
+                tokenChecker(tokens);
+            }
 
             lineScanner.close();
         }
@@ -82,11 +95,10 @@ public class RecipeCopyPasteCreator {
                 tokens.get(0).equalsIgnoreCase("prepare")){
             prepMapper(tokens);
         }
-        if(tokens.get(0).equalsIgnoreCase("total")){
+        if(tokens.get(0).equalsIgnoreCase("total") || tokens.get(0).equalsIgnoreCase("Ready")){
             totalMapper(tokens);
         }
-        if(tokens.get(0).equalsIgnoreCase("Ingredient") ||
-                tokens.get(0).equalsIgnoreCase("Ingredients") ){
+        if(tokens.get(0).equalsIgnoreCase("Ingredient") || tokens.get(0).equalsIgnoreCase("Ingredients")){
             ingredinetsMapper();
         }
         if(tokens.get(0).equalsIgnoreCase("Directions")){
@@ -228,7 +240,8 @@ public class RecipeCopyPasteCreator {
             tokens.add(lineScanner.next());
             if(tokens.get(0).equalsIgnoreCase("directions")){
                 directionsMapper();
-                return null;
+                recipeIngredientList = ingredientList;
+                return ingredientList;
             }
             while (lineScanner.hasNext()) {
                 tokens.add(lineScanner.next());
@@ -320,7 +333,7 @@ public class RecipeCopyPasteCreator {
     private String unitChecker(String token){
         //TODO: TEST/CORRECT
 
-        token = token.replaceAll(".","");
+        token = token.replaceAll("/\\./g","");
         token = token.replaceAll(" ","");
         if (token.equalsIgnoreCase("pinch(es)") || token.equalsIgnoreCase("pinches") || token.equalsIgnoreCase("pinch") || token.equalsIgnoreCase("pn") || token.equalsIgnoreCase("pns")) {
             return "pinch(es)";
@@ -330,6 +343,9 @@ public class RecipeCopyPasteCreator {
         }
         if (token.equalsIgnoreCase("teaspoon(s)") || token.equalsIgnoreCase("teaspoons") || token.equalsIgnoreCase("teaspoon")|| token.equalsIgnoreCase("tsp") || token.equalsIgnoreCase("tspn")) {
             return "teaspoon(s)";
+        }
+        if (token.equalsIgnoreCase("cups(s)") || token.equalsIgnoreCase("cups") || token.equalsIgnoreCase("cup") || token.equalsIgnoreCase("cp") || token.equalsIgnoreCase("cps")) {
+            return "cup(s)";
         }
         if (token.equalsIgnoreCase("pint(s)") || token.equalsIgnoreCase("pints") || token.equalsIgnoreCase("pint") || token.equalsIgnoreCase("pts")|| token.equalsIgnoreCase("pt")|| token.equalsIgnoreCase("pnt")) {
             return "pint(s)";
@@ -354,6 +370,9 @@ public class RecipeCopyPasteCreator {
         }
         if (token.equalsIgnoreCase("kilogram(s)") || token.equalsIgnoreCase("kilograms") || token.equalsIgnoreCase("kilogram") || token.equalsIgnoreCase("kgs") || token.equalsIgnoreCase("kg") || token.equalsIgnoreCase("kgm") || token.equalsIgnoreCase("kgms")) {
             return "kilogram(s)";
+        }
+        if (token.equalsIgnoreCase("gram(s)") || token.equalsIgnoreCase("grams") || token.equalsIgnoreCase("gram") || token.equalsIgnoreCase("g") || token.equalsIgnoreCase("gs")) {
+            return "gram(s)";
         }
         if (token.equalsIgnoreCase("milligram(s)") || token.equalsIgnoreCase("milligrams") || token.equalsIgnoreCase("milligram") || token.equalsIgnoreCase("mg") || token.equalsIgnoreCase("mgs")) {
             return "milligram(s)";

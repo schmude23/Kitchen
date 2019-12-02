@@ -447,9 +447,10 @@ public class It3_DatabaseTester {
      */
     @Test
     public void testRecipeCopyPasteCreator() {
-        RecipeCopyPasteCreator rcp = new RecipeCopyPasteCreator();
+        RecipeCopyPasteCreator rcp = new RecipeCopyPasteCreator(appContext.getApplicationContext());
         String test = "Overnight Apple Cinnamon French Toast\n" +
-                "Rated as 4.53 out of 5 Stars\n" +
+                "Servings\n" +
+                "10\n" +
                 "Prep\n" +
                 "\n" +
                 "20 m\n" +
