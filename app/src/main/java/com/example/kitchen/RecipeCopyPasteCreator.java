@@ -9,10 +9,21 @@ public class RecipeCopyPasteCreator {
     private Scanner recipeScanner;
     private ArrayList<RecipeIngredient> recipeIngredientList;
     private ArrayList<RecipeDirection> recipeDirectionList;
-    private Recipe recipe = new Recipe();
-    //TODO: how do you set up the database?
-    Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-    DatabaseHelper database = new DatabaseHelper(appContext.getApplicationContext());
+    private Recipe recipe;
+    Context appContext;
+    DatabaseHelper database;
+
+    /**
+     * This is the constructor for this class.
+     *
+     * @param context The application context. This is needed for database access.
+     */
+    public RecipeCopyPasteCreator(Context context) {
+        recipe = new Recipe();
+        appContext = context;
+        database = new DatabaseHelper(appContext);
+    }
+
 
     /**
      * This method creates takes a string made from a found recipe and converts and normalizes the
