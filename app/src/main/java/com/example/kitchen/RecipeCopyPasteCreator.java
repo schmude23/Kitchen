@@ -36,7 +36,8 @@ public class RecipeCopyPasteCreator {
         recipeScanner = new Scanner(recipeTxt);
         List<String> tokens = new ArrayList<>();
         String recipeTitle = "";
-        Boolean titleFound = false;
+        boolean passed = false;
+        boolean titleFound = false;
 
         while (recipeScanner.hasNextLine()) {
             tokens = new ArrayList<>();
@@ -54,7 +55,7 @@ public class RecipeCopyPasteCreator {
                 tokens.add(lineScanner.next());
             }
             if(tokens.size() > 0) {
-                tokenChecker(tokens);
+               passed = tokenChecker(tokens);
             }
 
             lineScanner.close();
@@ -66,9 +67,9 @@ public class RecipeCopyPasteCreator {
         if(recipeIngredientList.size() > 0 && recipeDirectionList.size() >0 ){
             recipe.setTitle(recipeTitle);
             database.addRecipe(recipe);
-            return true;
+            return passed;
         }
-            return false;
+            return passed;
 
     }
 
@@ -79,33 +80,35 @@ public class RecipeCopyPasteCreator {
      * @param tokens
      * @return true if the operation was successful, false otherwise
      */
-    private void tokenChecker(List<String>  tokens){
+    private boolean tokenChecker(List<String>  tokens){
         //maybe check for if any of them error.
-        boolean errorFound;
+        boolean passed = false;
         //TODO: implement
         tokens.set(0, tokens.get(0).replaceAll(":",""));
         if(tokens.get(0).equalsIgnoreCase("servings") ||
                 tokens.get(0).equalsIgnoreCase("serving") ||
                 tokens.get(0).equalsIgnoreCase("yields") ||
                 tokens.get(0).equalsIgnoreCase("yield") ){
-            servingMapper(tokens);
+            passed = servingMapper(tokens);
         }
-        if(tokens.get(0).equalsIgnoreCase("prep") ||
+        if(!passed && (tokens.get(0).equalsIgnoreCase("prep") ||
                 tokens.get(0).equalsIgnoreCase("preparation") ||
-                tokens.get(0).equalsIgnoreCase("prepare")){
-            prepMapper(tokens);
+                tokens.get(0).equalsIgnoreCase("prepare"))){
+            passed = prepMapper(tokens);
         }
-        if(tokens.get(0).equalsIgnoreCase("total") || tokens.get(0).equalsIgnoreCase("Ready")){
-            totalMapper(tokens);
+        if(!passed && (tokens.get(0).equalsIgnoreCase("total") ||
+                tokens.get(0).equalsIgnoreCase("Ready"))){
+            passed = totalMapper(tokens);
         }
-        if(tokens.get(0).equalsIgnoreCase("Ingredient") || tokens.get(0).equalsIgnoreCase("Ingredients")){
-            ingredinetsMapper();
+        if(!passed && (tokens.get(0).equalsIgnoreCase("Ingredient") ||
+                tokens.get(0).equalsIgnoreCase("Ingredients"))){
+            passed = ingredientsMapper();
         }
-        if(tokens.get(0).equalsIgnoreCase("Directions")){
-            directionsMapper();
+        if(!passed && tokens.get(0).equalsIgnoreCase("Directions")){
+            passed = directionsMapper();
         }
 
-
+        return passed;
     }
 
     /**
@@ -224,24 +227,31 @@ public class RecipeCopyPasteCreator {
      *
      * @return RecipeIngredientList if the operation was successful, null otherwise
      */
-    private ArrayList<RecipeIngredient> ingredinetsMapper(){
+    private boolean ingredientsMapper(){
         //TODO: TEST/CORRECT
         //TODO: think about "1/2 cup"
         //TODO: think about split ingredients i.e. Frosting:
         ArrayList<RecipeIngredient> ingredientList = new ArrayList<>();
-        RecipeIngredient ingredient = new RecipeIngredient();
+        RecipeIngredient ingredient;
+        boolean passed = false;
+
         while(recipeScanner.hasNextLine()){
             List<String> tokens = new ArrayList<>();
             Scanner lineScanner = new Scanner(recipeScanner.nextLine());
+            ingredient = new RecipeIngredient();
             String NameDetail = "";
             int beginAt = 2;
 
+            //check for empty lines
+            while(!lineScanner.hasNext()){
+                lineScanner.close();
+                lineScanner = new Scanner(recipeScanner.nextLine());
+            }
             //check once for title "Directions"
             tokens.add(lineScanner.next());
             if(tokens.get(0).equalsIgnoreCase("directions")){
-                directionsMapper();
                 recipeIngredientList = ingredientList;
-                return ingredientList;
+                return (directionsMapper() && passed);
             }
             while (lineScanner.hasNext()) {
                 tokens.add(lineScanner.next());
@@ -286,12 +296,14 @@ public class RecipeCopyPasteCreator {
                 Ingredient testIngredient = new Ingredient();
                 testIngredient.setName(NameDetail);
                 ingredient.setIngredientID(database.addIngredient(testIngredient));
+                ingredient.setDetails("");
             }
 
             ingredientList.add(ingredient);
+            passed = true;
         }
         recipeIngredientList = ingredientList;
-        return ingredientList;
+        return passed;
     }
 
     /**
@@ -299,18 +311,29 @@ public class RecipeCopyPasteCreator {
      *
      * @return RecipeDirectiontList if the operation was successful, null otherwise
      */
-    private ArrayList<RecipeDirection> directionsMapper() {
+    private boolean directionsMapper() {
         //TODO: TEST/CORRECT
         //TODO: think about if directions are pre-numbered
         ArrayList<RecipeDirection> directionList = new ArrayList<>();
         RecipeDirection direction = new RecipeDirection();
+        boolean passed = false;
         int dirNum = 1;
 
 
+        //TODO: give a prliminary check using a for loop if number is first, always start at second slot
         while(recipeScanner.hasNextLine()) {
+            //new line!!!
+            direction = new RecipeDirection();
+            //new line!!
             String directionText = "";
             Scanner lineScanner = new Scanner(recipeScanner.nextLine());
 
+            //check for empty lines
+            while(!lineScanner.hasNext()){
+                lineScanner.close();
+                lineScanner = new Scanner(recipeScanner.nextLine());
+            }
+            
             while (lineScanner.hasNext()) {
                 directionText += lineScanner.next() + " ";
             }
@@ -318,10 +341,11 @@ public class RecipeCopyPasteCreator {
             direction.setDirectionText(directionText);
             directionList.add(direction);
             dirNum++;
+            passed = true;
         }
 
         recipeDirectionList = directionList;
-        return directionList;
+        return passed;
     }
 
     /**
@@ -332,7 +356,6 @@ public class RecipeCopyPasteCreator {
      */
     private String unitChecker(String token){
         //TODO: TEST/CORRECT
-
         token = token.replaceAll("/\\./g","");
         token = token.replaceAll(" ","");
         if (token.equalsIgnoreCase("pinch(es)") || token.equalsIgnoreCase("pinches") || token.equalsIgnoreCase("pinch") || token.equalsIgnoreCase("pn") || token.equalsIgnoreCase("pns")) {
