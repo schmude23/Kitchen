@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 
@@ -24,7 +26,7 @@ public class EditCategoryActivity extends AppCompatActivity {
     private DatabaseHelper database = new DatabaseHelper(this);
     private Recipe recipe;
     private Dialog myDialog;
-    private Button cancelButton;
+    private FloatingActionButton cancelButton;
     private EditText editCategory, editCategoryPopupCategoryEditText;
     private ListView categoryListView;
     private ArrayList<String> categoryList = new ArrayList<String>();
@@ -76,7 +78,7 @@ public class EditCategoryActivity extends AppCompatActivity {
      *
      */
     private void editRecipe() {
-        cancelButton.setVisibility(View.INVISIBLE);
+        cancelButton.hide();
         for (int i = 0; i < recipe.getCategoryList().size(); i++) {
             int id = recipe.getCategoryList().get(i).getCategoryID();
             Category category = database.getCategory(id);
