@@ -18,7 +18,11 @@
         <activity android:name=".ShoppingCartActivity" />
         <activity android:name=".EditIngredientActivity" />
         <activity android:name=".EditRecipeActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".EditProfileActivity" />
         <activity android:name=".EditDirectionActivity" />
+        <activity android:name=".ViewProfileActivity" />
         <activity android:name=".EditCategoryActivity" />
         <activity android:name=".AdvancedSearchActivity" />
         <activity android:name=".DisplaySelectedRecipeActivity" />
