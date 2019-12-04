@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 
@@ -24,7 +26,7 @@ public class EditDirectionActivity extends AppCompatActivity {
     private DatabaseHelper database = new DatabaseHelper(this);
     private Recipe recipe;
     private Dialog myDialog;
-    private Button finishButton;
+    private FloatingActionButton finishButton;
     private EditText directionEditText, editDirectionPopupDirectionEditText;
     private ListView directionListView;
     private ArrayList<String> directionList = new ArrayList<String>();
@@ -80,7 +82,7 @@ public class EditDirectionActivity extends AppCompatActivity {
      *
      */
     private void editRecipe() {
-        finishButton.setText("Finish");
+        finishButton.setImageResource(R.drawable.ic_check_mark);
         for (int i = 0; i < recipe.getDirectionsList().size(); i++) {
             String text = recipe.getDirectionsList().get(i).getDirectionText();
             directionAdapter.add(text);
