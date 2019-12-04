@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
 
         // Display Toolbar
@@ -121,6 +120,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
+            case R.id.action_login:
+                Intent login = new Intent(this, LoginActivity.class);
+                startActivity(login);
+                return true;
             case R.id.advanced_search_item:
                 Intent advancedSearch = new Intent(this, AdvancedSearchActivity.class);
                 startActivity(advancedSearch);
