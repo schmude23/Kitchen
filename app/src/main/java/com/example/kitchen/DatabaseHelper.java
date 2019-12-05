@@ -381,6 +381,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method retrieves all recipes that have been favorited
+     *
+     * @return The recipes that have favorite value of 1
+     */
+    public ArrayList<Recipe> getRecipeByFavorite() {
+        Recipe recipe;
+        ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_LIST + "  WHERE " + RT_FAVORITED + " = ? ", new String[]{String.valueOf(1)});
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                recipe = mapRecipe(cursor);
+                recipeList.add(recipe);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        if (recipeList.size() == 0) {
+            return null;
+        }
+        return recipeList;
+    }
+
+    /**
      * This method retrieves all recipes which contain this ingredient id
      *
      * @param ingredientId
