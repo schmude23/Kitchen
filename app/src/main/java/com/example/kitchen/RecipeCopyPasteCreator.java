@@ -60,7 +60,6 @@ public class RecipeCopyPasteCreator {
 
             lineScanner.close();
         }
-
         recipeScanner.close();
 
         //make sure ingredient and directions actually have something in them.
@@ -69,7 +68,7 @@ public class RecipeCopyPasteCreator {
             database.addRecipe(recipe);
             return passed;
         }
-            return passed;
+            return false;
 
     }
 
@@ -83,12 +82,15 @@ public class RecipeCopyPasteCreator {
     private boolean tokenChecker(List<String>  tokens){
         //maybe check for if any of them error.
         boolean passed = false;
+        if(tokens.size() == 0){
+            return false;
+        }
         //TODO: implement
         tokens.set(0, tokens.get(0).replaceAll(":",""));
         if(tokens.get(0).equalsIgnoreCase("servings") ||
                 tokens.get(0).equalsIgnoreCase("serving") ||
                 tokens.get(0).equalsIgnoreCase("yields") ||
-                tokens.get(0).equalsIgnoreCase("yield") ){
+                tokens.get(0).equalsIgnoreCase("yield")){
             passed = servingMapper(tokens);
         }
         if(!passed && (tokens.get(0).equalsIgnoreCase("prep") ||
@@ -119,17 +121,18 @@ public class RecipeCopyPasteCreator {
      */
     private boolean servingMapper(List<String> tokens) {
         //TODO: Test/Correct
+        //TODO: Test/Correct
+
         int servings = 0;
 
         //checks to see if the original tokens have the number
-        for (int i = 1; i < tokens.size(); i++) {
-            try {
-                servings = numberChecker("serving", tokens).intValue();
-                recipe.setServings((double) servings);
+        if(tokens.size() > 1) {
+            servings = numberChecker("servings", tokens).intValue();
+            if (servings != -1.0) {
+                recipe.setServings(servings + 0.0);
                 return true;
-            } catch (NumberFormatException e) { /*do nothing*/}
+            }
         }
-
         //check following lines for number
         while (recipeScanner.hasNextLine()) {
             tokens = new ArrayList<>();
@@ -137,11 +140,17 @@ public class RecipeCopyPasteCreator {
 
             //if the line is not blank, send to token checker for validation.
             while (lineScanner.hasNext()) {
-                try {
-                    servings = Integer.parseInt(lineScanner.next());
-                    recipe.setServings((double) servings);
-                    return true;
-                } catch (NumberFormatException e) { /*do nothing*/}
+                tokens.add(lineScanner.next());
+            }
+            //check to see if no number found and next instance begins
+            if(tokenChecker(tokens)){
+                return false;
+            }
+            //check to see if no number found
+            servings = numberChecker("servings", tokens).intValue();
+            if(servings != -1.0) {
+                recipe.setServings(servings + 0.0);
+                return true;
             }
         }
         return false;
@@ -159,12 +168,12 @@ public class RecipeCopyPasteCreator {
         int prepTime = 0;
 
         //checks to see if the original tokens have the number
-        for (int i = 1; i < tokens.size(); i++) {
-            try {
-                prepTime = numberChecker("prep", tokens).intValue();
+        if(tokens.size() > 1) {
+            prepTime = numberChecker("prep", tokens).intValue();
+            if (prepTime != -1.0) {
                 recipe.setPrep_time(prepTime);
                 return true;
-            } catch (NumberFormatException e) { /*do nothing*/}
+            }
         }
 
         //check following lines for number
@@ -174,11 +183,17 @@ public class RecipeCopyPasteCreator {
 
             //if the line is not blank, send to token checker for validation.
             while (lineScanner.hasNext()) {
-                try {
-                    prepTime = Integer.parseInt(lineScanner.next());
-                    recipe.setPrep_time(prepTime);
-                    return true;
-                } catch (NumberFormatException e) { /*do nothing*/}
+                tokens.add(lineScanner.next());
+            }
+            //check to see if no number found and next instance begins
+            if(tokenChecker(tokens)){
+                return false;
+            }
+            //check to see if no number found
+            prepTime = numberChecker("prep", tokens).intValue();
+            if(prepTime != -1.0) {
+                recipe.setPrep_time(prepTime);
+                return true;
             }
         }
         return false;
@@ -192,16 +207,15 @@ public class RecipeCopyPasteCreator {
      */
     private boolean totalMapper(List<String> tokens) {
         //TODO: Test/Correct
-
         int totalTime = 0;
 
         //checks to see if the original tokens have the number
-        for (int i = 1; i < tokens.size(); i++) {
-            try {
-                totalTime = numberChecker("total", tokens).intValue();
+        if(tokens.size() > 1) {
+            totalTime = numberChecker("total", tokens).intValue();
+            if (totalTime != -1.0) {
                 recipe.setTotal_time(totalTime);
                 return true;
-            } catch (NumberFormatException e) { /*do nothing*/}
+            }
         }
 
         //check following lines for number
@@ -211,11 +225,17 @@ public class RecipeCopyPasteCreator {
 
             //if the line is not blank, send to token checker for validation.
             while (lineScanner.hasNext()) {
-                try {
-                    totalTime = Integer.parseInt(lineScanner.next());
-                    recipe.setTotal_time(totalTime);
-                    return true;
-                } catch (NumberFormatException e) { /*do nothing*/}
+                tokens.add(lineScanner.next());
+            }
+            //check to see if no number found and next instance begins
+            if(tokenChecker(tokens)){
+                return false;
+            }
+            //check to see if no number found
+            totalTime = numberChecker("total", tokens).intValue();
+            if(totalTime != -1.0) {
+                recipe.setTotal_time(totalTime);
+                return true;
             }
         }
         return false;
@@ -253,14 +273,16 @@ public class RecipeCopyPasteCreator {
             while (lineScanner.hasNext()) {
                 tokens.add(lineScanner.next());
             }
-            //Check and update quantity if possible.
-            try{
-                double quantity = numberChecker("Ingredient", tokens);
-                ingredient.setQuantity(quantity);
-
-            }catch(NumberFormatException nfe){
-                ingredient.setQuantity(0);
+            //check to see if no number found and next instance begins
+            if(tokenChecker(tokens)){
+                return false;
             }
+            //Check to see if quantity is found
+            double quantity = numberChecker("Ingredient", tokens);
+            if(quantity != -1.0) {
+                ingredient.setQuantity(quantity);
+            }
+
             //sets unit if possible
             ingredient.setUnit(unitChecker(tokens.get(1)));
 
@@ -351,29 +373,64 @@ public class RecipeCopyPasteCreator {
     private Double numberChecker(String type, List<String> tokens){
         Double number = 0.0;
         Double tempNum = 0.0;
+        boolean found = false;
 
         if(type.equalsIgnoreCase("servings")){
+
             //TODO: think about situation "serves 6-8"
+            //TODO: think about situations of "serves 6 - 8"
+            for(int i = 0; i < tokens.size(); i++) {
+                try {//if just a number
+                    if(!tokens.get(i).contains("-")){
+                        tempNum = Double.parseDouble(String.valueOf(tokens.get(i)));
+                        found = true;
+                    }
+                    else{//if 6-8
+                        char[] letters = tokens.get(i).toCharArray();
+                        if(letters.length == 3) {
+                            found = true;
+                            tempNum = Double.parseDouble(String.valueOf(letters[1]));
+                            tempNum = (tempNum + Double.parseDouble(String.valueOf(letters[3])))/2;
+                            tempNum = tempNum.intValue() + 0.0;
+                        }
+                    }
+                } catch (NumberFormatException e) { /*do nothing*/}
+                if(found){
+                    number = tempNum;
+                    break; }
+            }
+
         }
 
 
-        if(type.equalsIgnoreCase("prep") || type.equalsIgnoreCase("total")){
+        if(type.equalsIgnoreCase("prep") || type.equalsIgnoreCase("total")) {
             //TODO: think about 1 h / 1 hour / 30 m / 30 minutes
             for(int i = 0; i < tokens.size(); i++) {
                 try {
                     tempNum += Double.parseDouble(tokens.get(i));
                     if(tokens.get(i+1).equalsIgnoreCase("h") ||
+                            tokens.get(i+1).equalsIgnoreCase("hr") ||
+                            tokens.get(i+1).equalsIgnoreCase("hrs") ||
                             tokens.get(i+1).equalsIgnoreCase("hour") ||
                             tokens.get(i+1).equalsIgnoreCase("hours")){
                         number += tempNum * 60;
+                        found = true;
+                    } else{
+                        if(tokens.get(i+1).equalsIgnoreCase("m") ||
+                                tokens.get(i+1).equalsIgnoreCase("min") ||
+                                tokens.get(i+1).equalsIgnoreCase("mins") ||
+                                tokens.get(i+1).equalsIgnoreCase("minute") ||
+                                tokens.get(i+1).equalsIgnoreCase("minutes")) {
+
+                            number += tempNum;
+                            found = true;
+                        }
                     }
-                    else{
-                        number += tempNum;
-                    }
+
                 } catch (NumberFormatException e) { /*do nothing*/}
+                if(found){ break; }
             }
         }
-
 
         if(type.equalsIgnoreCase("ingredient")){
             //TODO: think about "1/2 cup"
@@ -381,23 +438,35 @@ public class RecipeCopyPasteCreator {
             //checks for "1/2" numbers or for normal numbers
             try{
                 number = Integer.parseInt(tokens.get(0)) + 0.0;
+                found = true;
             }catch (NumberFormatException nfe){
                 String temp = tokens.get(0);
                 String[] arr = temp.split("");
-                if(arr.length > 2 && arr[2].equalsIgnoreCase("/")){
-                    number = Double.parseDouble(arr[1]) / Double.parseDouble(arr[2]);
-                }
+                try {
+                    if (arr.length > 2 && arr[2].equalsIgnoreCase("/")) {
+                        number = Double.parseDouble(arr[1]) / Double.parseDouble(arr[2]);
+                        found = true;
+                    }
+                }catch(NumberFormatException nfe2){/*do nothing*/}
             }
-
             //checks for 1/2 values
+            try {
                 String temp = tokens.get(1);
                 String[] arr = temp.split("");
-                if(arr.length > 2 && arr[2].equalsIgnoreCase("/")){
+                if (arr.length > 2 && arr[2].equalsIgnoreCase("/")) {
                     number += Double.parseDouble(arr[1]) / Double.parseDouble(arr[2]);
-
-            }
+                    found = true;
+                }
+            }catch(NumberFormatException nfe3){/*do nothing*/}
         }
-        return number;
+
+        //want to cycle till found.
+        if(found){
+            return number;
+        }
+        else{
+            return -1.0;
+        }
     }
 
     /**
