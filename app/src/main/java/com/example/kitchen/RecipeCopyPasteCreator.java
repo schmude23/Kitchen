@@ -9,7 +9,7 @@ public class RecipeCopyPasteCreator {
     private Scanner recipeScanner;
     private ArrayList<RecipeIngredient> recipeIngredientList;
     private ArrayList<RecipeDirection> recipeDirectionList;
-    private Recipe recipe = new Recipe();
+    private Recipe recipe;
     Context appContext;
     DatabaseHelper database;
 
@@ -119,13 +119,12 @@ public class RecipeCopyPasteCreator {
      */
     private boolean servingMapper(List<String> tokens) {
         //TODO: Test/Correct
-        //TODO: think about situation "serves 6-8"
         int servings = 0;
 
         //checks to see if the original tokens have the number
         for (int i = 1; i < tokens.size(); i++) {
             try {
-                servings = Integer.parseInt(tokens.get(i));
+                servings = numberChecker("serving", tokens).intValue();
                 recipe.setServings((double) servings);
                 return true;
             } catch (NumberFormatException e) { /*do nothing*/}
@@ -156,13 +155,13 @@ public class RecipeCopyPasteCreator {
      */
     private boolean prepMapper(List<String> tokens) {
         //TODO: Test/Correct
-        //TODO: think about 1 h / 1 hour / 30 m / 30 minutes
+
         int prepTime = 0;
 
         //checks to see if the original tokens have the number
         for (int i = 1; i < tokens.size(); i++) {
             try {
-                prepTime = Integer.parseInt(tokens.get(i));
+                prepTime = numberChecker("prep", tokens).intValue();
                 recipe.setPrep_time(prepTime);
                 return true;
             } catch (NumberFormatException e) { /*do nothing*/}
@@ -193,13 +192,13 @@ public class RecipeCopyPasteCreator {
      */
     private boolean totalMapper(List<String> tokens) {
         //TODO: Test/Correct
-        //TODO: think about 1 h / 1 hour / 30 m / 30 minutes
+
         int totalTime = 0;
 
         //checks to see if the original tokens have the number
         for (int i = 1; i < tokens.size(); i++) {
             try {
-                totalTime = Integer.parseInt(tokens.get(i));
+                totalTime = numberChecker("total", tokens).intValue();
                 recipe.setTotal_time(totalTime);
                 return true;
             } catch (NumberFormatException e) { /*do nothing*/}
@@ -229,8 +228,6 @@ public class RecipeCopyPasteCreator {
      */
     private boolean ingredientsMapper(){
         //TODO: TEST/CORRECT
-        //TODO: think about "1/2 cup"
-        //TODO: think about split ingredients i.e. Frosting:
         ArrayList<RecipeIngredient> ingredientList = new ArrayList<>();
         RecipeIngredient ingredient;
         boolean passed = false;
@@ -258,7 +255,7 @@ public class RecipeCopyPasteCreator {
             }
             //Check and update quantity if possible.
             try{
-                int quantity = Integer.parseInt(tokens.get(0));
+                double quantity = numberChecker("Ingredient", tokens);
                 ingredient.setQuantity(quantity);
 
             }catch(NumberFormatException nfe){
@@ -313,14 +310,11 @@ public class RecipeCopyPasteCreator {
      */
     private boolean directionsMapper() {
         //TODO: TEST/CORRECT
-        //TODO: think about if directions are pre-numbered
         ArrayList<RecipeDirection> directionList = new ArrayList<>();
         RecipeDirection direction = new RecipeDirection();
         boolean passed = false;
         int dirNum = 1;
 
-
-        //TODO: give a prliminary check using a for loop if number is first, always start at second slot
         while(recipeScanner.hasNextLine()) {
             //new line!!!
             direction = new RecipeDirection();
@@ -333,7 +327,7 @@ public class RecipeCopyPasteCreator {
                 lineScanner.close();
                 lineScanner = new Scanner(recipeScanner.nextLine());
             }
-            
+
             while (lineScanner.hasNext()) {
                 directionText += lineScanner.next() + " ";
             }
@@ -346,6 +340,64 @@ public class RecipeCopyPasteCreator {
 
         recipeDirectionList = directionList;
         return passed;
+    }
+
+    /**
+     * This method checks the numbers for the given string list
+     *
+     *
+     * @return a number or -1 for the given string
+     */
+    private Double numberChecker(String type, List<String> tokens){
+        Double number = 0.0;
+        Double tempNum = 0.0;
+
+        if(type.equalsIgnoreCase("servings")){
+            //TODO: think about situation "serves 6-8"
+        }
+
+
+        if(type.equalsIgnoreCase("prep") || type.equalsIgnoreCase("total")){
+            //TODO: think about 1 h / 1 hour / 30 m / 30 minutes
+            for(int i = 0; i < tokens.size(); i++) {
+                try {
+                    tempNum += Double.parseDouble(tokens.get(i));
+                    if(tokens.get(i+1).equalsIgnoreCase("h") ||
+                            tokens.get(i+1).equalsIgnoreCase("hour") ||
+                            tokens.get(i+1).equalsIgnoreCase("hours")){
+                        number += tempNum * 60;
+                    }
+                    else{
+                        number += tempNum;
+                    }
+                } catch (NumberFormatException e) { /*do nothing*/}
+            }
+        }
+
+
+        if(type.equalsIgnoreCase("ingredient")){
+            //TODO: think about "1/2 cup"
+
+            //checks for "1/2" numbers or for normal numbers
+            try{
+                number = Integer.parseInt(tokens.get(0)) + 0.0;
+            }catch (NumberFormatException nfe){
+                String temp = tokens.get(0);
+                String[] arr = temp.split("");
+                if(arr.length > 2 && arr[2].equalsIgnoreCase("/")){
+                    number = Double.parseDouble(arr[1]) / Double.parseDouble(arr[2]);
+                }
+            }
+
+            //checks for 1/2 values
+                String temp = tokens.get(1);
+                String[] arr = temp.split("");
+                if(arr.length > 2 && arr[2].equalsIgnoreCase("/")){
+                    number += Double.parseDouble(arr[1]) / Double.parseDouble(arr[2]);
+
+            }
+        }
+        return number;
     }
 
     /**
