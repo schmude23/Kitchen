@@ -147,6 +147,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                 Intent intent = new Intent(this, IngredientListActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.action_retrieve_recipe:
+                Intent retrieveRecipe = new Intent(this, ShareRecipeActivity.class);
+                retrieveRecipe.putExtra("recipeId", -1);
+                startActivity(retrieveRecipe);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

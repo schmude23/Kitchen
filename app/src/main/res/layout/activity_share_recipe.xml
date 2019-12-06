@@ -7,80 +7,148 @@
     tools:context="com.example.kitchen.ShareRecipeActivity">
 
     <Button
-        android:id="@+id/listen"
+        android:id="@+id/onOff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="19dp"
-        android:text="Listen"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="14dp"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="55dp"
+        android:background="@drawable/button_style"
+        android:text="Wifi On" />
+
+    <Button
+        android:id="@+id/discover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/onOff"
+        android:layout_alignBottom="@+id/onOff"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_style"
+        android:text="discover" />
 
     <ListView
-        android:id="@+id/listview"
+        android:id="@+id/peerListView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@android:color/darker_gray"
-        android:layout_below="@+id/listen"
+        android:layout_below="@+id/onOff"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="31dp"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="25dp"
+        android:background="@color/royal_blue" />
 
     <TextView
-        android:id="@+id/msg"
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/peerListView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="31dp"
+        android:text="To Share Recipe:"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="italic" />
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text1"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:text="1. User who is receiving the recipe must click the 'Retrieve Recipe' option on the home screen"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="italic" />
+    <TextView
+        android:id="@+id/text3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:text="2. Both users must be connected to the same WiFi"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="italic" />
+    <TextView
+        android:id="@+id/text4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text3"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:text="3. Both users must click discover"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="italic" />
+    <TextView
+        android:id="@+id/text5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text4"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:text="4. One user (does not matter who) must click on the other users phone in the blue box"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="italic" />
+    <TextView
+        android:id="@+id/text6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text5"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:text="5. Once connected, the user sharing the recipe must click 'share'"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="italic" />
+    <Button
+        android:id="@+id/sendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_style"
+        android:text="Share"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/connectionStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/listview"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
-        android:hint="Message"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:text="Connection Status"
         android:textAlignment="center"
-        android:textColor="?android:attr/textColorLink"
-        android:textSize="30sp"
-        android:textStyle="italic" />
-
-    <EditText
-        android:id="@+id/writemsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/listen"
-        android:layout_alignLeft="@+id/listen" />
-
-    <Button
-        android:id="@+id/send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Send"
-        android:layout_alignTop="@+id/writemsg"
-        android:layout_alignEnd="@+id/status"
-        android:layout_alignRight="@+id/status" />
-
-    <Button
-        android:id="@+id/listDevices"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/listview"
-        android:layout_centerHorizontal="true"
-        android:text="List Devices" />
-
-    <TextView
-        android:id="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/listDevices"
-        android:layout_alignBottom="@+id/listDevices"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="14dp"
-        android:text="Status"
-        android:textSize="14sp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="18sp"
         android:textStyle="italic"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="14dp" />
+        android:layout_alignParentLeft="true" />
+
+
 
 </RelativeLayout>

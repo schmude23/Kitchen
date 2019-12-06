@@ -94,7 +94,6 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
         text = recipe.getTotal_time() + " min";
         total_time.setText(text);
         image.setImageBitmap(recipe.getImage(this));
-        //image.setRotation(90);
         getIngredients();
         getDirections();
         getCategories();

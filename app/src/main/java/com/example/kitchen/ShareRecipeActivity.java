@@ -1,283 +1,321 @@
 package com.example.kitchen;
 
-
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.BluetoothSocket;
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
+import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pGroup;
+import android.net.wifi.p2p.WifiP2pInfo;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Handler;
 import android.os.Message;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Set;
-import java.util.UUID;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShareRecipeActivity extends AppCompatActivity {
 
-    Button listen,send, listDevices;
+    Button btnOnOff, btnDiscover, btnSend;
     ListView listView;
-    TextView msg_box,status;
-    EditText writeMsg;
+    TextView read_msg_box, connectionStatus;
 
-    BluetoothAdapter bluetoothAdapter;
-    BluetoothDevice[] btArray;
+    WifiManager wifiManager;
+    WifiP2pManager mManager;
+    WifiP2pManager.Channel mChannel;
 
+    BroadcastReceiver mReceiver;
+    IntentFilter mIntentFilter;
+
+    List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
+    String[] deviceNameArray;
+    WifiP2pDevice[] deviceArray;
+
+    static final int MESSAGE_READ = 1;
+
+    ServerClass serverClass;
+    ClientClass clientClass;
     SendReceive sendReceive;
 
-    static final int STATE_LISTENING = 1;
-    static final int STATE_CONNECTING=2;
-    static final int STATE_CONNECTED=3;
-    static final int STATE_CONNECTION_FAILED=4;
-    static final int STATE_MESSAGE_RECEIVED=5;
-
-    int REQUEST_ENABLE_BLUETOOTH=1;
-
-    private static final String APP_NAME = "BTChat";
-    private static final UUID MY_UUID=UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66");
+    Recipe recipe;
+    int recipeId;
+    DatabaseHelper database;
+    Dialog myDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_recipe);
-
-        findViewByIdes();
-        bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
-
-        if(!bluetoothAdapter.isEnabled())
-        {
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent,REQUEST_ENABLE_BLUETOOTH);
-        }
-
-        implementListeners();
+        recipeId = getIntent().getIntExtra("recipeId", -1);
+        database = new DatabaseHelper(this);
+        if (recipeId != -1)
+            recipe = database.getRecipe(recipeId);
+        myDialog = new Dialog(this);
+        initialWork();
+        exqListener();
     }
 
-    private void implementListeners() {
-
-        listDevices.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Set<BluetoothDevice> bt=bluetoothAdapter.getBondedDevices();
-                String[] strings=new String[bt.size()];
-                btArray=new BluetoothDevice[bt.size()];
-                int index=0;
-
-                if( bt.size()>0)
-                {
-                    for(BluetoothDevice device : bt)
-                    {
-                        btArray[index]= device;
-                        strings[index]=device.getName();
-                        index++;
-                    }
-                    ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,strings);
-                    listView.setAdapter(arrayAdapter);
-                }
-            }
-        });
-
-        listen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ServerClass serverClass=new ServerClass();
-                serverClass.start();
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ClientClass clientClass=new ClientClass(btArray[i]);
-                clientClass.start();
-
-                status.setText("Connecting");
-            }
-        });
-
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String string= String.valueOf(writeMsg.getText());
-                sendReceive.write(string.getBytes());
-            }
-        });
-    }
-
-    Handler handler=new Handler(new Handler.Callback() {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case MESSAGE_READ:
+                    byte[] readBuff = (byte[]) msg.obj;
+                    String tempMsg = new String(readBuff, 0, msg.arg1);
+                    if (!tempMsg.equals("retry")) {
+                        recipe = new Recipe(tempMsg, getApplicationContext());
+                        if (recipe.getTitle().isEmpty()) {
+                            String retry = "retry";
+                            sendReceive.write(retry.getBytes());
+                        } else {
+                            database.addRecipe(recipe);
+                            read_msg_box.setText(recipe.getTitle() + " size: " + tempMsg.getBytes().length);
+                            Intent intent = new Intent(getApplicationContext(), DisplaySelectedRecipeActivity.class);
+                            intent.putExtra("recipeId", recipe.getKeyID());
+                            startActivity(intent);
+                        }
+                    } else {
+                        sendReceive.write(recipe.toString().getBytes());
+                    }
 
-            switch (msg.what)
-            {
-                case STATE_LISTENING:
-                    status.setText("Listening");
-                    break;
-                case STATE_CONNECTING:
-                    status.setText("Connecting");
-                    break;
-                case STATE_CONNECTED:
-                    status.setText("Connected");
-                    break;
-                case STATE_CONNECTION_FAILED:
-                    status.setText("Connection Failed");
-                    break;
-                case STATE_MESSAGE_RECEIVED:
-                    byte[] readBuff= (byte[]) msg.obj;
-                    String tempMsg=new String(readBuff,0,msg.arg1);
-                    msg_box.setText(tempMsg);
                     break;
             }
             return true;
         }
     });
 
-    private void findViewByIdes() {
-        listen=(Button) findViewById(R.id.listen);
-        send=(Button) findViewById(R.id.send);
-        listView=(ListView) findViewById(R.id.listview);
-        msg_box =(TextView) findViewById(R.id.msg);
-        status=(TextView) findViewById(R.id.status);
-        writeMsg=(EditText) findViewById(R.id.writemsg);
-        listDevices=(Button) findViewById(R.id.listDevices);
-    }
-
-    private class ServerClass extends Thread
-    {
-        private BluetoothServerSocket serverSocket;
-
-        public ServerClass(){
-            try {
-                serverSocket=bluetoothAdapter.listenUsingRfcommWithServiceRecord(APP_NAME,MY_UUID);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        public void run()
-        {
-            BluetoothSocket socket=null;
-
-            while (socket==null)
-            {
-                try {
-                    Message message=Message.obtain();
-                    message.what=STATE_CONNECTING;
-                    handler.sendMessage(message);
-
-                    socket=serverSocket.accept();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Message message=Message.obtain();
-                    message.what=STATE_CONNECTION_FAILED;
-                    handler.sendMessage(message);
-                }
-
-                if(socket!=null)
-                {
-                    Message message=Message.obtain();
-                    message.what=STATE_CONNECTED;
-                    handler.sendMessage(message);
-
-                    sendReceive=new SendReceive(socket);
-                    sendReceive.start();
-
-                    break;
+    private void exqListener() {
+        btnOnOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (wifiManager.isWifiEnabled()) {
+                    wifiManager.setWifiEnabled(false);
+                    btnOnOff.setText("ON");
+                } else {
+                    wifiManager.setWifiEnabled(true);
+                    btnOnOff.setText("OFF");
                 }
             }
-        }
+        });
+
+        btnDiscover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+                    @Override
+                    public void onSuccess() {
+                        connectionStatus.setText("Discovery Started");
+                    }
+
+                    @Override
+                    public void onFailure(int i) {
+                        connectionStatus.setText("Discovery Starting Failed");
+                    }
+                });
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final WifiP2pDevice device = deviceArray[i];
+                WifiP2pConfig config = new WifiP2pConfig();
+                config.deviceAddress = device.deviceAddress;
+
+                mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getApplicationContext(), "Connected to " + device.deviceName, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(int i) {
+                        Toast.makeText(getApplicationContext(), "Not Connected", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String msg = recipe.toString(getApplicationContext());
+                sendReceive.write(msg.getBytes());
+            }
+        });
     }
 
-    private class ClientClass extends Thread
-    {
-        private BluetoothDevice device;
-        private BluetoothSocket socket;
+    private void initialWork() {
+        btnOnOff = (Button) findViewById(R.id.onOff);
+        btnDiscover = (Button) findViewById(R.id.discover);
+        btnSend = (Button) findViewById(R.id.sendButton);
+        listView = (ListView) findViewById(R.id.peerListView);
+        connectionStatus = (TextView) findViewById(R.id.connectionStatus);
+        if (recipeId == -1)
+            btnSend.setVisibility(View.INVISIBLE);
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        mChannel = mManager.initialize(this, getMainLooper(), null);
+        disconnect();
+        mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+    }
+    public void disconnect() {
+        if (mManager != null && mChannel != null) {
+            mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
+                @Override
+                public void onGroupInfoAvailable(WifiP2pGroup group) {
+                    if (group != null && mManager != null && mChannel != null
+                            && group.isGroupOwner()) {
+                        mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
 
-        public ClientClass (BluetoothDevice device1)
-        {
-            device=device1;
+                            @Override
+                            public void onSuccess() {
+                               // Log.d(TAG, "removeGroup onSuccess -");
+                            }
 
-            try {
-                socket=device.createRfcommSocketToServiceRecord(MY_UUID);
-            } catch (IOException e) {
-                e.printStackTrace();
+                            @Override
+                            public void onFailure(int reason) {
+                                //Log.d(TAG, "removeGroup onFailure -" + reason);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    }
+    WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
+        @Override
+        public void onPeersAvailable(WifiP2pDeviceList peerList) {
+            if (!peerList.getDeviceList().equals(peers)) {
+                peers.clear();
+                peers.addAll(peerList.getDeviceList());
+
+                deviceNameArray = new String[peerList.getDeviceList().size()];
+                deviceArray = new WifiP2pDevice[peerList.getDeviceList().size()];
+                int index = 0;
+
+                for (WifiP2pDevice device : peerList.getDeviceList()) {
+                    deviceNameArray[index] = device.deviceName;
+                    deviceArray[index] = device;
+                    index++;
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, deviceNameArray);
+                listView.setAdapter(adapter);
+            }
+
+            if (peers.size() == 0) {
+                Toast.makeText(getApplicationContext(), "No Device Found", Toast.LENGTH_SHORT).show();
+                return;
             }
         }
+    };
 
-        public void run()
-        {
+    WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
+        @Override
+        public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
+            final InetAddress groupOwnerAddress = wifiP2pInfo.groupOwnerAddress;
+
+            if (wifiP2pInfo.groupFormed && wifiP2pInfo.isGroupOwner) {
+                connectionStatus.setText("Host");
+                serverClass = new ServerClass();
+                serverClass.start();
+            } else if (wifiP2pInfo.groupFormed) {
+                connectionStatus.setText("Client");
+                clientClass = new ClientClass(groupOwnerAddress);
+                clientClass.start();
+            }
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mReceiver, mIntentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mReceiver);
+    }
+
+    public class ServerClass extends Thread {
+        Socket socket;
+        ServerSocket serverSocket;
+
+        @Override
+        public void run() {
             try {
-                socket.connect();
-                Message message=Message.obtain();
-                message.what=STATE_CONNECTED;
-                handler.sendMessage(message);
-
-                sendReceive=new SendReceive(socket);
+                serverSocket = new ServerSocket(8888);
+                socket = serverSocket.accept();
+                sendReceive = new SendReceive(socket);
                 sendReceive.start();
-
             } catch (IOException e) {
                 e.printStackTrace();
-                Message message=Message.obtain();
-                message.what=STATE_CONNECTION_FAILED;
-                handler.sendMessage(message);
             }
         }
     }
 
-    private class SendReceive extends Thread
-    {
-        private final BluetoothSocket bluetoothSocket;
-        private final InputStream inputStream;
-        private final OutputStream outputStream;
+    private class SendReceive extends Thread {
+        private Socket socket;
+        private InputStream inputStream;
+        private OutputStream outputStream;
 
-        public SendReceive (BluetoothSocket socket)
-        {
-            bluetoothSocket=socket;
-            InputStream tempIn=null;
-            OutputStream tempOut=null;
-
+        public SendReceive(Socket skt) {
+            socket = skt;
             try {
-                tempIn=bluetoothSocket.getInputStream();
-                tempOut=bluetoothSocket.getOutputStream();
+                inputStream = socket.getInputStream();
+                outputStream = socket.getOutputStream();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            inputStream=tempIn;
-            outputStream=tempOut;
         }
 
-        public void run()
-        {
-            byte[] buffer=new byte[1024];
+        @Override
+        public void run() {
+            byte[] buffer = new byte[5000];
             int bytes;
 
-            while (true)
-            {
+            while (socket != null) {
                 try {
-                    bytes=inputStream.read(buffer);
-                    handler.obtainMessage(STATE_MESSAGE_RECEIVED,bytes,-1,buffer).sendToTarget();
+                    bytes = inputStream.read(buffer);
+                    if (bytes > 0) {
+                        handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        public void write(byte[] bytes)
-        {
+        public void write(byte[] bytes) {
             try {
                 outputStream.write(bytes);
             } catch (IOException e) {
@@ -285,4 +323,26 @@ public class ShareRecipeActivity extends AppCompatActivity {
             }
         }
     }
+
+    public class ClientClass extends Thread {
+        Socket socket;
+        String hostAdd;
+
+        public ClientClass(InetAddress hostAddress) {
+            hostAdd = hostAddress.getHostAddress();
+            socket = new Socket();
+        }
+
+        @Override
+        public void run() {
+            try {
+                socket.connect(new InetSocketAddress(hostAdd, 8888), 500);
+                sendReceive = new SendReceive(socket);
+                sendReceive.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
