@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -26,13 +27,14 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
 
     private ListView ingredientListView;
     private ArrayList<String> ingredientList = new ArrayList<String>();
-    private ArrayAdapter<String> ingredientAdapter;
+    private MyCustomAdapter ingredientAdapter;
     private Button btnAddIngredient;
     private EditText editIngredient;
 
     private ListView categoryListView;
     private ArrayList<String> categoryList = new ArrayList<String>();
-    private ArrayAdapter<String> categoryAdapter;
+    private MyCustomAdapter categoryAdapter;
+
     private Button btnAddCategory;
     private EditText editCategory;
 
@@ -126,24 +128,32 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
 
 
     private void limitToIngredientList() {
-        editIngredient = (EditText) findViewById(R.id.edit_ingredient);
+        //editIngredient = (EditText) findViewById(R.id.edit_ingredient);
+        ArrayList<Ingredient> ingredients = database.getAllIngredients();
+        String [] ingredientStrings = new String [ingredients.size()];
+        for(int i = 0;i < ingredients.size(); i++){
+            ingredientStrings[i] = ingredients.get(i).getName();
+        }
+        ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, ingredientStrings);
+        AutoCompleteTextView textView =  findViewById(R.id.edit_ingredient);
+        textView.setAdapter(autoCompleteAdapter);
         btnAddIngredient = (Button) findViewById(R.id.button_add_ingredient);
         btnAddIngredient.setOnClickListener(this);
 
         //ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
-        ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientList) {
-            @NonNull
-            @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
-                textView.setMinHeight(0); // Min Height
-                textView.setMinimumHeight(0); // Min Height
-                textView.setHeight(100); // Height
-                return view;
-            }
-        };
-
+        ingredientAdapter = new MyCustomAdapter(ingredientList, this);
+//        ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientList) {
+//            @NonNull
+//            @Override
+//            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+//                View view = super.getView(position, convertView, parent);
+//                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
+//                textView.setMinHeight(0); // Min Height
+//                textView.setMinimumHeight(0); // Min Height
+//                textView.setHeight(100); // Height
+//                return view;
+//            }
+//        };
         // set the ingredientListView variable to your ingredientList in the xml
         ingredientListView = (ListView) findViewById(R.id.ingredient_list);
         ingredientListView.setAdapter(ingredientAdapter);
@@ -153,22 +163,31 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
 
     private void limitToCategoryList() {
         editCategory = (EditText) findViewById(R.id.edit_category);
+//        ArrayList<Category> ingredients = database.getAllRecipeCategories();
+//        String [] ingredientStrings = new String [ingredients.size()];
+//        for(int i = 0;i < ingredients.size(); i++){
+//            ingredientStrings[i] = ingredients.get(i).getName();
+//        }
+//        ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, ingredientStrings);
+//        AutoCompleteTextView textView =  findViewById(R.id.edit_ingredient);
+//        textView.setAdapter(autoCompleteAdapter);
         btnAddCategory = (Button) findViewById(R.id.button_add_category);
         btnAddCategory.setOnClickListener(this);
 
         //ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
-        categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categoryList) {
-            @NonNull
-            @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
-                textView.setMinHeight(0); // Min Height
-                textView.setMinimumHeight(0); // Min Height
-                textView.setHeight(100); // Height
-                return view;
-            }
-        };
+        categoryAdapter = new MyCustomAdapter(categoryList, this);
+//        categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categoryList) {
+//            @NonNull
+//            @Override
+//            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+//                View view = super.getView(position, convertView, parent);
+//                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
+//                textView.setMinHeight(0); // Min Height
+//                textView.setMinimumHeight(0); // Min Height
+//                textView.setHeight(100); // Height
+//                return view;
+//            }
+//        };
 
         // set the ingredientListView variable to your ingredientList in the xml
         categoryListView = (ListView) findViewById(R.id.category_list);
