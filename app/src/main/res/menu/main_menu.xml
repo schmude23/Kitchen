@@ -40,5 +40,8 @@
     <item
         android:id="@+id/action_retrieve_recipe"
         android:title="Retrieve Recipe"/>
+    <item
+        android:id="@+id/action_paste_recipe"
+        android:title="Paste Recipe"/>
 
 </menu>

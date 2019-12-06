@@ -152,6 +152,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                 retrieveRecipe.putExtra("recipeId", -1);
                 startActivity(retrieveRecipe);
                 return true;
+            case R.id.action_paste_recipe:
+                Intent pasteRecipe = new Intent(this, PasteRecipeActivity.class);
+                startActivity(pasteRecipe);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
