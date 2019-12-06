@@ -1,7 +1,6 @@
 package com.example.kitchen;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 
@@ -29,7 +27,7 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
     private ArrayList<String> ingredientList = new ArrayList<String>();
     private MyCustomAdapter ingredientAdapter;
     private Button btnAddIngredient;
-    private EditText editIngredient;
+    AutoCompleteTextView editIngredient;
 
     private ListView categoryListView;
     private ArrayList<String> categoryList = new ArrayList<String>();
@@ -135,8 +133,8 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
             ingredientStrings[i] = ingredients.get(i).getName();
         }
         ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, ingredientStrings);
-        AutoCompleteTextView textView =  findViewById(R.id.edit_ingredient);
-        textView.setAdapter(autoCompleteAdapter);
+        editIngredient =  findViewById(R.id.edit_ingredient);
+        editIngredient.setAdapter(autoCompleteAdapter);
         btnAddIngredient = (Button) findViewById(R.id.button_add_ingredient);
         btnAddIngredient.setOnClickListener(this);
 
