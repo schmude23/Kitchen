@@ -64,7 +64,7 @@ public class RecipeCopyPasteCreator {
         recipeScanner.close();
 
         //make sure ingredient and directions actually have something in them.
-        if(recipeIngredientList.size() > 0 && recipeDirectionList.size() >0 ){
+        if(recipeIngredientList != null && recipeDirectionList != null){
             recipe.setTitle(recipeTitle);
 
             return database.addRecipe(recipe);
