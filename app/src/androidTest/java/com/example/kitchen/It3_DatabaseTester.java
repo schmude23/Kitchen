@@ -613,6 +613,7 @@ public class It3_DatabaseTester {
                 "Recipe By:CALJAKE\n" +
                 "This is a great brunch recipe, it's perfect for large gatherings. A yummy bread casserole baked with sweet apple filling.\n" +
                 "Ingredients\n" +
+                "1 1/2 cups milk\n" +
                 "3/4 cup butter, melted\n" +
                 "1 cup brown sugar\n" +
                 "1 teaspoon ground cinnamon\n" +
@@ -620,7 +621,6 @@ public class It3_DatabaseTester {
                 "20 slices white bread\n" +
                 " \n" +
                 "6 eggs\n" +
-                "1 1/2 cups milk\n" +
                 "1 teaspoon vanilla extract\n" +
                 "1/2 cup maple syrup\n" +
                 "Directions\n" +

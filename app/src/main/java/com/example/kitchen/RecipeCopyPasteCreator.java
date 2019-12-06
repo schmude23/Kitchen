@@ -434,19 +434,19 @@ public class RecipeCopyPasteCreator {
         }
 
         if(type.equalsIgnoreCase("ingredient")){
-            //TODO: think about "1/2 cup"
+            //TODO: think about "1/2 cup" what about 1.5?
 
             //checks for "1/2" numbers or for normal numbers
             try{
-                number = Integer.parseInt(tokens.get(0)) + 0.0;
+                number = Double.parseDouble(tokens.get(0));
                 found = true;
             }catch (NumberFormatException nfe){
                 String temp = tokens.get(0);
                 String[] arr = temp.split("");
-                //arr[1].equalsIgnoreCase("/")
+                //arr.length == 2 && arr[1].equalsIgnoreCase("/")
                 try {
-                    if (arr.length == 2 && temp.contains("/") || temp.contains("\\")) {
-                        number = Double.parseDouble(arr[1]) / Double.parseDouble(arr[2]);
+                    if (temp.contains("/") || temp.contains("\\")) {
+                        number = Double.parseDouble(arr[0]) / Double.parseDouble(arr[2]);
                         found = true;
                     }
                 }catch(NumberFormatException nfe2){/*do nothing*/}
@@ -455,8 +455,8 @@ public class RecipeCopyPasteCreator {
             try {
                 String temp = tokens.get(1);
                 String[] arr = temp.split("");
-                if (arr.length > 2 && arr[2].equalsIgnoreCase("/")) {
-                    number += Double.parseDouble(arr[1]) / Double.parseDouble(arr[2]);
+                if (temp.contains("/") || temp.contains("\\")) {
+                    number += Double.parseDouble(arr[0]) / Double.parseDouble(arr[2]);
                     found = true;
                 }
             }catch(NumberFormatException nfe3){/*do nothing*/}
