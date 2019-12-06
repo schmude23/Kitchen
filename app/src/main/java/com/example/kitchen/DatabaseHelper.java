@@ -2,6 +2,7 @@ package com.example.kitchen;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,10 +21,11 @@ import java.util.Random;
 
 //create read update delete
 public class DatabaseHelper extends SQLiteOpenHelper {
-    //set to true for printouts.
-    private static boolean IS_IN_TESTING_MODE = true;
 
-    public static final int VERSION_NUMBER = 4;
+    //The app context
+    private Context context;
+
+    public static final int VERSION_NUMBER = 5;
     public static final String DATABASE_NAME = "RECIPE_DATABASE";
 
     //Ingredient Table (Uses prefix IT)
@@ -74,17 +76,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SC_QUANTITY = "QUANTITY";
     public static final String SC_UNIT = "UNIT";
 
-    //User Table (Uses prefix SC)
+    //User Table (Uses prefix UI)
     private static final String TABLE_USER_INFO = "USER_INFO";
     public static final String UI_KEY_ID = "ID";
     public static final String UI_USERNAME = "USERNAME";
     public static final String UI_PASSWORD = "PASSWORD";
-    public static final String UI_HAND_CHOICE = "HAND_CHOICE";
+    public static final String UI_THEME = "THEME";
 
 
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION_NUMBER);
+        this.context = context;
     }
 
     /**
@@ -155,7 +158,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + UI_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + UI_USERNAME + " TEXT,"
                 + UI_PASSWORD + " TEXT,"
-                + UI_HAND_CHOICE + " INTEGER" + ")";
+                + UI_THEME + " INTEGER" + ")";
         sqLiteDatabase.execSQL(CREATE_USER_INFO_TABLE);
 
     }
@@ -385,8 +388,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @return The recipes that have favorite value of 1
      */
-    public ArrayList<Recipe> getRecipeByFavorite() {
-        //TODO:Test/Correct
+    public ArrayList<Recipe> getRecipesByFavorite() {
         Recipe recipe;
         ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -1337,12 +1339,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if((origUnit.equalsIgnoreCase("tablespoon(s)") || origUnit.equalsIgnoreCase("teaspoon(s)") ||
                 origUnit.equalsIgnoreCase("pint(s)") || origUnit.equalsIgnoreCase("fluid ounce(s)") ||
                 origUnit.equalsIgnoreCase("quart(s)") || origUnit.equalsIgnoreCase("gallon(s)") ||
-                origUnit.equalsIgnoreCase("pinch(es)"))
+                origUnit.equalsIgnoreCase("pinch(es)") || origUnit.equalsIgnoreCase("cup(s)"))
                 &&
                 (reqUnit.equalsIgnoreCase("tablespoon(s)") || reqUnit.equalsIgnoreCase("teaspoon(s)") ||
                 reqUnit.equalsIgnoreCase("pint(s)") || reqUnit.equalsIgnoreCase("fluid ounce(s)") ||
                 reqUnit.equalsIgnoreCase("quart(s)") || reqUnit.equalsIgnoreCase("gallon(s)") ||
-                reqUnit.equalsIgnoreCase("pinch(es)"))){
+                reqUnit.equalsIgnoreCase("pinch(es)") || reqUnit.equalsIgnoreCase("cup(s)"))){
 
             return convertUnitVolume(origUnit, reqUnit, quantity);
         }
@@ -1372,7 +1374,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful, will return a value of the quantity in the new unit
      */
     public double convertUnitVolume(String origUnit, String reqUnit, double quantity) {
-        //TODO: Test/Correct
         //converting all values to cups
         if (origUnit.contentEquals("pinch(es)")) {
             quantity = quantity / 768;
@@ -1432,7 +1433,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful, will return a value of the quantity in the new unit
      */
     public double convertUnitMass(String origUnit, String reqUnit, double quantity) {
-        //TODO: Test/Correct
         if (origUnit.contentEquals("grain(s)")) {
             quantity = quantity *  0.06479891;
         }
@@ -1714,7 +1714,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cVals = new ContentValues();
         cVals.put(UI_USERNAME, username);
         cVals.put(UI_PASSWORD, password);
-        cVals.put(UI_HAND_CHOICE, 1);
+        cVals.put(UI_THEME, 1);
         int res = (int) sqLiteDatabase.insert(TABLE_USER_INFO, null, cVals);
 
         return res;
@@ -1745,14 +1745,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * This method returns a true or false on username and password match
      *
-     * @return If successful in username and password matching, return true
-     * otherwise, return false
+     * @return If successful in username and password matching, return true and put the user's settings
+     * into shared preferences, otherwise, return false
      */
     public int loginCheck(String username, String password){
         String storedPass = null;
         int userId = -1;
         SQLiteDatabase db = this.getReadableDatabase();
         PasswordEncryption md5 = new PasswordEncryption();
+        int themeId = 0; //Default theme Id
 
         //Checks if username exists
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USER_INFO + "  WHERE " + UI_USERNAME + " = ? ", new String[]{String.valueOf(username)});
@@ -1766,6 +1767,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int passIndex = cursor.getColumnIndexOrThrow(UI_PASSWORD);
                 storedPass = cursor.getString(passIndex);
             }
+            if (cursor.getColumnIndex(UI_THEME) != -1) {
+                int themeIndex = cursor.getColumnIndexOrThrow(UI_THEME);
+                themeId = cursor.getInt(themeIndex);
+            }
         }else{
             return -1;
         }
@@ -1775,6 +1780,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //checks if password is correct.
        if(password != null && password.equals(storedPass)){
+
+           SharedPreferences prefs = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+           prefs.edit().putString("Username", username);
+           prefs.edit().putInt("UserId", userId);
+           prefs.edit().putInt("ThemeId", themeId);
+
            return userId;
        }
 
@@ -1787,7 +1798,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param  username, password, updateUsername, updatePassword
      * @return If successful in updating, will return true
      */
-    public boolean editUser(String username, String password, String updateUsername, String updatePassword, int updateHand) {
+    public boolean editUser(String username, String password, String updateUsername, String updatePassword, int updateTheme) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         PasswordEncryption md5 = new PasswordEncryption();
 
@@ -1802,7 +1813,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cVals = new ContentValues();
         cVals.put(UI_USERNAME, updateUsername);
         cVals.put(UI_PASSWORD, updatePassword);
-        cVals.put(UI_HAND_CHOICE, updateHand);
+        cVals.put(UI_THEME, updateTheme);
         long returned = sqLiteDatabase.update(TABLE_USER_INFO, cVals, UI_KEY_ID + " = ?", new String[]{String.valueOf(userId)});
         return true;
     }

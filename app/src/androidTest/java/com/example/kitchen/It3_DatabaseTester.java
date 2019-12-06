@@ -358,6 +358,214 @@ public class It3_DatabaseTester {
     }
 
     /**
+     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
+     * changes
+     * This method tests convertUnits was gallons, is now fluid ounces
+     */
+    @Test
+    public void convertRecipeIngredientUnits_GallonsToFluidOunces() {
+        setUp();
+        createRecipe_DifferentUnits("gallon(s)");
+        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "gallon(s)", "fluid ounce(s)");
+        assertEquals("convertRecipeIngredientUnits_GallonsToFluidOunces - Quantity", 768, returned.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits_GallonsToFluidOunces - Unit", "fluid ounce(s)", returned.getIngredientList().get(0).getUnit());
+        tearDown();
+    }
+
+    /**
+     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
+     * changes
+     * This method tests convertUnits was fluid ounces, is now cups
+     */
+    @Test
+    public void convertRecipeIngredientUnits_FluidOuncesToCups() {
+        setUp();
+        createRecipe_DifferentUnits("fluid ounce(s)");
+        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "fluid ounce(s)", "cup(s)");
+        assertEquals("convertRecipeIngredientUnits_FluidOuncesToCups - Quantity", 0.75, returned.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits_FluidOuncesToCups - Unit", "cup(s)", returned.getIngredientList().get(0).getUnit());
+        tearDown();
+    }
+
+    /**
+     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
+     * changes
+     * This method tests convertUnits was pinches, is now tablespoons
+     */
+    @Test
+    public void convertRecipeIngredientUnits_PinchesToTablespoons() {
+        setUp();
+        createRecipe_DifferentUnits("pinch(es)");
+        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "pinch(es)", "tablespoon(s)");
+        assertEquals("convertRecipeIngredientUnits_PinchesToTablespoons - Quantity", 0.13, returned.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits_PinchesToTablespoons - Unit", "tablespoon(s)", returned.getIngredientList().get(0).getUnit());
+        tearDown();
+    }
+
+    /**
+     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
+     * changes
+     * This method tests convertUnits was tablespoons, is now pinches
+     */
+    @Test
+    public void convertRecipeIngredientUnits_TablespoonsToPinches() {
+        setUp();
+        createRecipe_DifferentUnits("tablespoon(s)");
+        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "tablespoon(s)", "pinch(es)");
+        assertEquals("convertRecipeIngredientUnits_TablespoonsToPinches - Quantity", 288, returned.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits_TablespoonsToPinches - Unit", "pinch(es)", returned.getIngredientList().get(0).getUnit());
+        tearDown();
+    }
+
+    /**
+     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
+     * changes
+     * This method tests convertUnits was kilograms, is now milligrams
+     */
+    @Test
+    public void convertRecipeIngredientUnits_KilogramsToMilligrams() {
+        setUp();
+        createRecipe_DifferentUnits("kilogram(s)");
+        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "kilogram(s)", "milligram(s)");
+        assertEquals("convertRecipeIngredientUnits_KilogramToMilligram - Quantity", 6000000, returned.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits_KilogramToMilligram - Unit", "milligram(s)", returned.getIngredientList().get(0).getUnit());
+        tearDown();
+    }
+
+    /**
+     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
+     * changes
+     * This method tests convertUnits was milligrams, is now kilograms
+     */
+    @Test
+    public void convertRecipeIngredientUnits_MilligramsToKilograms() {
+        setUp();
+        createRecipe_DifferentUnits("milligram(s)");
+        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "milligram(s)", "kilogram(s)");
+        assertEquals("convertRecipeIngredientUnits_MilligramsToKilograms - Quantity", 0, returned.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits_MilligramsToKilograms - Unit", "kilogram(s)", returned.getIngredientList().get(0).getUnit());
+        tearDown();
+    }
+
+    /**
+     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
+     * changes
+     * This method tests convertUnits was ounces, is now pounds
+     */
+    @Test
+    public void convertRecipeIngredientUnits_OuncesToPounds() {
+        setUp();
+        createRecipe_DifferentUnits("ounce(s)");
+        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "ounce(s)", "pound(s)");
+        assertEquals("convertRecipeIngredientUnits_OuncesToPounds - Quantity", 0.37, returned.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits_OuncesToPounds - Unit", "pound(s)", returned.getIngredientList().get(0).getUnit());
+        tearDown();
+    }
+
+    /**
+     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
+     * changes
+     * This method tests convertUnits was pounds, is now ounces
+     */
+    @Test
+    public void convertRecipeIngredientUnits_PoundsToOunces() {
+        setUp();
+        createRecipe_DifferentUnits("pound(s)");
+        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "pound(s)", "ounce(s)");
+        assertEquals("convertRecipeIngredientUnits_PoundsToOunces - Quantity", 96, returned.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits_PoundsToOunces - Unit", "ounce(s)", returned.getIngredientList().get(0).getUnit());
+        tearDown();
+    }
+
+    /**
+     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
+     * changes
+     * This method tests convertUnits was ounces, is now grains
+     */
+    @Test
+    public void convertRecipeIngredientUnits_OuncesToGrains() {
+        setUp();
+        createRecipe_DifferentUnits("ounce(s)");
+        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "ounce(s)", "grain(s)");
+        assertEquals("convertRecipeIngredientUnits_OuncesToGrains - Quantity", 2625, returned.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits_OuncesToGrains - Unit", "grain(s)", returned.getIngredientList().get(0).getUnit());
+        tearDown();
+    }
+
+    /**
+     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
+     * changes
+     * This method tests convertUnits was grains, is now ounces
+     */
+    @Test
+    public void convertRecipeIngredientUnits_GrainsToOunces() {
+        setUp();
+        createRecipe_DifferentUnits("grain(s)");
+        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "grain(s)", "ounce(s)");
+        assertEquals("convertRecipeIngredientUnits_GrainsToOunces - Quantity", 0.01, returned.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits_GrainsToOunces - Unit", "ounce(s)", returned.getIngredientList().get(0).getUnit());
+        tearDown();
+    }
+
+    /**
+     * This method tests that getRecipesByFavorite returns null if no recipes are favorited
+     */
+    @Test
+    public void getFavoritedRecipes_ReturnsNull(){
+        setUp();
+        assertEquals("getFavoritedRecipes - Returns Null", null, testDatabase.getRecipesByFavorite());
+        tearDown();
+    }
+
+    /**
+     * This method tests that getRecipesByFavorite returns a list of recipes if at least one recipe is favorited
+     */
+    @Test
+    public void getFavoritedRecipes_ReturnsList(){
+        setUp();
+        createRecipe_Favorited();
+        assertNotEquals("getFavoritedRecipes - Returns List", null, testDatabase.getRecipesByFavorite());
+        tearDown();
+    }
+
+    /**
+     * This method test that getRecipesByFavorite returns a correct list of favorited recipes
+     */
+    @Test
+    public void getFavoritedRecipes_CorrectInformation(){
+        setUp();
+        createRecipe_Favorited();
+        createRecipe_Favorited();
+        List<Recipe> returned = testDatabase.getRecipesByFavorite();
+        assertEquals("getFavoritedRecipes - Returns 2", 2, returned.size());
+        assertEquals("getFavoritedRecipes - 1st Recipe Title", "TestRecipe2", returned.get(0).getTitle());
+        assertEquals("getFavoritedRecipes - 1st Recipe Servings", 4, returned.get(0).getServings(), 0);
+        assertEquals("getFavoritedRecipes - 1st Recipe Prep_Time", 5, returned.get(0).getPrep_time(), 0);
+        assertEquals("getFavoritedRecipes - 1st Recipe Total_Time", 15, returned.get(0).getTotal_time(), 0);
+        assertEquals("getFavoritedRecipes - 1st Recipe Favorited", true, returned.get(0).getFavorited());
+        ArrayList<RecipeIngredient> recipe1Ingredients = testDatabase.getAllRecipeIngredients(recipeID2);
+        assertEquals("getFavoritedRecipes - 1st RecipeIngredient Units", "cup(s)", recipe1Ingredients.get(0).getUnit());
+        assertEquals("getFavoritedRecipes - 1st RecipeIngredient Quantity", 1, recipe1Ingredients.get(0).getQuantity(), 0);
+        assertEquals("getFavoritedRecipes - 1st RecipeIngredient Details", "", recipe1Ingredients.get(0).getDetails());
+        ArrayList<RecipeDirection> recipe1Directions = testDatabase.getAllRecipeDirections(recipeID2);
+        assertEquals("getFavoritedRecipes - 1st RecipeDirection Number", 1, recipe1Directions.get(0).getDirectionNumber());
+        assertEquals("getFavoritedRecipes - 1st RecipeDirection Text", "TestDirection", recipe1Directions.get(0).getDirectionText());
+        assertEquals("getFavoritedRecipes - 2nd Recipe Title", "TestRecipe2", returned.get(1).getTitle());
+        assertEquals("getFavoritedRecipes - 2nd Recipe Servings", 4, returned.get(1).getServings(), 0);
+        assertEquals("getFavoritedRecipes - 2nd Recipe Prep_Time", 5, returned.get(1).getPrep_time(), 0);
+        assertEquals("getFavoritedRecipes - 2nd Recipe Total_Time", 15, returned.get(1).getTotal_time(), 0);
+        assertEquals("getFavoritedRecipes - 2nd Recipe Favorited", true, returned.get(1).getFavorited());
+        ArrayList<RecipeIngredient> recipe2Ingredients = testDatabase.getAllRecipeIngredients(recipeID2);
+        assertEquals("getFavoritedRecipes - 2nd RecipeIngredient Units", "cup(s)", recipe2Ingredients.get(0).getUnit());
+        assertEquals("getFavoritedRecipes - 2nd RecipeIngredient Quantity", 1, recipe2Ingredients.get(0).getQuantity(), 0);
+        assertEquals("getFavoritedRecipes - 2nd RecipeIngredient Details", "", recipe2Ingredients.get(0).getDetails());
+        ArrayList<RecipeDirection> recipe2Directions = testDatabase.getAllRecipeDirections(recipeID2);
+        assertEquals("getFavoritedRecipes - 2nd RecipeDirection Number", 1, recipe2Directions.get(0).getDirectionNumber());
+        assertEquals("getFavoritedRecipes - 2nd RecipeDirection Text", "TestDirection", recipe2Directions.get(0).getDirectionText());
+        tearDown();
+    }
+
+    /**
      * This method tests that the Recipe(String) constructor is working.
      */
     @Test
@@ -382,6 +590,47 @@ public class It3_DatabaseTester {
         assertEquals("testCreateRecipeUsingString - Correct Category", testRecipe.getCategoryList().get(0).getCategoryID(), retrieved.getCategoryList().get(0).getCategoryID());
 
         tearDown();
+    }
+
+    /**
+     * This method tests that the Recipe Copy Paste Creator constructor is working.
+     */
+    @Test
+    public void testRecipeCopyPasteCreator() {
+        RecipeCopyPasteCreator rcp = new RecipeCopyPasteCreator(appContext.getApplicationContext());
+        String test = "Overnight Apple Cinnamon French Toast\n" +
+                "Servings\n" +
+                "10\n" +
+                "Prep\n" +
+                "\n" +
+                "20 m\n" +
+                "Cook\n" +
+                "\n" +
+                "1 h 30 m\n" +
+                "Ready In\n" +
+                "\n" +
+                "15 h\n" +
+                "Recipe By:CALJAKE\n" +
+                "\"This is a great brunch recipe, it's perfect for large gatherings. A yummy bread casserole baked with sweet apple filling.\"\n" +
+
+
+                "Ingredients\n" +
+                "3/4 cup butter, melted\n" +
+                "1 cup brown sugar\n" +
+                "1 teaspoon ground cinnamon\n" +
+                "2 (21 ounce) cans apple pie filling\n" +
+                "20 slices white bread\n" +
+                " \n" +
+                "6 eggs\n" +
+                "1 1/2 cups milk\n" +
+                "1 teaspoon vanilla extract\n" +
+                "1/2 cup maple syrup\n" +
+                "Directions\n" +
+                "Grease a 9x13 inch baking pan. In a small bowl, stir together the melted butter, brown sugar and cinnamon.\n" +
+                "Spread the sugar mixture into the bottom of the prepared pan. Spread the apple pie filling evenly over the sugar mixture. Layer the bread slices on top of the filling, pressing down as you go. In a medium bowl, beat the eggs with the milk and vanilla. Slowly pour this mixture over the bread, making sure that it is completely absorbed. Cover the pan with aluminum foil and refrigerate overnight.\n" +
+                "In the morning, preheat oven to 350 degrees F (175 degrees C).\n" +
+                "Place covered pan into the oven and bake at 350 degrees F (175 degrees C) for 60 to 75 minutes. When done remove from oven and turn on broiler. Remove foil and drizzle maple syrup on top of the egg topping; broil for 2 minutes, or until the syrup begins to caramelize. Remove from the oven and let stand for 10 minutes, then cut into squares. Invert the pan onto a serving tray or baking sheet so the apple filling is on top. Serve hot.";
+        rcp.main(test);
     }
 
     // Helper Methods:
@@ -443,43 +692,30 @@ public class It3_DatabaseTester {
     }
 
     /**
-     * This method tests that the Recipe Copy Paste Creator constructor is working.
+     * Helper method for tests that need a recipe that is favorited
      */
-    @Test
-    public void testRecipeCopyPasteCreator() {
-        RecipeCopyPasteCreator rcp = new RecipeCopyPasteCreator(appContext.getApplicationContext());
-        String test = "Overnight Apple Cinnamon French Toast\n" +
-                "Servings\n" +
-                "10\n" +
-                "Prep\n" +
-                "\n" +
-                "20 m\n" +
-                "Cook\n" +
-                "\n" +
-                "1 h 30 m\n" +
-                "Ready In\n" +
-                "\n" +
-                "15 h\n" +
-                "Recipe By:CALJAKE\n" +
-                "\"This is a great brunch recipe, it's perfect for large gatherings. A yummy bread casserole baked with sweet apple filling.\"\n" +
+    public void createRecipe_Favorited(){
+        Category category2 = new Category(-1, "Lunch");
+        int categoryID2 = testDatabase.addCategory(category);
 
+        RecipeCategory recipeCategory2 = new RecipeCategory(-1, -1, categoryID);
+        List<RecipeCategory> listOfCategories = new ArrayList<RecipeCategory>();
+        listOfCategories.add(recipeCategory2);
 
-                "Ingredients\n" +
-                "3/4 cup butter, melted\n" +
-                "1 cup brown sugar\n" +
-                "1 teaspoon ground cinnamon\n" +
-                "2 (21 ounce) cans apple pie filling\n" +
-                "20 slices white bread\n" +
-                " \n" +
-                "6 eggs\n" +
-                "1 1/2 cups milk\n" +
-                "1 teaspoon vanilla extract\n" +
-                "1/2 cup maple syrup\n" +
-                "Directions\n" +
-                "Grease a 9x13 inch baking pan. In a small bowl, stir together the melted butter, brown sugar and cinnamon.\n" +
-                "Spread the sugar mixture into the bottom of the prepared pan. Spread the apple pie filling evenly over the sugar mixture. Layer the bread slices on top of the filling, pressing down as you go. In a medium bowl, beat the eggs with the milk and vanilla. Slowly pour this mixture over the bread, making sure that it is completely absorbed. Cover the pan with aluminum foil and refrigerate overnight.\n" +
-                "In the morning, preheat oven to 350 degrees F (175 degrees C).\n" +
-                "Place covered pan into the oven and bake at 350 degrees F (175 degrees C) for 60 to 75 minutes. When done remove from oven and turn on broiler. Remove foil and drizzle maple syrup on top of the egg topping; broil for 2 minutes, or until the syrup begins to caramelize. Remove from the oven and let stand for 10 minutes, then cut into squares. Invert the pan onto a serving tray or baking sheet so the apple filling is on top. Serve hot.";
-        rcp.main(test);
+        Ingredient ingredient2 = new Ingredient(-1, "Sugar");
+        ingredientIDM2 = testDatabase.addIngredient(ingredient2);
+        Ingredient ingredient3 = new Ingredient(-1, "Oil");
+        ingredientIDM3 = testDatabase.addIngredient(ingredient3);
+
+        RecipeIngredient recipeIngredient2 = new RecipeIngredient(-1, -1, ingredientIDM2, 1, "cup(s)", "");
+        List<RecipeIngredient> listOfIngredients = new ArrayList<RecipeIngredient>();
+        listOfIngredients.add(recipeIngredient2);
+
+        RecipeDirection recipeDirection = new RecipeDirection(-1, -1, "TestDirection", 1);
+        List<RecipeDirection> listOfDirections = new ArrayList<RecipeDirection>();
+        listOfDirections.add(recipeDirection);
+
+        testRecipe2 = new Recipe("TestRecipe2", 4, 5, 15, true, listOfIngredients, listOfDirections, listOfCategories);
+        recipeID2 = testDatabase.addRecipe(testRecipe2);
     }
 }

@@ -1109,36 +1109,6 @@ public class It2_DatabaseTester {
     /**
      * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
      * changes
-     * This method tests convertUnits was pounds, is now pinches
-     */
-    @Test
-    public void convertRecipeIngredientUnits_PoundsToPinches() {
-        setUp();
-        createRecipe_DifferentUnits("pound(s)");
-        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "pound(s)", "pinch(es)");
-        assertEquals("convertRecipeIngredientUnits_PintToCups - Quantity", 8834.56, returned.getIngredientList().get(0).getQuantity(), 0);
-        assertEquals("convertRecipeIngredientUnits_PintToCups - Unit", "pinch(es)", returned.getIngredientList().get(0).getUnit());
-        tearDown();
-    }
-
-    /**
-     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
-     * changes
-     * This method tests convertUnits was pinches, is now pounds
-     */
-    @Test
-    public void convertRecipeIngredientUnits_PinchesToPounds() {
-        setUp();
-        createRecipe_DifferentUnits("pinch(es)");
-        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "pinch(es)", "pound(s)");
-        assertEquals("convertRecipeIngredientUnits_PintToCups - Quantity", 0.00, returned.getIngredientList().get(0).getQuantity(), 0);
-        assertEquals("convertRecipeIngredientUnits_PintToCups - Unit", "pound(s)", returned.getIngredientList().get(0).getUnit());
-        tearDown();
-    }
-
-    /**
-     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
-     * changes
      * This method tests convertUnits was blank, is now cups. This should not change the ingredient at all
      */
     @Test

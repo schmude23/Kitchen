@@ -1,6 +1,7 @@
 package com.example.kitchen;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,7 +138,6 @@ class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>
          */
         @Override
         public void onClick(View v) {
-//            recipes.notifyAll();
             listener.onClick(getAdapterPosition());
         }
     }
