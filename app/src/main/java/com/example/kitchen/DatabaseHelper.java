@@ -389,7 +389,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return The recipes that have favorite value of 1
      */
     public ArrayList<Recipe> getRecipesByFavorite() {
-        //TODO:Test/Correct
         Recipe recipe;
         ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
         SQLiteDatabase db = this.getReadableDatabase();
