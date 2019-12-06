@@ -1271,6 +1271,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method returns a list of all Categories
+     *
+     * @return If successful in fetching the Categories this method will return an Array list of
+     * Categories, if not this method will return null.
+     */
+    public ArrayList<Category> getAllCategories() {
+        Category category;
+        ArrayList<Category> categoryList = new ArrayList<Category>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CATEGORY_LIST, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                category = mapCategory(cursor);
+                categoryList.add(category);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        if (categoryList.size() == 0) {
+            return null;
+        }
+        return categoryList;
+    }
+
+    /**
      * This method deletes the recipe category list in the recipe category table using the recipeId
      *
      * @param recipeId
