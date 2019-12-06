@@ -25,7 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //The app context
     private Context context;
 
-    public static final int VERSION_NUMBER = 4;
+    public static final int VERSION_NUMBER = 5;
     public static final String DATABASE_NAME = "RECIPE_DATABASE";
 
     //Ingredient Table (Uses prefix IT)
@@ -388,7 +388,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @return The recipes that have favorite value of 1
      */
-    public ArrayList<Recipe> getRecipeByFavorite() {
+    public ArrayList<Recipe> getRecipesByFavorite() {
         //TODO:Test/Correct
         Recipe recipe;
         ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
@@ -1340,12 +1340,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if((origUnit.equalsIgnoreCase("tablespoon(s)") || origUnit.equalsIgnoreCase("teaspoon(s)") ||
                 origUnit.equalsIgnoreCase("pint(s)") || origUnit.equalsIgnoreCase("fluid ounce(s)") ||
                 origUnit.equalsIgnoreCase("quart(s)") || origUnit.equalsIgnoreCase("gallon(s)") ||
-                origUnit.equalsIgnoreCase("pinch(es)"))
+                origUnit.equalsIgnoreCase("pinch(es)") || origUnit.equalsIgnoreCase("cup(s)"))
                 &&
                 (reqUnit.equalsIgnoreCase("tablespoon(s)") || reqUnit.equalsIgnoreCase("teaspoon(s)") ||
                 reqUnit.equalsIgnoreCase("pint(s)") || reqUnit.equalsIgnoreCase("fluid ounce(s)") ||
                 reqUnit.equalsIgnoreCase("quart(s)") || reqUnit.equalsIgnoreCase("gallon(s)") ||
-                reqUnit.equalsIgnoreCase("pinch(es)"))){
+                reqUnit.equalsIgnoreCase("pinch(es)") || reqUnit.equalsIgnoreCase("cup(s)"))){
 
             return convertUnitVolume(origUnit, reqUnit, quantity);
         }
@@ -1375,7 +1375,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful, will return a value of the quantity in the new unit
      */
     public double convertUnitVolume(String origUnit, String reqUnit, double quantity) {
-        //TODO: Test/Correct
         //converting all values to cups
         if (origUnit.contentEquals("pinch(es)")) {
             quantity = quantity / 768;
@@ -1435,7 +1434,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful, will return a value of the quantity in the new unit
      */
     public double convertUnitMass(String origUnit, String reqUnit, double quantity) {
-        //TODO: Test/Correct
         if (origUnit.contentEquals("grain(s)")) {
             quantity = quantity *  0.06479891;
         }
@@ -1801,7 +1799,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param  username, password, updateUsername, updatePassword
      * @return If successful in updating, will return true
      */
-    public boolean editUser(String username, String password, String updateUsername, String updatePassword, int updateHand) {
+    public boolean editUser(String username, String password, String updateUsername, String updatePassword, int updateTheme) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         PasswordEncryption md5 = new PasswordEncryption();
 
@@ -1816,7 +1814,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cVals = new ContentValues();
         cVals.put(UI_USERNAME, updateUsername);
         cVals.put(UI_PASSWORD, updatePassword);
-        cVals.put(UI_THEME, updateHand);
+        cVals.put(UI_THEME, updateTheme);
         long returned = sqLiteDatabase.update(TABLE_USER_INFO, cVals, UI_KEY_ID + " = ?", new String[]{String.valueOf(userId)});
         return true;
     }
