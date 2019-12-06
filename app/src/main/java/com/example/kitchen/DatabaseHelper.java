@@ -1277,6 +1277,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Categories, if not this method will return null.
      */
     public ArrayList<Category> getAllCategories() {
+        //TODO Test/Correct
         Category category;
         ArrayList<Category> categoryList = new ArrayList<Category>();
         SQLiteDatabase db = this.getReadableDatabase();
