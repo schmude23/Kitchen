@@ -31,13 +31,14 @@ public class RecipeCopyPasteCreator {
      * @param recipeTxt
      * @return true if the operation was successful, false otherwise
      */
-    public Boolean main(String recipeTxt) {
+    public int main(String recipeTxt) {
         //TODO: implement
         recipeScanner = new Scanner(recipeTxt);
-        List<String> tokens = new ArrayList<>();
+        List<String> tokens;
         String recipeTitle = "";
         boolean passed = false;
         boolean titleFound = false;
+        recipe = new Recipe();
 
         while (recipeScanner.hasNextLine()) {
             tokens = new ArrayList<>();
@@ -65,10 +66,10 @@ public class RecipeCopyPasteCreator {
         //make sure ingredient and directions actually have something in them.
         if(recipeIngredientList.size() > 0 && recipeDirectionList.size() >0 ){
             recipe.setTitle(recipeTitle);
-            database.addRecipe(recipe);
-            return passed;
+
+            return database.addRecipe(recipe);
         }
-            return false;
+            return -1;
 
     }
 
@@ -391,7 +392,7 @@ public class RecipeCopyPasteCreator {
                             found = true;
                             tempNum = Double.parseDouble(String.valueOf(letters[1]));
                             tempNum = (tempNum + Double.parseDouble(String.valueOf(letters[3])))/2;
-                            tempNum = tempNum.intValue() + 0.0;
+                            tempNum = tempNum;
                         }
                     }
                 } catch (NumberFormatException e) { /*do nothing*/}
@@ -442,8 +443,9 @@ public class RecipeCopyPasteCreator {
             }catch (NumberFormatException nfe){
                 String temp = tokens.get(0);
                 String[] arr = temp.split("");
+                //arr[1].equalsIgnoreCase("/")
                 try {
-                    if (arr.length > 2 && arr[2].equalsIgnoreCase("/")) {
+                    if (arr.length == 2 && temp.contains("/") || temp.contains("\\")) {
                         number = Double.parseDouble(arr[1]) / Double.parseDouble(arr[2]);
                         found = true;
                     }

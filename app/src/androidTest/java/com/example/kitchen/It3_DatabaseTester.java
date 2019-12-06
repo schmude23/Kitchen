@@ -611,9 +611,7 @@ public class It3_DatabaseTester {
                 "\n" +
                 "15 h\n" +
                 "Recipe By:CALJAKE\n" +
-                "\"This is a great brunch recipe, it's perfect for large gatherings. A yummy bread casserole baked with sweet apple filling.\"\n" +
-
-
+                "This is a great brunch recipe, it's perfect for large gatherings. A yummy bread casserole baked with sweet apple filling.\n" +
                 "Ingredients\n" +
                 "3/4 cup butter, melted\n" +
                 "1 cup brown sugar\n" +
@@ -630,6 +628,37 @@ public class It3_DatabaseTester {
                 "Spread the sugar mixture into the bottom of the prepared pan. Spread the apple pie filling evenly over the sugar mixture. Layer the bread slices on top of the filling, pressing down as you go. In a medium bowl, beat the eggs with the milk and vanilla. Slowly pour this mixture over the bread, making sure that it is completely absorbed. Cover the pan with aluminum foil and refrigerate overnight.\n" +
                 "In the morning, preheat oven to 350 degrees F (175 degrees C).\n" +
                 "Place covered pan into the oven and bake at 350 degrees F (175 degrees C) for 60 to 75 minutes. When done remove from oven and turn on broiler. Remove foil and drizzle maple syrup on top of the egg topping; broil for 2 minutes, or until the syrup begins to caramelize. Remove from the oven and let stand for 10 minutes, then cut into squares. Invert the pan onto a serving tray or baking sheet so the apple filling is on top. Serve hot.";
+        rcp.main(test);
+
+        test = "South African Melktert (Milk Tart)\n" +
+                "Rated as 4.18 out of 5 Stars\n" +
+                "Prep\n" +
+                "\n" +
+                "30 m\n" +
+                "Cook\n" +
+                "\n" +
+                "40 m\n" +
+                "Ready In\n" +
+                "\n" +
+                "1 h 10 m\n" +
+                "Recipe By:TWAKMUIS\n" +
+                "\"My 'ouma' South African grandmother's legendary milk tart. It is lip-smacking. The recipe is a real winner. It is a traditional South African tart that is very easy to prepare.\"\n" +
+                "Ingredients\n" +
+                "3 tablespoons butter, melted\n" +
+                "1 cup white sugar\n" +
+                "3 egg yolks\n" +
+                "1 cup cake flour\n" +
+                "1 teaspoon baking powder\n" +
+                " \n" +
+                "1/4 teaspoon salt\n" +
+                "1 teaspoon vanilla extract\n" +
+                "4 cups milk\n" +
+                "3 egg white\n" +
+                "1 tablespoon cinnamon sugar\n" +
+                "Directions\n" +
+                "Preheat the oven to 375 degrees F (190 degrees C). Coat a 9 inch deep dish pie plate with vegetable oil cooking spray.\n" +
+                "In a large bowl, mix together the butter and sugar until smooth. Add the egg yolks and beat until light and fluffy. Sift in the cake flour, baking powder and salt, and stir until well blended. Mix in the vanilla and milk. In a separate bowl, whip the egg whites to stiff peaks using an electric mixer. Fold into the batter. Pour into the prepared pie plate, and sprinkle cinnamon sugar over the top.\n" +
+                "Bake for 25 minutes in the preheated oven, then reduce the temperature to 325 degrees F (165 degrees C). Continue to bake for 25 to 30 minutes, or until the center is set when you gently jiggle the pie. Serve hot or cold.";
         rcp.main(test);
     }
 
