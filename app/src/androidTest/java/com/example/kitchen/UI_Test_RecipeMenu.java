@@ -62,7 +62,7 @@ public class UI_Test_RecipeMenu {
                                         withId(R.id.recipe_toolbar),
                                         1),
                                 2)));
-        overflowMenuButton.perform(scrollTo(), click());
+        overflowMenuButton.perform(click());
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.title), withText("Add to Cart"),

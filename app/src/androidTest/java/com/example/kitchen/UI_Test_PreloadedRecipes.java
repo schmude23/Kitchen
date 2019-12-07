@@ -61,7 +61,7 @@ public class UI_Test_PreloadedRecipes {
                 allOf(withId(R.id.text_recipe_name), withText("Quick Lunch Panini")));
         textView6.check(matches(isDisplayed()));
 
-        //Below code can't run because of scrolling issues.
+        //TODO: Below code can't run because of scrolling issues.
         /*
         ViewInteraction textView7 = onView(
                 allOf(withId(R.id.text_recipe_name), withText("Ground Beef Tacos")));
