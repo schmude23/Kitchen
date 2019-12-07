@@ -39,6 +39,7 @@ public class UI_Test_RegisterAndLogin {
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
+
     @Test
     public void uI_Test_RegisterAndLogin() {
 

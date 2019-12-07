@@ -7,6 +7,7 @@ import android.view.ViewParent;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
@@ -41,6 +42,7 @@ public class UI_Test_EditRecipe {
 
     @Test
     public void uI_Test_EditRecipe() {
+
         ViewInteraction linearLayout = onView(
                 allOf(childAtPosition(
                         allOf(withId(R.id.recipe_list_recycler),
@@ -67,7 +69,7 @@ public class UI_Test_EditRecipe {
                                         withId(R.id.recipe_toolbar),
                                         1),
                                 2)));
-        overflowMenuButton.perform(scrollTo(), click());
+        overflowMenuButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -89,13 +91,7 @@ public class UI_Test_EditRecipe {
         appCompatTextView.perform(click());
 
         ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.edit_recipe_servings_edit_text), withText("4.0"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        0),
-                                2),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_recipe_servings_edit_text), withText("4.0")));
         appCompatEditText.perform(replaceText("2"));
 
         ViewInteraction appCompatEditText2 = onView(
@@ -119,13 +115,7 @@ public class UI_Test_EditRecipe {
         floatingActionButton.perform(click());
 
         ViewInteraction floatingActionButton2 = onView(
-                allOf(withId(R.id.edit_ingredient_next_button),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.FrameLayout")),
-                                        1),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_ingredient_next_button)));
         floatingActionButton2.perform(click());
 
         ViewInteraction floatingActionButton3 = onView(
@@ -158,6 +148,10 @@ public class UI_Test_EditRecipe {
                                 7),
                         isDisplayed()));
         textView.check(matches(withText("2.0")));
+
+        //Teardown to clear database
+        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase(DatabaseHelper.DATABASE_NAME);
+
     }
 
     private static Matcher<View> childAtPosition(
