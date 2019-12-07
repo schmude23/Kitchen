@@ -1,6 +1,7 @@
 package com.example.kitchen;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 
 import android.app.Dialog;
@@ -9,6 +10,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -16,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -51,6 +55,11 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_ingredient);
 
+        // Display Toolbar
+        Toolbar toolbar = findViewById(R.id.edit_recipe_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         int recipeID = getIntent().getIntExtra("recipeId", -1);
         newRecipe = getIntent().getBooleanExtra("newRecipe", true);
         recipe = database.getRecipe(recipeID);
@@ -65,7 +74,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
         // set the ingredientListView variable to your ingredientList in the xml
         ingredientListView = (ListView) findViewById(R.id.edit_ingredient_ingredient_list);
         ingredientListView.setAdapter(ingredientAdapter);
-        if (newRecipe)
+        if (newRecipe && recipe.getIngredientList() == null)
             addRecipe();
         else
             editRecipe();
@@ -77,14 +86,13 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
         });
 
         ArrayList<Ingredient> ingredients = database.getAllIngredients();
-        String [] ingredientStrings = new String [ingredients.size()];
-        for(int i = 0;i < ingredients.size(); i++){
+        String[] ingredientStrings = new String[ingredients.size()];
+        for (int i = 0; i < ingredients.size(); i++) {
             ingredientStrings[i] = ingredients.get(i).getName();
         }
         ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, ingredientStrings);
-        AutoCompleteTextView textView =  findViewById(R.id.edit_ingredient_ingredient_edit_text);
+        AutoCompleteTextView textView = findViewById(R.id.edit_ingredient_ingredient_edit_text);
         textView.setAdapter(autoCompleteAdapter);
-
 
 
     }
@@ -94,15 +102,16 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
      */
     private void addRecipe() {
         recipe.setIngredientList(new ArrayList<RecipeIngredient>());
-        recipe.setDirectionsList(new ArrayList<RecipeDirection>());
-        recipe.setCategoryList(new ArrayList<RecipeCategory>());
+        //recipe.setDirectionsList(new ArrayList<RecipeDirection>());
+        //recipe.setCategoryList(new ArrayList<RecipeCategory>());
     }
 
     /**
      *
      */
     private void editRecipe() {
-        finishButton.setImageResource(R.drawable.ic_check_mark);
+        if (!newRecipe)
+            finishButton.setImageResource(R.drawable.ic_check_mark);
         for (int i = 0; i < recipe.getIngredientList().size(); i++) {
             String quantity = String.valueOf(recipe.getIngredientList().get(i).getQuantity());
             String unit = recipe.getIngredientList().get(i).getUnit();
@@ -167,7 +176,6 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
     }
 
     /**
-     *
      * @param v
      */
     public void onEditIngredientPopupOkayButtonPressed(View v) {
@@ -185,7 +193,8 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
             myDialog.dismiss();
         }
     }
-    public void onEditIngredientPopupRemoveButtonPressed(View v){
+
+    public void onEditIngredientPopupRemoveButtonPressed(View v) {
         database.deleteIngredient(recipe.getIngredientList().get(position).getIngredientID());
         recipe.getIngredientList().remove(position);
         ingredientList.remove(position);
@@ -214,7 +223,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
             Ingredient i = database.getIngredient(recipe.getIngredientList().get(position).getIngredientID());
             editIngredientPopupIngredientEditText.setText(i.getName());
             String details = recipe.getIngredientList().get(position).getDetails();
-            if(details != null)
+            if (details != null)
                 editIngredientPopupIngredientDetailsEditText.setText(details);
             editIngredientPopupQuantityEditText.setText(valueOf(recipe.getIngredientList().get(position).getQuantity()));
         } else {
@@ -270,7 +279,6 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
     }
 
     /**
-     *
      * @param position
      */
     public void editIngredient(int position) {
@@ -306,27 +314,25 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-    /**
-     * This method monitors android button keys, i.e. back button
-     * deletes the recipe and returns to RecipeList if recipe is new
-     * @param keyCode
-     * @param event
-     * @return
-     */ /*
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            // Log.d(this.getClass().getName(), "back button pressed");
-            if(newRecipe)
-            {
-                database.deleteRecipe(recipe.getKeyID());
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return false;
-                //return super.onKeyDown(keyCode, event);
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    } */
 
+
+    // Toolbar functions
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_recipe_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onEditRecipeBackButtonPressed(View view) {
+        Intent intent = new Intent(getApplicationContext(), EditRecipeActivity.class);
+        intent.putExtra("recipeId", recipe.getKeyID());
+        intent.putExtra("newRecipe", newRecipe);
+        startActivity(intent);
+    }
 }

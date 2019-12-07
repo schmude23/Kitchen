@@ -1,6 +1,7 @@
 package com.example.kitchen;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -8,6 +9,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -39,6 +42,11 @@ public class EditCategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_category);
 
+        // Display Toolbar
+        Toolbar toolbar = findViewById(R.id.edit_recipe_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         // get recipe and create new RecipeDirection ArrayList
         int recipeID = getIntent().getIntExtra("recipeId", -1);
         newRecipe = getIntent().getBooleanExtra("newRecipe", true);
@@ -53,7 +61,7 @@ public class EditCategoryActivity extends AppCompatActivity {
         // set the ingredientListView variable to your ingredientList in the xml
         categoryListView = (ListView) findViewById(R.id.edit_category_category_list);
         categoryListView.setAdapter(categoryAdapter);
-        if (newRecipe)
+        if (newRecipe && recipe.getCategoryList() == null)
             addRecipe();
         else
             editRecipe();
@@ -78,7 +86,8 @@ public class EditCategoryActivity extends AppCompatActivity {
      *
      */
     private void editRecipe() {
-        cancelButton.hide();
+        if(!newRecipe)
+            cancelButton.hide();
         for (int i = 0; i < recipe.getCategoryList().size(); i++) {
             int id = recipe.getCategoryList().get(i).getCategoryID();
             Category category = database.getCategory(id);
@@ -88,7 +97,6 @@ public class EditCategoryActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param v
      */
     public void onEditCategoryAddCategoryButtonPressed(View v) {
@@ -108,44 +116,42 @@ public class EditCategoryActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param v
      */
     public void onEditCategoryNextButtonPressed(View v) {
-        if (recipe.getCategoryList().size() > 0) {
-            // Next Activity
-            if(database.editRecipe(recipe)) {
-                Context context = getApplicationContext();
-
-                CharSequence text = "Recipe Added!";
-                if (!newRecipe)
-                    text = "Recipe Updated!";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-            }
-            Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
-            intent.putExtra("recipeId", recipe.getKeyID());
-            startActivity(intent);
-        }
+//        if (recipe.getCategoryList().size() > 0) {
+//            // Next Activity
+//            if (database.editRecipe(recipe)) {
+//                Context context = getApplicationContext();
+//
+//                CharSequence text = "Recipe Added!";
+//                if (!newRecipe)
+//                    text = "Recipe Updated!";
+//                int duration = Toast.LENGTH_SHORT;
+//
+//                Toast toast = Toast.makeText(context, text, duration);
+//                toast.show();
+//            }
+//        }
+        database.editRecipe(recipe);
+        Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
+        intent.putExtra("recipeId", recipe.getKeyID());
+        startActivity(intent);
     }
 
     /**
-     *
      * @param v
      */
-    public void onEditCategoryCancelButtonPressed(View v){
+    public void onEditCategoryCancelButtonPressed(View v) {
         database.deleteRecipe(recipe.getKeyID());
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
     /**
-     *
      * @param v
      */
-    public void onEditCategoryPopupOkayButtonPressed(View v){
+    public void onEditCategoryPopupOkayButtonPressed(View v) {
         // edit the category that was clicked and update
         String input = editCategoryPopupCategoryEditText.getText().toString();
         if (input.length() > 0) {
@@ -164,10 +170,9 @@ public class EditCategoryActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param v
      */
-    public void onEditCategoryPopupRemoveButtonPressed(View v){
+    public void onEditCategoryPopupRemoveButtonPressed(View v) {
         database.deleteCategory(recipe.getCategoryList().get(position).getCategoryID());
         recipe.getCategoryList().remove(position);
         categoryList.remove(position);
@@ -190,33 +195,31 @@ public class EditCategoryActivity extends AppCompatActivity {
         int categoryID = recipe.getCategoryList().get(position).getCategoryID();
         editCategoryPopupCategoryEditText.setText(database.getCategory(categoryID).getName());
         removeButton = myDialog.findViewById(R.id.edit_category_popup_remove_button);
-        if(position != -1)
+        if (position != -1)
             removeButton.setVisibility(View.VISIBLE);
         this.position = position;
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
         myDialog.show();
     }
-    /**
-     * This method monitors android button keys, i.e. back button
-     * deletes the recipe and returns to RecipeList if recipe is new
-     * @param keyCode
-     * @param event
-     * @return
-     */ /*
+
+    // Toolbar functions
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            // Log.d(this.getClass().getName(), "back button pressed");
-            if(newRecipe)
-            {
-                database.deleteRecipe(recipe.getKeyID());
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return false;
-                //return super.onKeyDown(keyCode, event);
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }*/
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_recipe_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onEditRecipeBackButtonPressed(View view) {
+        Intent intent = new Intent(getApplicationContext(), EditDirectionActivity.class);
+        intent.putExtra("recipeId", recipe.getKeyID());
+        intent.putExtra("newRecipe", newRecipe);
+        startActivity(intent);
+    }
 }

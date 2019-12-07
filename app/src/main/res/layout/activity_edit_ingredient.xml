@@ -5,6 +5,10 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
+    <include
+        android:id="@+id/edit_recipe_toolbar"
+        layout="@layout/edit_recipe_toolbar" />
+
     <AutoCompleteTextView
         android:id="@+id/edit_ingredient_ingredient_edit_text"
         android:layout_width="fill_parent"
