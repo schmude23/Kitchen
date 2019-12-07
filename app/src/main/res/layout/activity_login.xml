@@ -45,7 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:background="@drawable/button_style"
-        android:text="Login" />
+        android:text="Login"
+        android:textColor="@color/light_grey"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -73,10 +74,11 @@
     <Button
         android:id="@+id/button_guest"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="162dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/button_style"
-        android:text="Continue As Guest" />
+        android:text="Skip"
+        android:textColor="@color/light_grey"/>
 
 
 </LinearLayout>
