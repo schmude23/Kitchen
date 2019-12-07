@@ -1030,7 +1030,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean editIngredient(Ingredient ingredient) {
         int id = ingredient.getKeyID();
 
-        //TODO: TEST/CORRECT
         if(getIngredient(ingredient.getName()) != -1){
             return false;
         }
@@ -1277,7 +1276,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Categories, if not this method will return null.
      */
     public ArrayList<Category> getAllCategories() {
-        //TODO Test/Correct
         Category category;
         ArrayList<Category> categoryList = new ArrayList<Category>();
         SQLiteDatabase db = this.getReadableDatabase();

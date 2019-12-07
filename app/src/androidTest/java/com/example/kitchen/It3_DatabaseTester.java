@@ -566,6 +566,49 @@ public class It3_DatabaseTester {
     }
 
     /**
+     * This method tests that getAllCategories returns null when no categories have been created
+     */
+    @Test
+    public void getAllCategories_ReturnsNull(){
+        assertEquals("getAllCategories - Returns Null", null, testDatabase.getAllCategories());
+    }
+
+    /**
+     * This method tests that getAllCategories returns a list when at least one category has been created
+     */
+    @Test
+    public void getAllCategories_ReturnsList(){
+        setUp();
+        assertNotEquals("getAllCategories - Returns List", null, testDatabase.getAllCategories());
+        tearDown();
+    }
+
+    /**
+     * This method tests that getAllCategories returns correct information when at least one category has been created
+     */
+    @Test
+    public void getAllCategories_CorrectInfo(){
+        setUp();
+        createRecipe_Favorited();
+        ArrayList<Category> returned = testDatabase.getAllCategories();
+        assertEquals("getAllCategories - List size", 1, returned.size());
+        assertEquals("getAllCategories - Returns Correct Category Name", "Lunch", returned.get(0).getName());
+        tearDown();
+    }
+
+    /**
+     * This method tests that editIngredient returns false if trying to change an ingredient to something
+     * that already exists
+     */
+    @Test
+    public void editIngredient_ReturnsFalse(){
+        setUp();
+        Ingredient editedIngredient = new Ingredient(-1, "Flour");
+        assertEquals("editIngredient - Returns False", false, testDatabase.editIngredient(editedIngredient));
+        tearDown();
+    }
+
+    /**
      * This method tests that the Recipe(String) constructor is working.
      */
     @Test
