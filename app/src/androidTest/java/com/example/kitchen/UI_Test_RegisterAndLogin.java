@@ -1,12 +1,14 @@
 package com.example.kitchen;
 
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
@@ -39,6 +41,10 @@ public class UI_Test_RegisterAndLogin {
 
     @Test
     public void uI_Test_RegisterAndLogin() {
+
+        //Setup to clear database
+        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase(DatabaseHelper.DATABASE_NAME);
+
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
@@ -78,13 +84,7 @@ public class UI_Test_RegisterAndLogin {
         appCompatTextView.perform(click());
 
         ViewInteraction appCompatTextView2 = onView(
-                allOf(withId(R.id.textview_register), withText("Register"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        3),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.textview_register), withText("Register")));
         appCompatTextView2.perform(click());
 
         ViewInteraction appCompatEditText = onView(
@@ -128,43 +128,19 @@ public class UI_Test_RegisterAndLogin {
         appCompatButton.perform(click());
 
         ViewInteraction appCompatEditText4 = onView(
-                allOf(withId(R.id.edittext_username),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
+                allOf(withId(R.id.edittext_username)));
         appCompatEditText4.perform(replaceText("username"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText5 = onView(
-                allOf(withId(R.id.edittext_password),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.edittext_password)));
         appCompatEditText5.perform(replaceText("password"), closeSoftKeyboard());
 
         ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.button_login), withText("Login"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                2),
-                        isDisplayed()));
+                allOf(withId(R.id.button_login), withText("Login")));
         appCompatButton2.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.profile_name_view), withText("username"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.profile_name_view), withText("username")));
         textView.check(matches(withText("username")));
     }
 
