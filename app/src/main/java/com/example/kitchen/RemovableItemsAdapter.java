@@ -12,13 +12,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
+public class RemovableItemsAdapter extends BaseAdapter implements ListAdapter {
     private ArrayList<String> list = new ArrayList<String>();
     private Context context;
 
 
 
-    public MyCustomAdapter(ArrayList<String> list, Context context) {
+    public RemovableItemsAdapter(ArrayList<String> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -44,7 +44,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         View view = convertView;
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.custom_list_items, null);
+            view = inflater.inflate(R.layout.removable_list_items, null);
         }
 
         //Handle TextView and display string from your list

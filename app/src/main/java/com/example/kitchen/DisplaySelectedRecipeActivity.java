@@ -1,9 +1,9 @@
 package com.example.kitchen;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -14,15 +14,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,20 +39,16 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
     private ImageButton favoriteIcon;
     Recipe recipe;
 
-    // Ingredient ListView variables
-    private ListView ingredientListView;
+    // Ingredient RecyclerView variables
     private ArrayList<String> ingredientList = new ArrayList<String>();
-    private ArrayAdapter<String> ingredientAdapter;
+   RecyclerView ingredientRecyclerView;
+   DisplayRecipeAdapter iAdapter;
 
-    // Direction ListView variables
-    private ListView directionListView;
+    // Direction RecyclerView variables
     ArrayList<String> directionList = new ArrayList<String>();
-    ArrayAdapter<String> directionAdapter;
+    DisplayRecipeAdapter dAdapter;
+    RecyclerView directionRecyclerView;
 
-    // Category ListView variables
-    private ListView categoryListView;
-    ArrayList<String> categoryList = new ArrayList<String>();
-    ArrayAdapter<String> categoryAdapter;
 
     //Popup window dialogs
     Dialog scaleRecipeDialog, deleteRecipeDialog, convertUnitDialog;
@@ -96,7 +89,6 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
         image.setImageBitmap(recipe.getImage(this));
         getIngredients();
         getDirections();
-        getCategories();
         if (recipe.getFavorited()) {
             favoriteIcon.setImageResource(R.drawable.ic_favorite);
 
@@ -104,68 +96,13 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
 
     }
 
-    /**
-     * Sets the size of ListView based on the number of items in the list
-     *
-     * @param listView to be updated
-     * @return true on success, otherwise false
-     */
-    public boolean setListViewHeightBasedOnItems(ListView listView) {
-
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter != null) {
-
-            int numberOfItems = listAdapter.getCount();
-
-            // Get total height of all items.
-            int totalItemsHeight = 0;
-            for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
-                View item = listAdapter.getView(itemPos, null, listView);
-                float px = 500 * (listView.getResources().getDisplayMetrics().density);
-                item.measure(View.MeasureSpec.makeMeasureSpec((int) px, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                totalItemsHeight += item.getMeasuredHeight();
-            }
-
-            // Get total height of all item dividers.
-            int totalDividersHeight = listView.getDividerHeight() *
-                    (numberOfItems - 1);
-            // Get padding
-            int totalPadding = listView.getPaddingTop() + listView.getPaddingBottom();
-
-            // Set list height.
-            ViewGroup.LayoutParams params = listView.getLayoutParams();
-            params.height = totalItemsHeight + totalDividersHeight + totalPadding;
-            listView.setLayoutParams(params);
-            listView.requestLayout();
-            return true;
-
-        } else {
-            return false;
-        }
-
-    }
-
-    /**
+   /**
      *
      */
     private void getIngredients() {
         // setup Ingredient List
-        //ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
-        ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientList) {
-            @NonNull
-            @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
-                textView.setMinHeight(0); // Min Height
-                textView.setMinimumHeight(0); // Min Height
-                textView.setHeight(100); // Height
-                return view;
-            }
-        };
-        // set the ingredientListView variable to ingredientList in the xml
-        ingredientListView = (ListView) findViewById(R.id.ingredient_list);
-        ingredientListView.setAdapter(ingredientAdapter);
+        ingredientRecyclerView = findViewById(R.id.ingredient_list);
+        ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Retrieve ingredients and add to ListView
         for (int i = 0; i < recipe.getIngredientList().size(); i++) {
@@ -183,13 +120,12 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
                     ingredientList.add(name + " [ " + quantity + " ]");
             } else {
                 if (details.compareTo("") != 0)
-                    ingredientList.add(name + " (" + details + ") "+ " [ " + quantity + " " + unit + " ]");
+                    ingredientList.add(name + " (" + details + ") " + " [ " + quantity + " " + unit + " ]");
                 else
                     ingredientList.add(name + " [ " + quantity + " " + unit + " ]");
             }
-            ingredientAdapter.notifyDataSetChanged();
-            ingredientListView.setAdapter(ingredientAdapter);
-            setListViewHeightBasedOnItems(ingredientListView);
+            iAdapter = new DisplayRecipeAdapter(ingredientList);
+            ingredientRecyclerView.setAdapter(iAdapter);
         }
     }
 
@@ -197,21 +133,8 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
      *
      */
     private void getDirections() {
-        directionAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, directionList) {
-            @NonNull
-            @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
-                textView.setMinHeight(0); // Min Height
-                textView.setMinimumHeight(0); // Min Height
-                textView.setHeight(300); // Height
-                return view;
-            }
-        };
-        // set the directionListView variable to directionList in the xml
-        directionListView = (ListView) findViewById(R.id.direction_list);
-        directionListView.setAdapter(directionAdapter);
+        directionRecyclerView = findViewById(R.id.direction_list);
+        directionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         for (int i = 0; i < recipe.getDirectionsList().size(); i++) {
             String text = recipe.getDirectionsList().get(i).getDirectionText();
             int number = recipe.getDirectionsList().get(i).getDirectionNumber();
@@ -222,42 +145,11 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
             }
             // Add to ListView and update height
             directionList.add(number + ") " + text);
-            directionAdapter.notifyDataSetChanged();
-            directionListView.setAdapter(directionAdapter);
-            setListViewHeightBasedOnItems(directionListView);
+            dAdapter = new DisplayRecipeAdapter(directionList);
+            directionRecyclerView.setAdapter(dAdapter);
         }
     }
 
-    /**
-     *
-     */
-    private void getCategories() {
-        categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categoryList) {
-            @NonNull
-            @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
-                textView.setMinHeight(0); // Min Height
-                textView.setMinimumHeight(0); // Min Height
-                textView.setHeight(100); // Height
-                return view;
-            }
-        };
-        // set the directionListView variable to directionList in the xml
-        categoryListView = (ListView) findViewById(R.id.category_list);
-        categoryListView.setAdapter(categoryAdapter);
-        for (int i = 0; i < recipe.getCategoryList().size(); i++) {
-            int categoryID = recipe.getCategoryList().get(i).getCategoryID();
-            Category category = dbHandler.getCategory(categoryID);
-            String text = category.getName();
-            // Add to ListView and update height
-            categoryList.add(text);
-            categoryAdapter.notifyDataSetChanged();
-            categoryListView.setAdapter(categoryAdapter);
-            setListViewHeightBasedOnItems(categoryListView);
-        }
-    }
 
     // Toolbar functions
     @Override
@@ -364,7 +256,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
                 R.array.units_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         oldUnitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
+        // Apply the dAdapter to the spinner
         oldUnitSpinner.setAdapter(oldUnitAdapter);
         oldUnitSpinner.setOnItemSelectedListener(this);
 
@@ -373,7 +265,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
                 R.array.units_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         newUnitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
+        // Apply the dAdapter to the spinner
         newUnitSpinner.setAdapter(newUnitAdapter);
         newUnitSpinner.setOnItemSelectedListener(this);
 

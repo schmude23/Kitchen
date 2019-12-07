@@ -25,13 +25,13 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
 
     private ListView ingredientListView;
     private ArrayList<String> ingredientList = new ArrayList<String>();
-    private MyCustomAdapter ingredientAdapter;
+    private RemovableItemsAdapter ingredientAdapter;
     private Button btnAddIngredient;
     AutoCompleteTextView editIngredient;
 
     private ListView categoryListView;
     private ArrayList<String> categoryList = new ArrayList<String>();
-    private MyCustomAdapter categoryAdapter;
+    private RemovableItemsAdapter categoryAdapter;
 
     private Button btnAddCategory;
     private EditText editCategory;
@@ -139,13 +139,13 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
         btnAddIngredient.setOnClickListener(this);
 
         //ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
-        ingredientAdapter = new MyCustomAdapter(ingredientList, this);
+        ingredientAdapter = new RemovableItemsAdapter(ingredientList, this);
 //        ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientList) {
 //            @NonNull
 //            @Override
 //            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 //                View view = super.getView(position, convertView, parent);
-//                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
+//                TextView textView = ((TextView) view.findViewById(android.R.id.text));
 //                textView.setMinHeight(0); // Min Height
 //                textView.setMinimumHeight(0); // Min Height
 //                textView.setHeight(100); // Height
@@ -173,13 +173,13 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
         btnAddCategory.setOnClickListener(this);
 
         //ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
-        categoryAdapter = new MyCustomAdapter(categoryList, this);
+        categoryAdapter = new RemovableItemsAdapter(categoryList, this);
 //        categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categoryList) {
 //            @NonNull
 //            @Override
 //            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 //                View view = super.getView(position, convertView, parent);
-//                TextView textView = ((TextView) view.findViewById(android.R.id.text1));
+//                TextView textView = ((TextView) view.findViewById(android.R.id.text));
 //                textView.setMinHeight(0); // Min Height
 //                textView.setMinimumHeight(0); // Min Height
 //                textView.setHeight(100); // Height
