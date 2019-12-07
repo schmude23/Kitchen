@@ -75,23 +75,11 @@ public class UI_Test_GuestLogin {
         appCompatTextView.perform(click());
 
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.button_guest), withText("Continue As Guest"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                4),
-                        isDisplayed()));
+                allOf(withId(R.id.button_guest)));
         appCompatButton.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.text_recipe_name), withText("Mac n Cheese"),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                        0),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.text_recipe_name)));
         textView.check(matches(withText("Mac n Cheese")));
     }
 

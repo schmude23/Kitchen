@@ -84,7 +84,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String UI_THEME = "THEME";
 
 
-
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION_NUMBER);
         this.context = context;
@@ -585,7 +584,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<Recipe> getAllRecipesSorted() {
         ArrayList<Recipe> recipeList = getAllRecipes();
 
-        if(recipeList == null){
+        if (recipeList == null) {
             return null;
         }
         //Arrays.sort(recipeList, new Comparator<Recipe>());
@@ -603,7 +602,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<Recipe> getRandomRecipes() {
         ArrayList<Recipe> recipeList = getAllRecipes();
 
-        if(recipeList == null){
+        if (recipeList == null) {
             return null;
         }
 
@@ -613,11 +612,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //I dont think we need to check for size as above would be negative.
         int size = recipeList.size();
         int checkSize = 50;
-        if (size < 50){
+        if (size < 50) {
             checkSize = size;
         }
 
-        for(int i = 0; i < checkSize; i++){
+        for (int i = 0; i < checkSize; i++) {
             int randInt = r.nextInt(recipeList.size());
             //add random recipe to randList
             randList.add(recipeList.get(randInt));
@@ -660,33 +659,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //delete ingredientlist and add new ingredientlist
         sqLiteDatabase.delete(TABLE_RECIPE_INGREDIENT_LIST, RI_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
-        for (int i = 0; i < recipeIngredientList.size(); i++) {
-            recipeIngredientList.get(i).setRecipeID(recipeId);
-            int ingredientRes = addRecipeIngredient(recipeIngredientList.get(i));
-            if (ingredientRes == -1) {
-                return false;
+        if (recipeIngredientList != null) {
+            for (int i = 0; i < recipeIngredientList.size(); i++) {
+                recipeIngredientList.get(i).setRecipeID(recipeId);
+                int ingredientRes = addRecipeIngredient(recipeIngredientList.get(i));
+                if (ingredientRes == -1) {
+                    return false;
+                }
             }
         }
 
         //delete recipecategorylist and add new recipecategorylist
         sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.delete(TABLE_RECIPE_CATEGORY_LIST, RC_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
-        for (int i = 0; i < recipeCategoryList.size(); i++) {
-            recipeCategoryList.get(i).setRecipeID(recipeId);
-            int recipeCategoryResult = addRecipeCategory(recipeCategoryList.get(i));
-            if (recipeCategoryResult == -1) {
-                return false;
+        if (recipeCategoryList != null) {
+            for (int i = 0; i < recipeCategoryList.size(); i++) {
+                recipeCategoryList.get(i).setRecipeID(recipeId);
+                int recipeCategoryResult = addRecipeCategory(recipeCategoryList.get(i));
+                if (recipeCategoryResult == -1) {
+                    return false;
+                }
             }
         }
 
         //delete recipeDirections and add new recipeDirections
         sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.delete(TABLE_RECIPE_DIRECTIONS_LIST, RD_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
-        for (int i = 0; i < recipeDirectionList.size(); i++) {
-            recipeDirectionList.get(i).setRecipeID(recipeId);
-            int recipeDirectionResult = addRecipeDirection(recipeDirectionList.get(i));
-            if (recipeDirectionResult == -1) {
-                return false;
+        if (recipeDirectionList != null) {
+            for (int i = 0; i < recipeDirectionList.size(); i++) {
+                recipeDirectionList.get(i).setRecipeID(recipeId);
+                int recipeDirectionResult = addRecipeDirection(recipeDirectionList.get(i));
+                if (recipeDirectionResult == -1) {
+                    return false;
+                }
             }
         }
 
@@ -1030,7 +1035,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean editIngredient(Ingredient ingredient) {
         int id = ingredient.getKeyID();
 
-        if(getIngredient(ingredient.getName()) != -1){
+        if (getIngredient(ingredient.getName()) != -1) {
             return false;
         }
 
@@ -1355,34 +1360,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param origUnit, reqUnit, quantity
      * @return If successful, will return a value of the quantity in the new unit, else -1
      */
-    public double convertUnit(String origUnit, String reqUnit, double quantity){
+    public double convertUnit(String origUnit, String reqUnit, double quantity) {
 
-        if(origUnit.equalsIgnoreCase("none")|| reqUnit.equalsIgnoreCase("none")){
+        if (origUnit.equalsIgnoreCase("none") || reqUnit.equalsIgnoreCase("none")) {
             return -1;
         }
 
         //for checking Volume units
-        if((origUnit.equalsIgnoreCase("tablespoon(s)") || origUnit.equalsIgnoreCase("teaspoon(s)") ||
+        if ((origUnit.equalsIgnoreCase("tablespoon(s)") || origUnit.equalsIgnoreCase("teaspoon(s)") ||
                 origUnit.equalsIgnoreCase("pint(s)") || origUnit.equalsIgnoreCase("fluid ounce(s)") ||
                 origUnit.equalsIgnoreCase("quart(s)") || origUnit.equalsIgnoreCase("gallon(s)") ||
                 origUnit.equalsIgnoreCase("pinch(es)") || origUnit.equalsIgnoreCase("cup(s)"))
                 &&
                 (reqUnit.equalsIgnoreCase("tablespoon(s)") || reqUnit.equalsIgnoreCase("teaspoon(s)") ||
-                reqUnit.equalsIgnoreCase("pint(s)") || reqUnit.equalsIgnoreCase("fluid ounce(s)") ||
-                reqUnit.equalsIgnoreCase("quart(s)") || reqUnit.equalsIgnoreCase("gallon(s)") ||
-                reqUnit.equalsIgnoreCase("pinch(es)") || reqUnit.equalsIgnoreCase("cup(s)"))){
+                        reqUnit.equalsIgnoreCase("pint(s)") || reqUnit.equalsIgnoreCase("fluid ounce(s)") ||
+                        reqUnit.equalsIgnoreCase("quart(s)") || reqUnit.equalsIgnoreCase("gallon(s)") ||
+                        reqUnit.equalsIgnoreCase("pinch(es)") || reqUnit.equalsIgnoreCase("cup(s)"))) {
 
             return convertUnitVolume(origUnit, reqUnit, quantity);
         }
 
         //for checking Mass units
-        if((origUnit.equalsIgnoreCase("grain(s)") || origUnit.equalsIgnoreCase("ounce(s)") ||
+        if ((origUnit.equalsIgnoreCase("grain(s)") || origUnit.equalsIgnoreCase("ounce(s)") ||
                 origUnit.equalsIgnoreCase("pound(s)") || origUnit.equalsIgnoreCase("kilogram(s)") ||
                 origUnit.equalsIgnoreCase("milligram(s)"))
                 &&
                 (reqUnit.equalsIgnoreCase("grain(s)") || reqUnit.equalsIgnoreCase("ounce(s)") ||
-                reqUnit.equalsIgnoreCase("pound(s)") || reqUnit.equalsIgnoreCase("kilogram(s)") ||
-                reqUnit.equalsIgnoreCase("milligram(s)"))){
+                        reqUnit.equalsIgnoreCase("pound(s)") || reqUnit.equalsIgnoreCase("kilogram(s)") ||
+                        reqUnit.equalsIgnoreCase("milligram(s)"))) {
             return convertUnitMass(origUnit, reqUnit, quantity);
         }
 
@@ -1460,7 +1465,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public double convertUnitMass(String origUnit, String reqUnit, double quantity) {
         if (origUnit.contentEquals("grain(s)")) {
-            quantity = quantity *  0.06479891;
+            quantity = quantity * 0.06479891;
         }
         if (origUnit.contentEquals("ounce(s)")) {
             quantity = quantity * 28.3495231;
@@ -1477,7 +1482,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //converting quantity to grams
         if (reqUnit.contentEquals("grain(s)")) {
-            quantity = quantity /  0.06479891;
+            quantity = quantity / 0.06479891;
         }
         if (reqUnit.contentEquals("ounce(s)")) {
             quantity = quantity / 28.3495231;
@@ -1496,13 +1501,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return Double.parseDouble(String.format("%.2f", quantity));
     }
 
-        /**
-         * This method scales and updates all ingredients as well as the recipe objects serving size.
-         * This method does NOT update the database
-         *
-         * @param recipe, desiredServing
-         * @return If successful, will return true
-         */
+    /**
+     * This method scales and updates all ingredients as well as the recipe objects serving size.
+     * This method does NOT update the database
+     *
+     * @param recipe, desiredServing
+     * @return If successful, will return true
+     */
     public Recipe scaleRecipe(Recipe recipe, double desiredServing) {
         if (recipe.getKeyID() == -1)
             return null;
@@ -1727,12 +1732,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         password = md5.main(password);
 
-        if(password == null){
+        if (password == null) {
             return -1;
         }
 
         //if the user already exists
-        if(getUser(username) != -1){
+        if (getUser(username) != -1) {
             return -1;
         }
 
@@ -1752,7 +1757,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful in username match, return the userId
      * otherwise, return -1
      */
-    public int getUser(String username){
+    public int getUser(String username) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
         //if User already Exists
@@ -1774,7 +1779,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful in username and password matching, return true and put the user's settings
      * into shared preferences, otherwise, return false
      */
-    public int loginCheck(String username, String password){
+    public int loginCheck(String username, String password) {
         String storedPass = null;
         int userId = -1;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -1797,7 +1802,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int themeIndex = cursor.getColumnIndexOrThrow(UI_THEME);
                 themeId = cursor.getInt(themeIndex);
             }
-        }else{
+        } else {
             return -1;
         }
 
@@ -1805,23 +1810,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         password = md5.main(password);
 
         //checks if password is correct.
-       if(password != null && password.equals(storedPass)){
+        if (password != null && password.equals(storedPass)) {
 
-           SharedPreferences prefs = context.getSharedPreferences("user", Context.MODE_PRIVATE);
-           prefs.edit().putString("Username", username);
-           prefs.edit().putInt("UserId", userId);
-           prefs.edit().putInt("ThemeId", themeId);
+            SharedPreferences prefs = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+            prefs.edit().putString("Username", username);
+            prefs.edit().putInt("UserId", userId);
+            prefs.edit().putInt("ThemeId", themeId);
 
-           return userId;
-       }
+            return userId;
+        }
 
-       return -1;
+        return -1;
     }
 
     /**
      * This method modifies the User details. must first pass through loginCheck()
      *
-     * @param  username, password, updateUsername, updatePassword
+     * @param username, password, updateUsername, updatePassword
      * @return If successful in updating, will return true
      */
     public boolean editUser(String username, String password, String updateUsername, String updatePassword, int updateTheme) {
@@ -1829,7 +1834,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         PasswordEncryption md5 = new PasswordEncryption();
 
         int userId = getUser(username);
-        if(userId == -1){
+        if (userId == -1) {
             return false;
         }
 
