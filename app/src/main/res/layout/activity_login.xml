@@ -25,6 +25,7 @@
         android:textColorHint="@color/white"
         android:textCursorDrawable="@color/white"
         android:backgroundTint="@color/white"
+        android:textColor="@color/white"
         android:hint="Username" />
 
     <EditText
@@ -35,6 +36,7 @@
         android:textColorHint="@color/white"
         android:textCursorDrawable="@color/white"
         android:hint="Password"
+        android:textColor="@color/white"
         android:backgroundTint="@color/white"
         android:inputType="textPassword" />
 
