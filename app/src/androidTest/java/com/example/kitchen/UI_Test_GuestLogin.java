@@ -79,8 +79,8 @@ public class UI_Test_GuestLogin {
         appCompatButton.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.text_recipe_name)));
-        textView.check(matches(withText("Mac n Cheese")));
+                allOf(withId(R.id.text_recipe_name), withText("Mac n Cheese")));
+        textView.check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(
