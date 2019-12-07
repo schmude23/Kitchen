@@ -220,21 +220,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         //add new ingredients from ingredientList
-        for (int i = 0; i < recipeIngredientList.size(); i++) {
-            recipeIngredientList.get(i).setRecipeID(res);
-            int result = addRecipeIngredient(recipeIngredientList.get(i));
+        if (recipeIngredientList != null) {
+            for (int i = 0; i < recipeIngredientList.size(); i++) {
+                recipeIngredientList.get(i).setRecipeID(res);
+                int result = addRecipeIngredient(recipeIngredientList.get(i));
+            }
         }
 
         //add new categorys from recipeCategoryList
-        for (int i = 0; i < recipeCategoryList.size(); i++) {
-            recipeCategoryList.get(i).setRecipeID(res);
-            int result = addRecipeCategory(recipeCategoryList.get(i));
+        if (recipeCategoryList != null) {
+            for (int i = 0; i < recipeCategoryList.size(); i++) {
+                recipeCategoryList.get(i).setRecipeID(res);
+                int result = addRecipeCategory(recipeCategoryList.get(i));
+            }
         }
 
         //add new directions from recipeDirectionList
-        for (int i = 0; i < recipeDirectionList.size(); i++) {
-            recipeDirectionList.get(i).setRecipeID(res);
-            int result = addRecipeDirection(recipeDirectionList.get(i));
+        if (recipeDirectionList != null) {
+            for (int i = 0; i < recipeDirectionList.size(); i++) {
+                recipeDirectionList.get(i).setRecipeID(res);
+                int result = addRecipeDirection(recipeDirectionList.get(i));
+            }
         }
 
         return res;
