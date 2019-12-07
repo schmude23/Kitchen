@@ -36,10 +36,7 @@ import static java.lang.String.valueOf;
 public class IngredientListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     DatabaseHelper database = new DatabaseHelper(this);
     Recipe recipe;
-    private Button finishButton;
-    private EditText editIngredientPopupIngredientEditText,
-            editIngredientPopupIngredientDetailsEditText,
-            editIngredientPopupQuantityEditText;
+    private EditText editIngredientPopupIngredientEditText;
 
     // ListView variables
     private ListView ingredientListView;
@@ -62,7 +59,6 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
 
         myDialog = new Dialog(this);
 
-        //getIngredients();
         ingredients = database.getAllIngredients();
         for(int i = 0;i < ingredients.size(); i++){
             ingredientList.add(ingredients.get(i).getName());
@@ -106,25 +102,30 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
             case R.id.advanced_search_item:
                 Intent advancedSearch = new Intent(this, AdvancedSearchActivity.class);
                 startActivity(advancedSearch);
+                this.finish();
                 return true;
             case R.id.action_add_recipe:
                 Intent addRecipe = new Intent(this, EditRecipeActivity.class);
                 addRecipe.putExtra("recipeId", -1); // New recipe
                 addRecipe.putExtra("newRecipe", true); // New recipe
                 startActivity(addRecipe);
+                this.finish();
                 return true;
             case R.id.action_view_cart:
                 Intent viewCart = new Intent(this, ShoppingCartActivity.class);
                 viewCart.putExtra("recipeId", -1);
                 startActivity(viewCart);
+                this.finish();
                 return true;
             case R.id.action_home:
                 Intent home = new Intent(this, MainActivity.class);
                 startActivity(home);
+                this.finish();
                 return true;
             case R.id.action_ingredient_list:
                 Intent intent = new Intent(this, IngredientListActivity.class);
                 startActivity(intent);
+                this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

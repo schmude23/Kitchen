@@ -137,6 +137,7 @@ public class EditCategoryActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
         intent.putExtra("recipeId", recipe.getKeyID());
         startActivity(intent);
+        this.finish();
     }
 
     /**
@@ -146,6 +147,7 @@ public class EditCategoryActivity extends AppCompatActivity {
         database.deleteRecipe(recipe.getKeyID());
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        this.finish();
     }
 
     /**
@@ -221,5 +223,6 @@ public class EditCategoryActivity extends AppCompatActivity {
         intent.putExtra("recipeId", recipe.getKeyID());
         intent.putExtra("newRecipe", newRecipe);
         startActivity(intent);
+        this.finish();
     }
 }

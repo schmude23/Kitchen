@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent registerIntent = new Intent(LoginActivity.this,RegisterActivity.class);
                 startActivity(registerIntent);
+                finish();
             }
         });
 
@@ -53,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                     i.putExtra("username", user);
                     i.putExtra("userID", res);
                     startActivity(i);
+                    finish();
                 } else {
                     Toast toast = Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT);
                     toast.setGravity(0, 0, 500);
@@ -70,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                 toast.show();
                 Intent i = new Intent(LoginActivity.this,MainActivity.class);
                 startActivity(i);
+                finish();
             }
         });
     }

@@ -17,7 +17,7 @@
         android:layout_marginLeft="28dp"
         android:layout_marginTop="55dp"
         android:background="@drawable/button_style"
-        android:text="Wifi On" />
+        android:text="Reset Connection" />
 
     <Button
         android:id="@+id/discover"

@@ -124,38 +124,46 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
             case R.id.action_login:
                 Intent login = new Intent(this, LoginActivity.class);
                 startActivity(login);
+                this.finish();
                 return true;
             case R.id.advanced_search_item:
                 Intent advancedSearch = new Intent(this, AdvancedSearchActivity.class);
                 startActivity(advancedSearch);
+                this.finish();
                 return true;
             case R.id.action_add_recipe:
                 Intent addRecipe = new Intent(this, EditRecipeActivity.class);
                 addRecipe.putExtra("recipeId", -1); // New recipe
                 addRecipe.putExtra("newRecipe", true); // New recipe
                 startActivity(addRecipe);
+                this.finish();
                 return true;
             case R.id.action_view_cart:
                 Intent viewCart = new Intent(this, ShoppingCartActivity.class);
                 viewCart.putExtra("recipeId", -1);
                 startActivity(viewCart);
+                this.finish();
                 return true;
             case R.id.action_home:
                 Intent home = new Intent(this, MainActivity.class);
                 startActivity(home);
+                this.finish();
                 return true;
             case R.id.action_ingredient_list:
                 Intent intent = new Intent(this, IngredientListActivity.class);
                 startActivity(intent);
+                this.finish();
                 return true;
             case R.id.action_retrieve_recipe:
                 Intent retrieveRecipe = new Intent(this, ShareRecipeActivity.class);
                 retrieveRecipe.putExtra("recipeId", -1);
                 startActivity(retrieveRecipe);
+                this.finish();
                 return true;
             case R.id.action_paste_recipe:
                 Intent pasteRecipe = new Intent(this, PasteRecipeActivity.class);
                 startActivity(pasteRecipe);
+                this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -185,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         else
             intent.putExtra("recipeId", recipes.get(position).getKeyID());
         startActivity(intent);
+        this.finish();
     }
 
     /**

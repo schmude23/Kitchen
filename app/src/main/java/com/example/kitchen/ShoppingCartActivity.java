@@ -158,6 +158,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
             case R.id.action_home:
                 Intent home = new Intent(this, MainActivity.class);
                 startActivity(home);
+                this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

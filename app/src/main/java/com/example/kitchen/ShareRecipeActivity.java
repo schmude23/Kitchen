@@ -56,12 +56,14 @@ public class ShareRecipeActivity extends AppCompatActivity {
 
     ServerClass serverClass;
     ClientClass clientClass;
-    SendReceive sendReceive;
+    static SendReceive sendReceive;
 
     Recipe recipe;
     int recipeId;
     DatabaseHelper database;
     Dialog myDialog;
+
+    boolean sender = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +87,13 @@ public class ShareRecipeActivity extends AppCompatActivity {
                     String tempMsg = new String(readBuff, 0, msg.arg1);
                     if (!tempMsg.equals("retry")) {
                         recipe = new Recipe(tempMsg, getApplicationContext());
-                        if (recipe.getTitle().isEmpty()) {
+                        if (recipe.getTitle() == null || recipe.getIngredientList() == null) {
                             String retry = "retry";
+                            System.out.println(retry);
                             sendReceive.write(retry.getBytes());
                         } else {
                             database.addRecipe(recipe);
-                            read_msg_box.setText(recipe.getTitle() + " size: " + tempMsg.getBytes().length);
+                            // read_msg_box.setText(recipe.getTitle() + " size: " + tempMsg.getBytes().length);
                             Intent intent = new Intent(getApplicationContext(), DisplaySelectedRecipeActivity.class);
                             intent.putExtra("recipeId", recipe.getKeyID());
                             startActivity(intent);
@@ -106,16 +109,28 @@ public class ShareRecipeActivity extends AppCompatActivity {
     });
 
     private void exqListener() {
+        mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                connectionStatus.setText("Discovery Started");
+            }
+
+            @Override
+            public void onFailure(int i) {
+                connectionStatus.setText("Discovery Starting Failed");
+            }
+        });
         btnOnOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (wifiManager.isWifiEnabled()) {
-                    wifiManager.setWifiEnabled(false);
-                    btnOnOff.setText("ON");
-                } else {
-                    wifiManager.setWifiEnabled(true);
-                    btnOnOff.setText("OFF");
-                }
+//                if (wifiManager.isWifiEnabled()) {
+//                    wifiManager.setWifiEnabled(false);
+//                    btnOnOff.setText("ON");
+//                } else {
+//                    wifiManager.setWifiEnabled(true);
+//                    btnOnOff.setText("OFF");
+//                }
+                disconnect();
             }
         });
 
@@ -161,7 +176,11 @@ public class ShareRecipeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String msg = recipe.toString(getApplicationContext());
-                sendReceive.write(msg.getBytes());
+                try{
+                    sendReceive.write(msg.getBytes());
+                } catch (NullPointerException e){
+                    Toast.makeText(getApplicationContext(),"Sharing failed: Please reset connection on both devices", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -172,19 +191,22 @@ public class ShareRecipeActivity extends AppCompatActivity {
         btnSend = (Button) findViewById(R.id.sendButton);
         listView = (ListView) findViewById(R.id.peerListView);
         connectionStatus = (TextView) findViewById(R.id.connectionStatus);
-        if (recipeId == -1)
+        if (recipeId == -1) {
             btnSend.setVisibility(View.INVISIBLE);
+        }
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
-        disconnect();
+        //disconnect();
         mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
         mIntentFilter = new IntentFilter();
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+
     }
+
     public void disconnect() {
         if (mManager != null && mChannel != null) {
             mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
@@ -196,7 +218,7 @@ public class ShareRecipeActivity extends AppCompatActivity {
 
                             @Override
                             public void onSuccess() {
-                               // Log.d(TAG, "removeGroup onSuccess -");
+                                // Log.d(TAG, "removeGroup onSuccess -");
                             }
 
                             @Override
@@ -209,6 +231,7 @@ public class ShareRecipeActivity extends AppCompatActivity {
             });
         }
     }
+
     WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
@@ -221,9 +244,9 @@ public class ShareRecipeActivity extends AppCompatActivity {
                 int index = 0;
 
                 for (WifiP2pDevice device : peerList.getDeviceList()) {
-                    deviceNameArray[index] = device.deviceName;
-                    deviceArray[index] = device;
-                    index++;
+                        deviceNameArray[index] = device.deviceName;
+                        deviceArray[index] = device;
+                        index++;
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, deviceNameArray);

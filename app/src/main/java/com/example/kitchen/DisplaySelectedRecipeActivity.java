@@ -168,20 +168,24 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
                 editRecipe.putExtra("recipeId", recipeId);
                 editRecipe.putExtra("newRecipe", false);
                 startActivity(editRecipe);
+                this.finish();
                 return true;
             case R.id.action_home:
                 Intent home = new Intent(this, MainActivity.class);
                 startActivity(home);
+                this.finish();
                 return true;
             case R.id.action_share_recipe:
                 Intent shareRecipe = new Intent(this, ShareRecipeActivity.class);
                 shareRecipe.putExtra("recipeId", recipe.getKeyID());
                 startActivity(shareRecipe);
+                this.finish();
                 return true;
             case R.id.action_view_cart:
                 Intent viewCart = new Intent(this, ShoppingCartActivity.class);
                 viewCart.putExtra("recipeId", -1);
                 startActivity(viewCart);
+                this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -222,6 +226,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
         dbHandler.deleteRecipe(recipe.getKeyID());
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        this.finish();
     }
 
     public void onDisplaySelectedRecipeFavoriteButtonPressed(View v) {
@@ -377,6 +382,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
         Intent shoppingCartIntent = new Intent(this, ShoppingCartActivity.class);
         shoppingCartIntent.putExtra("recipeId", recipe.getKeyID());
         startActivity(shoppingCartIntent);
+        this.finish();
     }
 
 

@@ -47,26 +47,6 @@ public class ViewProfileActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        final MenuItem menuItem = menu.findItem(R.id.search);
-        searchView = (SearchView) menuItem.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (!searchView.isIconified())
-                    searchView.setIconified(true);
-                menuItem.collapseActionView();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                final List<RecipeListItem> filteredRecipeList = filter(recipeListItems, newText);
-                filter = true;
-                filteredList = filteredRecipeList;
-                recipeAdapter.setFilter(filteredRecipeList);
-                return true;
-            }
-        });
         return true;
     }
 
@@ -82,29 +62,35 @@ public class ViewProfileActivity extends AppCompatActivity {
             case R.id.action_login:
                 Intent login = new Intent(this, LoginActivity.class);
                 startActivity(login);
+                this.finish();
                 return true;
             case R.id.advanced_search_item:
                 Intent advancedSearch = new Intent(this, AdvancedSearchActivity.class);
                 startActivity(advancedSearch);
+                this.finish();
                 return true;
             case R.id.action_add_recipe:
                 Intent addRecipe = new Intent(this, EditRecipeActivity.class);
                 addRecipe.putExtra("recipeId", -1); // New recipe
                 addRecipe.putExtra("newRecipe", true); // New recipe
                 startActivity(addRecipe);
+                this.finish();
                 return true;
             case R.id.action_view_cart:
                 Intent viewCart = new Intent(this, ShoppingCartActivity.class);
                 viewCart.putExtra("recipeId", -1);
                 startActivity(viewCart);
+                this.finish();
                 return true;
             case R.id.action_home:
                 Intent home = new Intent(this, MainActivity.class);
                 startActivity(home);
+                this.finish();
                 return true;
             case R.id.action_ingredient_list:
                 Intent intent = new Intent(this, IngredientListActivity.class);
                 startActivity(intent);
+                this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -143,6 +129,7 @@ public class ViewProfileActivity extends AppCompatActivity {
                 toast.show();
                 Intent i = new Intent(ViewProfileActivity.this,MainActivity.class);
                 startActivity(i);
+                finish();
             }
         });
 
@@ -151,6 +138,7 @@ public class ViewProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent registerIntent = new Intent(ViewProfileActivity.this,EditProfileActivity.class);
                 startActivity(registerIntent);
+                finish();
             }
         });
 
@@ -158,19 +146,4 @@ public class ViewProfileActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * @param list
-     * @param query
-     * @return
-     */
-    private List<RecipeListItem> filter(List<RecipeListItem> list, String query) {
-        query = query.toLowerCase();
-        final List<RecipeListItem> filteredList = new ArrayList<>();
-        for (RecipeListItem recipe : list) {
-            final String text = recipe.getRecipeName().toLowerCase();
-            if (text.contains(query))
-                filteredList.add(recipe);
-        }
-        return filteredList;
-    }
 }

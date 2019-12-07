@@ -55,6 +55,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             int res3 = database.getUser(newUser);
                             moveToViewProfile.putExtra("userID", res3);
                             startActivity(moveToViewProfile);
+                            finish();
                         } else {
                             Toast toast = Toast.makeText(EditProfileActivity.this, "Passwords do not match", Toast.LENGTH_SHORT);
                             toast.setGravity(0, 0, 500);

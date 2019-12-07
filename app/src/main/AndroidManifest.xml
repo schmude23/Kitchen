@@ -14,7 +14,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PasteRecipeActivity"></activity>
+        <activity android:name=".PresentRecipeActivity"></activity>
+        <activity android:name=".PasteRecipeActivity" />
         <activity android:name=".ShoppingCartActivity" />
         <activity android:name=".EditIngredientActivity" />
         <activity android:name=".EditRecipeActivity" />

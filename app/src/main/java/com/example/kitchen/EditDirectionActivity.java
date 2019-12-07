@@ -135,6 +135,7 @@ public class EditDirectionActivity extends AppCompatActivity {
             Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
             intent.putExtra("recipeId", recipe.getKeyID());
             startActivity(intent);
+            this.finish();
         }
     }
 
@@ -149,6 +150,7 @@ public class EditDirectionActivity extends AppCompatActivity {
             intent.putExtra("recipeId", recipe.getKeyID());
             intent.putExtra("newRecipe", newRecipe);
             startActivity(intent);
+            this.finish();
         }
     }
 
@@ -221,6 +223,7 @@ public class EditDirectionActivity extends AppCompatActivity {
         intent.putExtra("recipeId", recipe.getKeyID());
         intent.putExtra("newRecipe", newRecipe);
         startActivity(intent);
+        this.finish();
     }
 
 }

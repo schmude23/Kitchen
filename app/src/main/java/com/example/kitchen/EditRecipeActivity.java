@@ -101,6 +101,7 @@ public class EditRecipeActivity extends AppCompatActivity {
                 intent.putExtra("recipeId", recipe.getKeyID());
                 intent.putExtra("newRecipe", newRecipe);
                 startActivity(intent);
+                this.finish();
             }
         }
     }
@@ -119,6 +120,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         }
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        this.finish();
     }
 
     // add image
@@ -186,6 +188,9 @@ public class EditRecipeActivity extends AppCompatActivity {
             // Log.d(this.getClass().getName(), "back button pressed");
             if (newRecipe) {
                 database.deleteRecipe(recipe.getKeyID());
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                this.finish();
                 return super.onKeyDown(keyCode, event);
             }
         }
@@ -205,6 +210,7 @@ public class EditRecipeActivity extends AppCompatActivity {
             database.deleteRecipe(recipe.getKeyID());
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
+            this.finish();
         }
     }
 }
