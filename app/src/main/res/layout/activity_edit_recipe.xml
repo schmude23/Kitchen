@@ -12,6 +12,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <include
+            android:id="@+id/edit_recipe_toolbar"
+            layout="@layout/edit_recipe_toolbar" />
 
         <EditText
             android:id="@+id/edit_recipe_recipe_name_edit_text"
@@ -19,8 +22,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/name"
-            android:textCursorDrawable="@null"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textCursorDrawable="@null" />
 
         <View
             android:id="@+id/divider"
@@ -34,26 +37,26 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/servings"
-            android:textCursorDrawable="@null"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:textCursorDrawable="@null" />
 
         <EditText
             android:id="@+id/edit_recipe_prep_time_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:textCursorDrawable="@null"
             android:hint="@string/prep_time_min"
-            android:inputType="time" />
+            android:inputType="time"
+            android:textCursorDrawable="@null" />
 
         <EditText
             android:id="@+id/edit_recipe_total_time_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:textCursorDrawable="@null"
             android:hint="@string/total_time_min"
-            android:inputType="time" />
+            android:inputType="time"
+            android:textCursorDrawable="@null" />
 
         <TextView
             android:layout_width="match_parent"
@@ -79,7 +82,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="0.1"/>
+                android:layout_weight="0.1" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/edit_recipe_cancel_button"
@@ -96,7 +99,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="0.8"/>
+                android:layout_weight="0.8" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/edit_recipe_next_button"
@@ -111,10 +114,11 @@
                 app:maxImageSize="48dp"
                 app:rippleColor="@color/black"
                 app:srcCompat="@drawable/ic_arrow_right_black" />
+
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="0.1"/>
+                android:layout_weight="0.1" />
 
 
         </LinearLayout>
