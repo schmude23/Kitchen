@@ -317,6 +317,8 @@ public class It1_DatabaseTester {
      */
     @Test
     public void editIngredient_ReturnsTrue(){
+        int returned = testDatabase.getIngredient("egg");
+        testDatabase.deleteIngredient(returned);
         Ingredient newIngredient = new Ingredient(ingredientID, "egg");
         assertEquals("editIngredient - Returns True", true, testDatabase.editIngredient(newIngredient));
     }
@@ -335,10 +337,12 @@ public class It1_DatabaseTester {
      */
     @Test
     public void editIngredient_CorrectInformation(){
-        Ingredient newIngredient = new Ingredient(ingredientID, "egg");
+        int returned = testDatabase.getIngredient("salt");
+        testDatabase.deleteIngredient(returned);
+        Ingredient newIngredient = new Ingredient(ingredientID, "salt");
         testDatabase.editIngredient(newIngredient);
         Ingredient retrieved = testDatabase.getIngredient(ingredientID);
-        assertEquals("editIngredient - Correct Name", "egg", retrieved.getName());
+        assertEquals("editIngredient - Correct Name", "salt", retrieved.getName());
         assertEquals("editIngredient - Correct ID", ingredientID, retrieved.getKeyID());
     }
 
