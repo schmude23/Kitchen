@@ -15,6 +15,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsInstanceOf;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -91,65 +92,43 @@ public class UI_Test_EditRecipe {
         appCompatTextView.perform(click());
 
         ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.edit_recipe_servings_edit_text), withText("4.0")));
+                allOf(withId(R.id.edit_recipe_servings_edit_text)));
         appCompatEditText.perform(replaceText("2"));
-
-        ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.edit_recipe_servings_edit_text), withText("2"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        0),
-                                2),
-                        isDisplayed()));
-        appCompatEditText2.perform(closeSoftKeyboard());
+        appCompatEditText.perform(closeSoftKeyboard());
 
         ViewInteraction floatingActionButton = onView(
-                allOf(withId(R.id.edit_recipe_next_button),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        7),
-                                3),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_recipe_next_button)));
         floatingActionButton.perform(click());
+
+        ViewInteraction appCompatEditText2 = onView(
+                allOf(withId(R.id.edit_ingredient_ingredient_edit_text)));
+        appCompatEditText2.perform(closeSoftKeyboard());
 
         ViewInteraction floatingActionButton2 = onView(
                 allOf(withId(R.id.edit_ingredient_next_button)));
         floatingActionButton2.perform(click());
 
+        ViewInteraction appCompatEditText3 = onView(
+                allOf(withId(R.id.edit_direction_direction_edit_text)));
+        appCompatEditText3.perform(closeSoftKeyboard());
+
         ViewInteraction floatingActionButton3 = onView(
-                allOf(withId(R.id.edit_direction_next_button),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.FrameLayout")),
-                                        1),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_direction_next_button)));
         floatingActionButton3.perform(click());
 
+        ViewInteraction appCompatEditText4 = onView(
+                allOf(withId(R.id.edit_category_category_edit_text)));
+        appCompatEditText4.perform(closeSoftKeyboard());
+
         ViewInteraction floatingActionButton4 = onView(
-                allOf(withId(R.id.edit_category_next_button),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.FrameLayout")),
-                                        1),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_category_next_button)));
         floatingActionButton4.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.recipe_servings), withText("2.0"),
-                        childAtPosition(
-                                allOf(withId(R.id.constraint),
-                                        childAtPosition(
-                                                IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                                0)),
-                                7),
-                        isDisplayed()));
+                allOf(withId(R.id.recipe_servings)));
         textView.check(matches(withText("2.0")));
 
-        //Teardown to clear database
+        //Teardown to reset database
         InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase(DatabaseHelper.DATABASE_NAME);
 
     }
