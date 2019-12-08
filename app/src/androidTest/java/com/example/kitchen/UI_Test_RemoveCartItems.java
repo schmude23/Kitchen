@@ -64,7 +64,7 @@ public class UI_Test_RemoveCartItems {
                                         withId(R.id.recipe_toolbar),
                                         1),
                                 2)));
-        overflowMenuButton.perform(scrollTo(), click());
+        overflowMenuButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -184,24 +184,12 @@ public class UI_Test_RemoveCartItems {
         checkBox.check(matches(isDisplayed()));
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.ingredient_quantity_text), withText("1.0"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.shopping_cart_recycler),
-                                        0),
-                                1),
-                        isDisplayed()));
-        textView.check(matches(withText("1.0")));
+                allOf(withId(R.id.ingredient_quantity_text), withText("1.0")));
+        textView.check(matches(isDisplayed()));
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.ingredient_unit_text), withText("pinch(es)"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.shopping_cart_recycler),
-                                        0),
-                                2),
-                        isDisplayed()));
-        textView2.check(matches(withText("pinch(es)")));
+                allOf(withId(R.id.ingredient_unit_text), withText("pinch(es)")));
+        textView2.check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(
