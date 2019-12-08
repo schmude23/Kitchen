@@ -13,9 +13,9 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="@color/royal_blue"
+        android:onClick="onEditRecipeBackButtonPressed"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/ic_action_navigation_arrow_back"
-        android:onClick="onEditRecipeBackButtonPressed"/>
+        app:srcCompat="@drawable/ic_arrow_back_black" />
 
 
 </androidx.appcompat.widget.Toolbar>

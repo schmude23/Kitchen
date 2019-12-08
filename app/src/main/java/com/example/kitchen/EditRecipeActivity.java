@@ -212,5 +212,11 @@ public class EditRecipeActivity extends AppCompatActivity {
             startActivity(intent);
             this.finish();
         }
+        else{
+            Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
+            intent.putExtra("recipeId", recipe.getKeyID());
+            startActivity(intent);
+            this.finish();
+        }
     }
 }

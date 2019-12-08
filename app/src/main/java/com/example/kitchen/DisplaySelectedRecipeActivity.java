@@ -41,8 +41,8 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
 
     // Ingredient RecyclerView variables
     private ArrayList<String> ingredientList = new ArrayList<String>();
-   RecyclerView ingredientRecyclerView;
-   DisplayRecipeAdapter iAdapter;
+    RecyclerView ingredientRecyclerView;
+    DisplayRecipeAdapter iAdapter;
 
     // Direction RecyclerView variables
     ArrayList<String> directionList = new ArrayList<String>();
@@ -96,7 +96,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
 
     }
 
-   /**
+    /**
      *
      */
     private void getIngredients() {
@@ -282,7 +282,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
 
     public void onUnitConversionPopupOkayButtonPressed(View v) {
 
-        if(oldUnit.compareTo("none") == 0 || newUnit.compareTo("none") == 0|| oldUnit.compareTo(newUnit) == 0) {
+        if (oldUnit.compareTo("none") == 0 || newUnit.compareTo("none") == 0 || oldUnit.compareTo(newUnit) == 0) {
             Toast.makeText(this, "Cannot convert units", Toast.LENGTH_SHORT).show();
             convertUnitDialog.dismiss();
         }
@@ -357,6 +357,13 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
         ingredientList = new ArrayList<>();
         getIngredients();
         scaleRecipeDialog.dismiss();
+    }
+
+    public void onPresentRecipeSelected(MenuItem item) {
+        Intent intent = new Intent(this, PresentRecipeActivity.class);
+        intent.putExtra("recipeId", recipe.getKeyID());
+        startActivity(intent);
+        this.finish();
     }
 
     // Spinner Methods

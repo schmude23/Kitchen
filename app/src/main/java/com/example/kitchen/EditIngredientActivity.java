@@ -19,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -102,8 +101,6 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
      */
     private void addRecipe() {
         recipe.setIngredientList(new ArrayList<RecipeIngredient>());
-        //recipe.setDirectionsList(new ArrayList<RecipeDirection>());
-        //recipe.setCategoryList(new ArrayList<RecipeCategory>());
     }
 
     /**

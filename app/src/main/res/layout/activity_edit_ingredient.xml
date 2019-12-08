@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -9,22 +10,34 @@
         android:id="@+id/edit_recipe_toolbar"
         layout="@layout/edit_recipe_toolbar" />
 
-    <AutoCompleteTextView
-        android:id="@+id/edit_ingredient_ingredient_edit_text"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_ingredient"
-        android:textCursorDrawable="@null"
-        android:textSize="24sp" />
+        android:orientation="horizontal"
+        android:weightSum="1">
 
-    <Button
-        android:id="@+id/edit_ingredient_add_ingredient_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
-        android:background="@drawable/button_style"
-        android:onClick="onEditIngredientAddIngredientButtonPressed"
-        android:text="@string/add_ingredient" />
+        <AutoCompleteTextView
+            android:id="@+id/edit_ingredient_ingredient_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_ingredient"
+            android:textCursorDrawable="@null"
+            android:textSize="24sp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/edit_ingredient_add_ingredient_button"
+            android:onClick="onEditIngredientAddIngredientButtonPressed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            app:backgroundTint="@color/white"
+            app:maxImageSize="40dp"
+            app:srcCompat="@drawable/ic_add" />
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/edit_ingredient_ingredient_header"

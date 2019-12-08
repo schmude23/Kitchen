@@ -2,28 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <include
         android:id="@+id/edit_recipe_toolbar"
         layout="@layout/edit_recipe_toolbar" />
 
-    <EditText
-        android:id="@+id/edit_direction_direction_edit_text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_direction"
-        android:textCursorDrawable="@null"
-        android:textSize="24sp" />
-
-    <Button
-        android:id="@+id/edit_direction_add_direction_button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
-        android:background="@drawable/button_style"
-        android:onClick="onEditDirectionAddDirectionButtonPressed"
-        android:text="@string/add_direction" />
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <EditText
+            android:id="@+id/edit_direction_direction_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_direction"
+            android:textCursorDrawable="@null"
+            android:textSize="24sp"
+            android:layout_weight="1"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/edit_direction_add_direction_button"
+            app:backgroundTint="@color/white"
+            app:maxImageSize="40dp"
+            app:srcCompat="@drawable/ic_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:onClick="onEditDirectionAddDirectionButtonPressed" />
+    </LinearLayout>
+
+    
 
     <TextView
         android:id="@+id/edit_direction_direction_header"

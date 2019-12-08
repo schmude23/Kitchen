@@ -16,6 +16,12 @@
             android:id="@+id/edit_recipe_toolbar"
             layout="@layout/edit_recipe_toolbar" />
 
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recipe Title" />
+
         <EditText
             android:id="@+id/edit_recipe_recipe_name_edit_text"
             android:layout_width="match_parent"
@@ -31,6 +37,12 @@
             android:layout_height="5dp"
             android:background="@color/light_slate_gray" />
 
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/servings" />
+
         <EditText
             android:id="@+id/edit_recipe_servings_edit_text"
             android:layout_width="match_parent"
@@ -40,6 +52,12 @@
             android:inputType="numberDecimal"
             android:textCursorDrawable="@null" />
 
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/prep_time_min" />
+
         <EditText
             android:id="@+id/edit_recipe_prep_time_edit_text"
             android:layout_width="match_parent"
@@ -48,6 +66,12 @@
             android:hint="@string/prep_time_min"
             android:inputType="time"
             android:textCursorDrawable="@null" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/total_time_min" />
 
         <EditText
             android:id="@+id/edit_recipe_total_time_edit_text"
@@ -71,7 +95,7 @@
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
             android:onClick="onEditRecipeImagePressed"
-            app:srcCompat="@drawable/ic_default_image" />
+            app:srcCompat="@drawable/upload_image" />
 
         <LinearLayout
             android:layout_width="match_parent"

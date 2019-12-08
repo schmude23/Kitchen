@@ -35,4 +35,8 @@
         android:id="@+id/action_scale_recipe"
         android:title="@string/scale_recipe"
         android:onClick="onScaleRecipeSelected"/>
+    <item
+        android:id="@+id/action_present_recipe"
+        android:title="@string/present_recipe"
+        android:onClick="onPresentRecipeSelected"/>
 </menu>
