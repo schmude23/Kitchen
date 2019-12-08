@@ -9,11 +9,6 @@
         android:title="@string/cart"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_home"
-        android:icon="@drawable/ic_home"
-        android:title="home"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/action_add_to_cart"
         android:title="Add to Cart"
         android:onClick="onAddToCartSelected"/>

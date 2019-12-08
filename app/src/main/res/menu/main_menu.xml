@@ -22,11 +22,6 @@
         android:title="@string/cart"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_home"
-        android:icon="@drawable/ic_home"
-        android:title="Home"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/advanced_search_item"
         android:title="Advanced Search" />
     <item

@@ -64,9 +64,8 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
         setContentView(R.layout.activity_display_selected_recipe);
         // Display Toolbar
         Toolbar toolbar = findViewById(R.id.recipe_toolbar);
-        //TextView toolbarText = (TextView) findViewById(R.id.toolbar_text);
         setSupportActionBar(toolbar);
-        //toolbarText.setText(getTitle());
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         //retrieving the extra infromation from intent
@@ -394,5 +393,15 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
         this.finish();
     }
 
+    /**
+     * Go to Recipe List when "Kitchen+" on toolbar is clicked
+     *
+     * @param view
+     */
+    public void onToolbarTextClicked(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
+    }
 
 }

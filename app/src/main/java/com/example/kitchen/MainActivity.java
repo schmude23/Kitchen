@@ -14,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import android.os.Bundle;
-import android.widget.RadioGroup;
+import android.view.View;
 import android.widget.Toast;
 
 
@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
             recipes = database.getAllRecipes();
             checkRecipes();
         }
+        recipes = quickSortByTitle(recipes, true);
         getRecipeListItems();
         recipeAdapter = new RecipeAdapter(recipeListItems, this);
         recyclerView.setAdapter(recipeAdapter);
@@ -327,6 +328,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
             ingredients = new ArrayList<RecipeIngredient>();
 
             ingredient = new Ingredient(-1, "chicken");
+
             ingredientID = database.addIngredient(ingredient);
             ringredient = new RecipeIngredient(-1, recipe.getKeyID(), ingredientID, (double) 2, "none", "breasts");
             database.addRecipeIngredient(ringredient);
@@ -1077,6 +1079,12 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         }
 
         return list;
+    }
+
+    public void onToolbarTextClicked(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 
 }
