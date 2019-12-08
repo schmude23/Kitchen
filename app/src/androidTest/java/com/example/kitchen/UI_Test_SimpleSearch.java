@@ -71,24 +71,12 @@ public class UI_Test_SimpleSearch {
         searchAutoComplete2.perform(replaceText("be"), closeSoftKeyboard());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.text_recipe_name), withText("Beef and Bean Chili"),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                        0),
-                                1),
-                        isDisplayed()));
-        textView.check(matches(withText("Beef and Bean Chili")));
+                allOf(withId(R.id.text_recipe_name), withText("Beef and Bean Chili")));
+        textView.check(matches(isDisplayed()));
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.text_recipe_name), withText("Ground Beef Tacos"),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                        0),
-                                1),
-                        isDisplayed()));
-        textView2.check(matches(withText("Ground Beef Tacos")));
+                allOf(withId(R.id.text_recipe_name), withText("Ground Beef Tacos")));
+        textView2.check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(
