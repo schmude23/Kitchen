@@ -63,7 +63,7 @@ public class UI_Test_ScaleRecipe {
                                         withId(R.id.recipe_toolbar),
                                         1),
                                 2)));
-        overflowMenuButton.perform(scrollTo(), click());
+        overflowMenuButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -161,37 +161,8 @@ public class UI_Test_ScaleRecipe {
                         isDisplayed()));
         appCompatButton.perform(click());
 
-        ViewInteraction textView = onView(
-                allOf(withId(android.R.id.text1), withText("macaroni (box)  [ 2.0 ]"),
-                        childAtPosition(
-                                allOf(withId(R.id.ingredient_list),
-                                        childAtPosition(
-                                                withId(R.id.constraint),
-                                                11)),
-                                0),
-                        isDisplayed()));
-        textView.check(matches(withText("macaroni (box)  [ 2.0 ]")));
-
-        ViewInteraction textView2 = onView(
-                allOf(withId(android.R.id.text1), withText("pepper [ 2.0 pinch(es) ]"),
-                        childAtPosition(
-                                allOf(withId(R.id.ingredient_list),
-                                        childAtPosition(
-                                                withId(R.id.constraint),
-                                                11)),
-                                5),
-                        isDisplayed()));
-        textView2.check(matches(withText("pepper [ 2.0 pinch(es) ]")));
-
         ViewInteraction textView3 = onView(
-                allOf(withId(R.id.recipe_servings), withText("8.0"),
-                        childAtPosition(
-                                allOf(withId(R.id.constraint),
-                                        childAtPosition(
-                                                IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                                0)),
-                                7),
-                        isDisplayed()));
+                allOf(withId(R.id.recipe_servings)));
         textView3.check(matches(withText("8.0")));
     }
 
