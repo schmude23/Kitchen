@@ -66,7 +66,8 @@ public class RecipeCopyPasteCreator {
         //make sure ingredient and directions actually have something in them.
         if(recipeIngredientList != null && recipeDirectionList != null){
             recipe.setTitle(recipeTitle);
-
+            recipe.setIngredientList(recipeIngredientList);
+            recipe.setDirectionsList(recipeDirectionList);
             return database.addRecipe(recipe);
         }
             return -1;
@@ -444,8 +445,13 @@ public class RecipeCopyPasteCreator {
                 String temp = tokens.get(0);
                 String[] arr = temp.split("");
                 //arr.length == 2 && arr[1].equalsIgnoreCase("/")
+                temp.trim();
                 try {
                     if (temp.contains("/") || temp.contains("\\")) {
+                        if(arr[0].equalsIgnoreCase("")){
+                            arr[0] = arr[1];
+                            arr[2] = arr[3];
+                        }
                         number = Double.parseDouble(arr[0]) / Double.parseDouble(arr[2]);
                         found = true;
                     }

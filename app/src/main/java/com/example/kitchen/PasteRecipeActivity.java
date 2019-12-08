@@ -95,8 +95,11 @@ public class PasteRecipeActivity extends AppCompatActivity {
 
     public void onAddRecipeClicked(View v) {
         RecipeCopyPasteCreator paste = new RecipeCopyPasteCreator(this);
-        EditText pastedText = findViewById(R.id.paste_edit_text);
-        int recipeId = paste.main(pastedText.toString());
+        EditText pastedText = (EditText) findViewById(R.id.paste_edit_text);
+        //pastedText.setText((findViewById(R.id.paste_edit_text)).toString());
+        //EditText pastedText = (EditText) findViewById(R.id.paste_edit_text);
+
+        int recipeId = paste.main(pastedText.getText().toString());
         if (recipeId == -1) {
             Toast.makeText(this, "Error Adding Recipe", Toast.LENGTH_SHORT).show();
         } else {

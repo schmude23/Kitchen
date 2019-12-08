@@ -941,6 +941,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method checks to see if an ingredient is being used in any recipes
+     *
+     * @param ingredientID The ingredient to be checked
+     * @return The id of the first found recipe in use
+     */
+    public int checkRecipeIngredient(int ingredientID){
+        //TODO: Test/Correct
+        RecipeIngredient recipeIngredient;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_RECIPE_INGREDIENT_LIST + "  WHERE " + RI_INGREDIENT_ID + " = ? ", new String[]{String.valueOf(ingredientID)});
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                recipeIngredient = mapRecipeIngredient(cursor);
+                return recipeIngredient.getRecipeID();
+            }
+            cursor.close();
+        }
+        return -1;
+    }
+
+    /**
      * This method adds an ingredient to the ingredients table.
      *
      * @param ingredient The ingredient to be inserted. (id is ignored)
@@ -1078,6 +1101,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return If successful in updating, will return true
      */
     public boolean deleteIngredient(int ingredintId) {
+
+        if(-1 != checkRecipeIngredient(ingredintId)){
+            return false;
+        }
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         long returned = sqLiteDatabase.delete(TABLE_INGREDIENT_LIST, IT_KEY_ID + " = ?", new String[]{String.valueOf(ingredintId)});
         sqLiteDatabase.delete(TABLE_RECIPE_INGREDIENT_LIST, RI_INGREDIENT_ID + " = ?", new String[]{String.valueOf(ingredintId)});
