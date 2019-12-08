@@ -102,6 +102,7 @@ public class EditDirectionActivity extends AppCompatActivity {
      */
     public void onEditDirectionAddDirectionButtonPressed(View v) {
         String input = directionEditText.getText().toString();
+        input = input.substring(0,1).toUpperCase() + input.substring(1);
         directionEditText.getText().clear();
         if (input.length() > 0) {
             // add string to the categoryAdapter, not the listview
@@ -160,6 +161,7 @@ public class EditDirectionActivity extends AppCompatActivity {
     public void onEditDirectionPopupOkayButtonPressed(View v) {
         // edit the direction that was clicked and update
         String input = editDirectionPopupDirectionEditText.getText().toString();
+        input = input.substring(0,1).toUpperCase() + input.substring(1);
         if (input.length() > 0) {
             directionList.set(position, input);
             directionAdapter.notifyDataSetChanged();

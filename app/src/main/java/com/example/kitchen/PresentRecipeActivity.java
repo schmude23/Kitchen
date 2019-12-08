@@ -22,7 +22,9 @@ public class PresentRecipeActivity extends AppCompatActivity {
         recipe = database.getRecipe(recipeId);
         textView = findViewById(R.id.present_recipe_text_view);
         position = 0;
-        String string = (position + 1) + ". " + recipe.getDirectionsList().get(position).getDirectionText();
+        String string = recipe.getDirectionsList().get(position).getDirectionText();
+        string = string.substring(0,1).toUpperCase() + string.substring(1);
+        string = (position + 1) + ". " + string;
         textView.setText(string);
 
     }
@@ -30,7 +32,9 @@ public class PresentRecipeActivity extends AppCompatActivity {
     public void onPresentRecipeNextButtonPressed(View view){
         position++;
         if(position < recipe.getDirectionsList().size()){
-            String string = (position + 1) + ". " + recipe.getDirectionsList().get(position).getDirectionText();
+            String string = recipe.getDirectionsList().get(position).getDirectionText();
+            string = string.substring(0,1).toUpperCase() + string.substring(1);
+            string = (position + 1) + ". " + string;
             textView.setText(string);
         }else {
             Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);
@@ -42,7 +46,9 @@ public class PresentRecipeActivity extends AppCompatActivity {
     public void onPresentRecipeBackButtonPressed(View view){
         position--;
         if(position > -1){
-            String string = (position + 1) + ". " + recipe.getDirectionsList().get(position).getDirectionText();
+            String string = recipe.getDirectionsList().get(position).getDirectionText();
+            string = string.substring(0,1).toUpperCase() + string.substring(1);
+            string = (position + 1) + ". " + string;
             textView.setText(string);
         }else {
             Intent intent = new Intent(this, DisplaySelectedRecipeActivity.class);

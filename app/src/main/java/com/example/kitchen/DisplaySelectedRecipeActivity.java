@@ -109,6 +109,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
             int ingredientID = recipe.getIngredientList().get(i).getIngredientID();
             Ingredient ingredient = dbHandler.getIngredient(ingredientID);
             String name = ingredient.getName();
+            name = name.substring(0,1).toUpperCase() + name.substring(1);
             String quantity = String.valueOf(recipe.getIngredientList().get(i).getQuantity());
             String unit = recipe.getIngredientList().get(i).getUnit();
             String details = recipe.getIngredientList().get(i).getDetails();
@@ -137,6 +138,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
         directionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         for (int i = 0; i < recipe.getDirectionsList().size(); i++) {
             String text = recipe.getDirectionsList().get(i).getDirectionText();
+            text = text.substring(0,1).toUpperCase() + text.substring(1);
             int number = recipe.getDirectionsList().get(i).getDirectionNumber();
             // fix incorrect numbers from removed directions
             if (number != (i + 1)) {

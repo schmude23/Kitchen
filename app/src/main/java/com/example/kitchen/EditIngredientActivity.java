@@ -129,6 +129,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
     public void onEditIngredientAddIngredientButtonPressed(View v) {
         // Show popup if valid ingredient to select quantity and units
         String input = editIngredientIngredientEditText.getText().toString();
+        input = input.substring(0,1).toUpperCase() + input.substring(1);
         if (input.length() > 0) {
             ShowPopup(v, -1);
         }
@@ -179,6 +180,7 @@ public class EditIngredientActivity extends AppCompatActivity implements Adapter
      */
     public void onEditIngredientPopupOkayButtonPressed(View v) {
         ingredientName = editIngredientPopupIngredientEditText.getText().toString();
+        ingredientName = ingredientName.substring(0,1).toUpperCase() + ingredientName.substring(1);
         ingredientDetails = editIngredientPopupIngredientDetailsEditText.getText().toString();
         ingredientQuantity = editIngredientPopupQuantityEditText.getText().toString();
         if (ingredientName.length() > 0 && ingredientQuantity.length() > 0) {

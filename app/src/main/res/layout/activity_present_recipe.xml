@@ -19,6 +19,7 @@
         android:layout_margin="30dp"
         android:paddingLeft="30dp"
         android:text="TextView"
+        android:paddingRight="10dp"
         android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="@+id/recipe_toolbar"
         app:layout_constraintStart_toStartOf="@+id/recipe_toolbar"

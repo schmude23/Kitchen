@@ -101,6 +101,7 @@ public class EditCategoryActivity extends AppCompatActivity {
      */
     public void onEditCategoryAddCategoryButtonPressed(View v) {
         String input = editCategory.getText().toString();
+        input = input.substring(0,1).toUpperCase() + input.substring(1);
         editCategory.getText().clear();
         if (input.length() > 0) {
             // add string to the categoryAdapter, not the listview
@@ -156,6 +157,7 @@ public class EditCategoryActivity extends AppCompatActivity {
     public void onEditCategoryPopupOkayButtonPressed(View v) {
         // edit the category that was clicked and update
         String input = editCategoryPopupCategoryEditText.getText().toString();
+        input = input.substring(0,1).toUpperCase() + input.substring(1);
         if (input.length() > 0) {
 
             categoryList.set(position, input);
