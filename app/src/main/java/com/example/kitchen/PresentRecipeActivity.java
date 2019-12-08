@@ -29,7 +29,7 @@ public class PresentRecipeActivity extends AppCompatActivity {
 
     public void onPresentRecipeNextButtonPressed(View view){
         position++;
-        if(position < (recipe.getDirectionsList().size() - 1)){
+        if(position < recipe.getDirectionsList().size()){
             String string = (position + 1) + ". " + recipe.getDirectionsList().get(position).getDirectionText();
             textView.setText(string);
         }else {
