@@ -16,15 +16,16 @@
         android:id="@+id/present_recipe_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:paddingLeft="30dp"
         android:text="TextView"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="@+id/recipe_toolbar"
         app:layout_constraintStart_toStartOf="@+id/recipe_toolbar"
         app:layout_constraintTop_toBottomOf="@+id/recipe_toolbar" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/edit_direction_finish_button"
+        android:id="@+id/present_recipe_back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
@@ -34,10 +35,11 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="20dp"
         app:maxImageSize="48dp"
-        app:srcCompat="@drawable/ic_arrow_back_black" />
+        app:srcCompat="@drawable/ic_arrow_back_black"
+        android:onClick="onPresentRecipeBackButtonPressed"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/edit_direction_next_button"
+        android:id="@+id/present_recipe_next_button"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,6 +50,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="48dp"
-        app:srcCompat="@drawable/ic_arrow_right_black" />
+        app:srcCompat="@drawable/ic_arrow_right_black"
+        android:onClick="onPresentRecipeNextButtonPressed"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
