@@ -1389,11 +1389,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //for checking Mass units
         if ((origUnit.equalsIgnoreCase("grain(s)") || origUnit.equalsIgnoreCase("ounce(s)") ||
                 origUnit.equalsIgnoreCase("pound(s)") || origUnit.equalsIgnoreCase("kilogram(s)") ||
-                origUnit.equalsIgnoreCase("milligram(s)"))
+                origUnit.equalsIgnoreCase("milligram(s)") || origUnit.equalsIgnoreCase("gram(s)"))
                 &&
                 (reqUnit.equalsIgnoreCase("grain(s)") || reqUnit.equalsIgnoreCase("ounce(s)") ||
                         reqUnit.equalsIgnoreCase("pound(s)") || reqUnit.equalsIgnoreCase("kilogram(s)") ||
-                        reqUnit.equalsIgnoreCase("milligram(s)"))) {
+                        reqUnit.equalsIgnoreCase("milligram(s)") || reqUnit.equalsIgnoreCase("gram(s)"))) {
             return convertUnitMass(origUnit, reqUnit, quantity);
         }
 

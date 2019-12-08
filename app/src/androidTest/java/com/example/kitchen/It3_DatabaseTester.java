@@ -508,6 +508,36 @@ public class It3_DatabaseTester {
     }
 
     /**
+     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
+     * changes
+     * This method tests convertUnits was grams, is now milligrams
+     */
+    @Test
+    public void convertRecipeIngredientUnits_GramsToMilligrams() {
+        setUp();
+        createRecipe_DifferentUnits("gram(s)");
+        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "gram(s)", "milligram(s)");
+        assertEquals("convertRecipeIngredientUnits_GramsToMilligrams - Quantity", 6000, returned.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits_GramsToMilligrams - Unit", "milligram(s)", returned.getIngredientList().get(0).getUnit());
+        tearDown();
+    }
+
+    /**
+     * This method checks that convertRecipeIngredientUnits returns a Recipe with the units correctly
+     * changes
+     * This method tests convertUnits was kilograms, is now grams
+     */
+    @Test
+    public void convertRecipeIngredientUnits_KilogramsToGrams() {
+        setUp();
+        createRecipe_DifferentUnits("kilogram(s)");
+        Recipe returned = testDatabase.convertRecipeIngredientUnits(testRecipe2, "kilogram(s)", "gram(s)");
+        assertEquals("convertRecipeIngredientUnits_KilogramsToGrams - Quantity", 6000, returned.getIngredientList().get(0).getQuantity(), 0);
+        assertEquals("convertRecipeIngredientUnits_KilogramsToGrams - Unit", "gram(s)", returned.getIngredientList().get(0).getUnit());
+        tearDown();
+    }
+
+    /**
      * This method tests that getRecipesByFavorite returns null if no recipes are favorited
      */
     @Test
