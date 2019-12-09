@@ -26,8 +26,8 @@
             android:textSize="24sp"
             app:backgroundTint="?attr/editTextColor"
             android:textColor="?attr/editTextColor"
-            android:textColorHint="?attr/editTextColor"/>
-
+            android:textColorHint="?attr/editTextColor"
+            android:popupBackground="?attr/autoCompleteBackground"/>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit_ingredient_add_ingredient_button"
             android:onClick="onEditIngredientAddIngredientButtonPressed"

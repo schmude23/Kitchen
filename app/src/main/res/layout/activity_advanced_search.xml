@@ -117,6 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.75"
                 android:textCursorDrawable="@null"
+                android:popupBackground="?attr/autoCompleteBackground"
                 app:backgroundTint="?attr/editTextColor"
                 android:textColor="?attr/editTextColor"
                 android:textColorHint="?attr/editTextColor"/>
@@ -157,6 +158,7 @@
                 android:layout_weight="0.75"
                 android:textCursorDrawable="@null"
                 app:backgroundTint="?attr/editTextColor"
+                android:popupBackground="?attr/autoCompleteBackground"
                 android:textColor="?attr/editTextColor"
                 android:textColorHint="?attr/editTextColor"/>
 

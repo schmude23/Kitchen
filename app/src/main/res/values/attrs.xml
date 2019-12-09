@@ -15,4 +15,6 @@
     <attr name="dividerColor" format="reference" />
     <attr name="radioColor" format="reference" />
     <attr name="floatingActionButtonColor" format="reference"/>
+    <attr name="spinnerColor" format="reference"/>
+    <attr name="autoCompleteBackground" format="reference"/>
 </resources>

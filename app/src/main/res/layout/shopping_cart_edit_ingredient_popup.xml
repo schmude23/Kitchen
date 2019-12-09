@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="false"
+        android:backgroundTint="@color/white"
         app:srcCompat="@drawable/ic_remove"
         app:layout_constraintTop_toBottomOf="@+id/shopping_cart_edit_ingredient_popup_quantity_text"
         app:layout_constraintEnd_toStartOf="@id/shopping_cart_edit_ingredient_popup_quantity_edit_text"
@@ -53,6 +54,7 @@
         android:clickable="true"
         android:focusable="false"
         app:srcCompat="@drawable/ic_add"
+        android:backgroundTint="@color/white"
         app:layout_constraintStart_toEndOf="@id/shopping_cart_edit_ingredient_popup_quantity_edit_text"
         app:layout_constraintTop_toBottomOf="@+id/shopping_cart_edit_ingredient_popup_quantity_text"
         android:onClick="onShoppingCartEditIngredientPopupAddButtonPressed"/>
