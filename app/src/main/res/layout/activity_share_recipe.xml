@@ -15,8 +15,10 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="28dp"
         android:layout_marginLeft="28dp"
+        android:layout_marginRight="50dp"
         android:layout_marginTop="55dp"
         android:background="@drawable/button_style"
+        android:textColor="?attr/buttonTextColor"
         android:text="Reset Connection" />
 
     <Button
@@ -25,8 +27,13 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/onOff"
         android:layout_alignBottom="@+id/onOff"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="97dp"
+        android:layout_marginRight="97dp"
+        android:layout_marginBottom="0dp"
         android:background="@drawable/button_style"
+        android:textColor="?attr/buttonTextColor"
         android:text="discover" />
 
     <ListView
@@ -133,7 +140,8 @@
         android:background="@drawable/button_style"
         android:text="Share"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:textColor="?attr/buttonTextColor"/>
 
     <TextView
         android:id="@+id/connectionStatus"

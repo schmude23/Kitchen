@@ -12,9 +12,9 @@
         android:id="@+id/activity_ingredient_list_ingredient_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/light_slate_gray"
+        android:background="?attr/headerSecondaryColor"
         android:text="@string/ingredients"
-        android:textColor="@color/white"
+        android:textColor="?attr/headerTextColor"
         android:textSize="14sp" />
 
     <ListView

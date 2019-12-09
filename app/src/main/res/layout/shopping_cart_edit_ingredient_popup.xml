@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="?attr/popupBackground">
 
     <TextView
         android:id="@+id/shopping_cart_edit_ingredient_popup_quantity_text"
@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"
+        android:textColor="?attr/primaryTextColor"
         android:paddingBottom="30dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -40,7 +41,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shopping_cart_edit_ingredient_popup_quantity_text"
         app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center"/>
+        android:gravity="center"
+        app:backgroundTint="?attr/editTextColor"
+        android:textColor="?attr/editTextColor"
+        android:textColorHint="?attr/editTextColor"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/shopping_cart_edit_ingredient_popup_add_button"
@@ -63,7 +67,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shopping_cart_edit_ingredient_popup_remove_button"
         android:background="@drawable/button_style"
-        android:onClick="onShoppingCartEditIngredientPopupCancelButtonPressed"/>
+        android:onClick="onShoppingCartEditIngredientPopupCancelButtonPressed"
+        android:textColor="?attr/buttonTextColor"/>
 
     <Button
         android:id="@+id/shopping_cart_edit_ingredient_popup_okay_button"
@@ -75,6 +80,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shopping_cart_edit_ingredient_popup_add_button"
         android:background="@drawable/button_style"
-        android:onClick="onShoppingCartEditIngredientPopupOkayButtonPressed"/>
+        android:onClick="onShoppingCartEditIngredientPopupOkayButtonPressed"
+        android:textColor="?attr/buttonTextColor"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,6 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="?attr/primaryTextColor"
         android:gravity="center"
         android:paddingBottom="30dp"/>
 
@@ -41,7 +42,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scale_recipe_popup_servings_text"
         app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center"/>
+        android:gravity="center"
+        app:backgroundTint="?attr/editTextColor"
+        android:textColor="?attr/editTextColor"
+        android:textColorHint="?attr/editTextColor"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/scale_recipe_popup_add_button"

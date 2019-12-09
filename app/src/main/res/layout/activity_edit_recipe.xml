@@ -29,13 +29,16 @@
             android:ems="10"
             android:hint="@string/name"
             android:inputType="textPersonName"
-            android:textCursorDrawable="@null" />
+            android:textCursorDrawable="@null"
+            app:backgroundTint="?attr/editTextColor"
+            android:textColor="?attr/editTextColor"
+            android:textColorHint="?attr/editTextColor"/>
 
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:background="@color/light_slate_gray" />
+            android:background="?attr/dividerColor"/>
 
         <TextView
             android:id="@+id/textView3"
@@ -50,7 +53,10 @@
             android:ems="10"
             android:hint="@string/servings"
             android:inputType="numberDecimal"
-            android:textCursorDrawable="@null" />
+            android:textCursorDrawable="@null"
+            app:backgroundTint="?attr/editTextColor"
+            android:textColor="?attr/editTextColor"
+            android:textColorHint="?attr/editTextColor"/>
 
         <TextView
             android:id="@+id/textView4"
@@ -65,7 +71,10 @@
             android:ems="10"
             android:hint="@string/prep_time_min"
             android:inputType="time"
-            android:textCursorDrawable="@null" />
+            android:textCursorDrawable="@null"
+            app:backgroundTint="?attr/editTextColor"
+            android:textColor="?attr/editTextColor"
+            android:textColorHint="?attr/editTextColor"/>
 
         <TextView
             android:id="@+id/textView5"
@@ -80,7 +89,10 @@
             android:ems="10"
             android:hint="@string/total_time_min"
             android:inputType="time"
-            android:textCursorDrawable="@null" />
+            android:textCursorDrawable="@null"
+            android:textColor="?attr/editTextColor"
+            android:textColorHint="?attr/editTextColor"
+            app:backgroundTint="?attr/editTextColor"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -101,7 +113,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="1">
+            android:weightSum="1"   >
 
             <View
                 android:layout_width="0dp"

@@ -19,15 +19,18 @@
             android:id="@+id/search_edit_text"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:hint="@string/search" />
+            android:hint="@string/search"
+            app:backgroundTint="?attr/editTextColor"
+            android:textColor="?attr/editTextColor"
+            android:textColorHint="?attr/editTextColor"/>
 
         <TextView
             android:id="@+id/sort_by_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/light_slate_gray"
+            android:background="?attr/headerSecondaryColor"
             android:text="@string/sort_by"
-            android:textColor="@color/white" />
+            android:textColor="?attr/headerTextColor" />
 
         <RadioGroup
             android:id="@+id/radio_group_recipe"
@@ -41,21 +44,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/dark_orange"
-                android:text="@string/name" />
+                android:text="@string/name"
+                android:textColor="?attr/secondaryTextColor"/>
 
             <RadioButton
                 android:id="@+id/radio_prep_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/dark_orange"
-                android:text="@string/prep_time" />
+                android:text="@string/prep_time"
+                android:textColor="?attr/secondaryTextColor"/>
 
             <RadioButton
                 android:id="@+id/radio_total_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/dark_orange"
-                android:text="@string/total_time" />
+                android:text="@string/total_time"
+                android:textColor="?attr/secondaryTextColor"/>
 
         </RadioGroup>
 
@@ -71,14 +77,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/dark_orange"
-                android:text="@string/ascending" />
+                android:text="@string/ascending"
+                android:textColor="?attr/secondaryTextColor"/>
 
             <RadioButton
                 android:id="@+id/radio_descending"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/dark_orange"
-                android:text="@string/descending" />
+                android:text="@string/descending"
+                android:textColor="?attr/secondaryTextColor"/>
 
         </RadioGroup>
 
@@ -86,14 +94,15 @@
             android:id="@+id/limit_to_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/light_slate_gray"
+            android:background="?attr/headerSecondaryColor"
             android:text="@string/limit_to"
-            android:textColor="@color/white" />
+            android:textColor="?attr/headerTextColor" />
 
         <TextView
             android:id="@+id/ingredients_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="?attr/primaryTextColor"
             android:text="@string/ingredients" />
 
         <LinearLayout
@@ -107,7 +116,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.75"
-                android:textCursorDrawable="@null" />
+                android:textCursorDrawable="@null"
+                app:backgroundTint="?attr/editTextColor"
+                android:textColor="?attr/editTextColor"
+                android:textColorHint="?attr/editTextColor"/>
 
             <Button
                 android:id="@+id/button_add_ingredient"
@@ -115,7 +127,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
                 android:background="@drawable/button_style"
-                android:text="@string/add" />
+                android:text="@string/add"
+                android:textColor="?attr/buttonTextColor"/>
 
         </LinearLayout>
 
@@ -128,7 +141,8 @@
             android:id="@+id/categories_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/categories" />
+            android:text="@string/categories"
+            android:textColor="?attr/primaryTextColor"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -141,7 +155,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.75"
-                android:textCursorDrawable="@null" />
+                android:textCursorDrawable="@null"
+                app:backgroundTint="?attr/editTextColor"
+                android:textColor="?attr/editTextColor"
+                android:textColorHint="?attr/editTextColor"/>
 
             <Button
                 android:id="@+id/button_add_category"
@@ -149,7 +166,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
                 android:background="@drawable/button_style"
-                android:text="@string/add" />
+                android:text="@string/add"
+                android:textColor="?attr/buttonTextColor"/>
 
         </LinearLayout>
 
@@ -163,7 +181,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_style"
-            android:text="@string/search" />
+            android:text="@string/search"
+            android:textColor="?attr/buttonTextColor"/>
 
     </LinearLayout>
 

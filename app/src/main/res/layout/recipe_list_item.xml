@@ -53,6 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Recipe Name"
+                    android:textColor="?attr/primaryTextColor"
                     android:textSize="25sp" />
 
                 <View
@@ -78,6 +79,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
+                        android:textColor="?attr/primaryTextColor"
                         android:text="Yields" />
 
                     <TextView
@@ -85,6 +87,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
+                        android:textColor="?attr/primaryTextColor"
                         android:text="x Servings" />
 
                 </LinearLayout>
@@ -104,6 +107,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
+                        android:textColor="?attr/primaryTextColor"
                         android:text="Prep Time" />
 
                     <TextView
@@ -111,6 +115,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
+                        android:textColor="?attr/primaryTextColor"
                         android:text="x min" />
                 </LinearLayout>
 
@@ -129,6 +134,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
+                        android:textColor="?attr/primaryTextColor"
                         android:text="Total Time" />
 
                     <TextView
@@ -136,6 +142,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
+                        android:textColor="?attr/primaryTextColor"
                         android:text="x min" />
 
                 </LinearLayout>

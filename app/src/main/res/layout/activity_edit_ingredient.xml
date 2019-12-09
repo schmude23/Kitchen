@@ -23,7 +23,10 @@
             android:layout_height="wrap_content"
             android:hint="@string/enter_ingredient"
             android:textCursorDrawable="@null"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            app:backgroundTint="?attr/editTextColor"
+            android:textColor="?attr/editTextColor"
+            android:textColorHint="?attr/editTextColor"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit_ingredient_add_ingredient_button"
@@ -43,10 +46,10 @@
         android:id="@+id/edit_ingredient_ingredient_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/light_slate_gray"
+        android:background="?attr/headerSecondaryColor"
         android:text="@string/ingredients"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:textColor="?attr/headerTextColor"
+        android:textSize="14sp"/>
 
     <FrameLayout
         android:layout_width="match_parent"
