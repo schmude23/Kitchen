@@ -39,5 +39,9 @@
     <item
         android:id="@+id/action_paste_recipe"
         android:title="Paste Recipe"/>
+    <item
+        android:id="@+id/action_view_favorites"
+        android:title="View Favorites"/>
+
 
 </menu>

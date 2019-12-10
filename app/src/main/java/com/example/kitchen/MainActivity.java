@@ -166,6 +166,9 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                 startActivity(pasteRecipe);
                 this.finish();
                 return true;
+            case R.id.action_view_favorites:
+                viewFavorites();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -1087,4 +1090,18 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         this.finish();
     }
 
+    private void viewFavorites(){
+        recipes = database.getRecipesByFavorite();
+        if(recipes == null)
+        {
+            Toast.makeText(this, "You have not favorited any recipes",Toast.LENGTH_SHORT ).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            this.finish();
+            return;
+        }
+        getRecipeListItems();
+        recipeAdapter = new RecipeAdapter(recipeListItems, this);
+        recyclerView.setAdapter(recipeAdapter);
+    }
 }
