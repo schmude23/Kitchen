@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:cropToPadding="true"
-        app:srcCompat="@drawable/app_picture" />
+        app:srcCompat="@drawable/app_icon" />
 
     <EditText
         android:id="@+id/edittext_username"
