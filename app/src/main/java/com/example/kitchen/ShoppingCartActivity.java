@@ -59,6 +59,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
         //TextView toolbarText = (TextView) findViewById(R.id.toolbar_text);
         setSupportActionBar(toolbar);
         //toolbarText.setText(getTitle());
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         int recipeId = getIntent().getIntExtra("recipeId", -1);
@@ -297,6 +298,11 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+    public void onToolbarTextClicked(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 
 

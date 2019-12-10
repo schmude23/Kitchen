@@ -69,6 +69,7 @@ public class ShareRecipeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_recipe);
+
         recipeId = getIntent().getIntExtra("recipeId", -1);
         database = new DatabaseHelper(this);
         if (recipeId != -1)
@@ -380,6 +381,11 @@ public class ShareRecipeActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+    public void onToolbarTextClicked(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 
 }

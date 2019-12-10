@@ -82,4 +82,9 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+    public void onToolbarTextClicked(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
+    }
 }

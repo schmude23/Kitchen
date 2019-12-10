@@ -25,6 +25,7 @@ public class PasteRecipeActivity extends AppCompatActivity {
         // Display Toolbar
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
     }
 
@@ -108,5 +109,10 @@ public class PasteRecipeActivity extends AppCompatActivity {
             startActivity(intent);
             this.finish();
         }
+    }
+    public void onToolbarTextClicked(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 }
