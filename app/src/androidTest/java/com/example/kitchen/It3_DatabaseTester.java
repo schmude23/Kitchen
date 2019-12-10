@@ -733,6 +733,40 @@ public class It3_DatabaseTester {
                 "In a large bowl, mix together the butter and sugar until smooth. Add the egg yolks and beat until light and fluffy. Sift in the cake flour, baking powder and salt, and stir until well blended. Mix in the vanilla and milk. In a separate bowl, whip the egg whites to stiff peaks using an electric mixer. Fold into the batter. Pour into the prepared pie plate, and sprinkle cinnamon sugar over the top.\n" +
                 "Bake for 25 minutes in the preheated oven, then reduce the temperature to 325 degrees F (165 degrees C). Continue to bake for 25 to 30 minutes, or until the center is set when you gently jiggle the pie. Serve hot or cold.";
         rcp.main(test);
+
+        test = "Easy One Pot Chicken Burrito Bowl\n" +
+                " Prep Time 10 minutes\n" +
+                " Cook Time 20 minutes\n" +
+                " Total Time 30 minutes\n" +
+                " Servings 6\n" +
+                " AuthorLayla\n" +
+                "Ingredients\n" +
+                "1 pound chicken breasts cubed into 1 inch pieces\n" +
+                "1/2 cup diced onion\n" +
+                "1 Tablespoon olive oil\n" +
+                "1 15 oz can black beans rinsed and drained\n" +
+                "1 15 oz can corn drained\n" +
+                "1 14.5 oz can diced tomatoes\n" +
+                "1 4 oz can diced green chiles\n" +
+                "1/4 cup Chunky Salsa\n" +
+                "1 cup jasmine or Basmati rice I used Basmati\n" +
+                "2 Tablespoons taco seasoning\n" +
+                "1 teaspoon cumin\n" +
+                "1/2 teaspoon chili powder\n" +
+                "1/2 teaspoon salt\n" +
+                "1/2 teaspoon pepper\n" +
+                "2 cups chicken stock or water\n" +
+                "1 cup shredded cheddar/jack cheese\n" +
+                "Optional toppings:\n" +
+                "Tomatoes\n" +
+                "Avocado\n" +
+                "Sour cream\n" +
+                "Cilantro\n" +
+                "guacamole\n" +
+                "Instructions\n" +
+                "Heat a large pan or pot to medium heat. Add the cubed chicken, onion and olive oil. Saute for 2-3 minutes or until the chicken is cooked and the onions are lightly browned. Add the black beans, corn, tomatoes, green chiles,salsa, jasmine rice, taco seasoning,cumin, chili powder and salt & pepper. Pour in chicken stock or water and then bring to a light boil. Cover the pan and reduce heat to low. Cook for 15-20 minutes, or until the rice is all the way cooked.\n" +
+                "Top with your favorite toppings.";
+        rcp.main(test);
     }
 
     // Helper Methods:

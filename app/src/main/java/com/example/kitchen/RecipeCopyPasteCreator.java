@@ -39,6 +39,8 @@ public class RecipeCopyPasteCreator {
         boolean passed = false;
         boolean titleFound = false;
         recipe = new Recipe();
+        recipeIngredientList = new ArrayList<RecipeIngredient>();
+        recipeDirectionList = new ArrayList<RecipeDirection>();
 
         while (recipeScanner.hasNextLine()) {
             tokens = new ArrayList<>();
@@ -108,7 +110,7 @@ public class RecipeCopyPasteCreator {
                 tokens.get(0).equalsIgnoreCase("Ingredients"))){
             passed = ingredientsMapper();
         }
-        if(!passed && tokens.get(0).equalsIgnoreCase("Directions")){
+        if(!passed && (tokens.get(0).equalsIgnoreCase("Directions")||tokens.get(0).equalsIgnoreCase("Instructions"))){
             passed = directionsMapper();
         }
 
@@ -286,7 +288,11 @@ public class RecipeCopyPasteCreator {
             }
 
             //sets unit if possible
-            ingredient.setUnit(unitChecker(tokens.get(1)));
+            if(tokens.size() > 1) {
+                ingredient.setUnit(unitChecker(tokens.get(1)));
+            }else{
+                ingredient.setUnit("none");
+            }
 
             //if "none" is found then the next token is part of the ingredient name
             if(ingredient.getUnit().equalsIgnoreCase("none")){
@@ -303,6 +309,9 @@ public class RecipeCopyPasteCreator {
             }
             for(int j = beginAt; j < tokens.size(); j++){
                 NameDetail += tokens.get(j) + " ";
+            }
+            if(tokens.size() == 1){
+                NameDetail = tokens.get(0).toString();
             }
 
             //adding either name and detail to a recipeIngredient or just a name.
@@ -458,13 +467,14 @@ public class RecipeCopyPasteCreator {
                 }catch(NumberFormatException nfe2){/*do nothing*/}
             }
             //checks for 1/2 values
-            try {
+            try {if(tokens.size() > 1) {
                 String temp = tokens.get(1);
                 String[] arr = temp.split("");
                 if (temp.contains("/") || temp.contains("\\")) {
                     number += Double.parseDouble(arr[0]) / Double.parseDouble(arr[2]);
                     found = true;
                 }
+            }
             }catch(NumberFormatException nfe3){/*do nothing*/}
         }
 

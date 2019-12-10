@@ -296,7 +296,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
             recipe = mapRecipe(cursor);
             cursor.moveToNext();
-
+            cursor.close();
+        }
+        else{
             cursor.close();
         }
 
@@ -340,6 +342,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 recipeList.add(recipe);
                 cursor.moveToNext();
             }
+            cursor.close();
+        }
+        else{
             cursor.close();
         }
         if (recipeList.size() == 0) {
@@ -408,6 +413,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             cursor.close();
         }
+        else{
+            cursor.close();
+        }
         if (recipeList.size() == 0) {
             return null;
         }
@@ -434,6 +442,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 recipeIngredientList.add(recipeIngredient);
                 cursor.moveToNext();
             }
+            cursor.close();
+        }
+        else{
             cursor.close();
         }
         if (recipeIngredientList.size() == 0) {
@@ -525,6 +536,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             cursor.close();
         }
+        else{
+            cursor.close();
+        }
         if (recipeCategoryList.size() == 0) {
             return null;
         }
@@ -577,6 +591,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         if (recipeList.size() == 0) {
             return null;
+        }
+        else{
+            cursor.close();
         }
         return recipeList;
     }
@@ -799,11 +816,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.moveToNext();
             }
         }
-        if (shoppingCartList.size() == 0) {
+        else{
             cursor.close();
+        }
+        if (shoppingCartList.size() == 0) {
             return null;
         }
-        cursor.close();
         return shoppingCartList;
     }
 
@@ -844,7 +862,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
             recipeIngredient = mapRecipeIngredient(cursor);
             cursor.moveToNext();
-
+            cursor.close();
+        }
+        else{
             cursor.close();
         }
 
@@ -934,6 +954,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             cursor.close();
         }
+        else{
+            cursor.close();
+        }
         if (recipeIngredientList.size() == 0) {
             return null;
         }
@@ -958,6 +981,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 recipeIngredient = mapRecipeIngredient(cursor);
                 return recipeIngredient.getRecipeID();
             }
+            cursor.close();
+        }
+        else{
             cursor.close();
         }
         return -1;
@@ -1002,7 +1028,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             cursor.close();
         }
-
+        else{
+            cursor.close();
+        }
         return ingredient;
     }
 
@@ -1024,7 +1052,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
             return ingredient.getKeyID();
         }
-
+        else{
+            cursor.close();
+        }
         return -1;
     }
 
@@ -1047,6 +1077,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ingredientList.add(ingredient);
                 cursor.moveToNext();
             }
+            cursor.close();
+        }
+        else{
             cursor.close();
         }
         if (ingredientList.size() == 0) {
@@ -1163,6 +1196,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             cursor.close();
         }
+        else{
+            cursor.close();
+        }
         if (recipeIngredientList.size() == 0) {
             return null;
         }
@@ -1204,6 +1240,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 recipeCategoryList.add(recipeCategory);
                 cursor.moveToNext();
             }
+            cursor.close();
+        }
+        else{
             cursor.close();
         }
         if (recipeCategoryList.size() == 0) {
@@ -1281,7 +1320,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             cursor.close();
         }
-
+        else{
+            cursor.close();
+        }
         return category;
     }
 
@@ -1303,7 +1344,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
             return category.getKeyID();
         }
-
+        else{
+            cursor.close();
+        }
         return -1;
     }
 
@@ -1326,6 +1369,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 categoryList.add(category);
                 cursor.moveToNext();
             }
+            cursor.close();
+        }
+        else{
             cursor.close();
         }
         if (categoryList.size() == 0) {
@@ -1557,7 +1603,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * This method returns a built Recipe object
      *
-     * @return If successful in fetching the cursor and building the recipe, it will
+     * @return If successful in fetching the
+     * and building the recipe, it will
      * return an Recipe Object, if not the method will return null.
      */
     private Recipe mapRecipe(Cursor cursor) {
