@@ -40,9 +40,8 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
 
     // ListView variables
     private ListView ingredientListView;
-    private ArrayList<String> ingredientList = new ArrayList<String>();
+    private List<String> ingredientList = new ArrayList<String>();
     private ArrayAdapter<String> ingredientAdapter;
-    private boolean newRecipe;
     List<Ingredient> ingredients;
     private int position = -1;
     Dialog myDialog; // Dialog for popup window
@@ -56,6 +55,8 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
         // Display Toolbar
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         myDialog = new Dialog(this);
 
@@ -63,6 +64,7 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
         for(int i = 0;i < ingredients.size(); i++){
             ingredientList.add(ingredients.get(i).getName());
         }
+        ingredientList = stringQuickSort(ingredientList, true);
         ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ingredientList);
         ingredientListView = (ListView) findViewById(R.id.activity_ingredient_list_ingredient_list);
 
@@ -77,18 +79,7 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
 
     }
 
-    /**
-     * This method is run when the options menu is being created and is where the menu is set.
-     *
-     * @param menu the menu that was created
-     */
-    // Toolbar functions
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        final MenuItem menuItem = menu.findItem(R.id.search);
-        return true;
-    }
+
 
     /**
      * This method is run when an item from the options menu is selected
@@ -115,11 +106,6 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
                 Intent viewCart = new Intent(this, ShoppingCartActivity.class);
                 viewCart.putExtra("recipeId", -1);
                 startActivity(viewCart);
-                this.finish();
-                return true;
-            case R.id.action_home:
-                Intent home = new Intent(this, MainActivity.class);
-                startActivity(home);
                 this.finish();
                 return true;
             case R.id.action_ingredient_list:
@@ -206,6 +192,46 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    public void onToolbarTextClicked(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
+    }
+    public static List<String> stringQuickSort(List<String> list, boolean ascending) {
+        List<String> sorted;  // this shall be the sorted list to return, no needd to initialise
+        List<String> smaller = new ArrayList<>(); // Vehicles smaller than pivot
+        List<String> greater = new ArrayList<>(); // Vehicles greater than pivot
+
+        if (list.isEmpty())
+            return list; // start with recursion base case
+        String pivot = list.get(0);  // first Vehicle in list, used as pivot
+        int i;
+        String j;     // Variable used for Vehicles in the loop
+        for (i = 1; i < list.size(); i++) {
+            j = list.get(i);
+            if (ascending) {
+                if (j.compareTo(pivot) < 0)   // make sure Vehicle has proper compareTo method
+                    smaller.add(j);
+                else
+                    greater.add(j);
+            } else {
+                if (j.compareTo(pivot) > 0)   // make sure Vehicle has proper compareTo method
+                    smaller.add(j);
+                else
+                    greater.add(j);
+            }
+        }
+        smaller = stringQuickSort(smaller, ascending);  // capitalise 's'
+        greater = stringQuickSort(greater, ascending);  // sort both halfs recursively
+        smaller.add(pivot);          // add initial pivot to the end of the (now sorted) smaller Vehicles
+        smaller.addAll(greater);     // add the (now sorted) greater Vehicles to the smaller ones (now smaller is essentially your sorted list)
+        sorted = smaller;            // assign it to sorted; one could just as well do: return smaller
+
+        return sorted;
+
 
     }
 }

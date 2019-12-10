@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:background="@color/colorAccent"
+    android:background="?attr/popupBackground"
     android:outlineSpotShadowColor="@color/colorPrimary">
 
     <EditText
@@ -26,7 +26,10 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.097" />
+        app:layout_constraintVertical_bias="0.097"
+        app:backgroundTint="?attr/editTextColor"
+        android:textColor="?attr/editTextColor"
+        android:textColorHint="?attr/editTextColor"/>
 
 
     <View
@@ -49,7 +52,8 @@
         android:layout_marginRight="20dp"
         android:onClick="onEditDirectionPopupOkayButtonPressed"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_direction_popup_direction_edit_text" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_direction_popup_direction_edit_text"
+        android:textColor="?attr/buttonTextColor"/>
 
     <Button
         android:id="@+id/edit_direction_popup_remove_button"
@@ -61,6 +65,7 @@
         android:text="@string/remove"
         android:onClick="onEditDirectionPopupRemoveButtonPressed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_direction_popup_direction_edit_text" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_direction_popup_direction_edit_text"
+        android:textColor="?attr/buttonTextColor"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

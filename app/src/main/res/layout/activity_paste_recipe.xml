@@ -22,13 +22,17 @@
             android:ems="10"
             android:gravity="start|top"
             android:hint="Paste Recipe Here"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            app:backgroundTint="?attr/editTextColor"
+            android:textColor="?attr/editTextColor"
+            android:textColorHint="?attr/editTextColor"/>
 
         <Button
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onAddRecipeClicked"
-            android:text="Add Recipe" />
+            android:text="Add Recipe"
+            android:textColor="?attr/buttonTextColor"/>
     </LinearLayout>
 </ScrollView>

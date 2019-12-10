@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:background="@color/colorAccent"
+    android:background="?attr/popupBackground"
     android:outlineSpotShadowColor="@color/colorPrimary">
 
     <Spinner
@@ -16,14 +16,17 @@
         android:layout_marginRight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/divider1" />
+        app:layout_constraintBottom_toTopOf="@+id/divider1"
+        android:background="?attr/spinnerColor"
+        android:popupBackground="?attr/spinnerColor"/>
     <TextView
         android:id="@+id/unit_conversion_popup_old_unit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/old_unit"/>
+        android:text="@string/old_unit"
+        android:textColor="?attr/primaryTextColor"/>
 
     <View
         android:id="@+id/divider1"
@@ -31,7 +34,7 @@
         android:layout_height="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="19dp"
-        android:background="@color/light_slate_gray"
+        android:background="?attr/dividerColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +46,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/divider1"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/new_unit"/>
+        android:text="@string/new_unit"
+        android:textColor="?attr/primaryTextColor"/>
 
     <Spinner
         android:id="@+id/unit_conversion_popup_new_unit_spinner"
@@ -53,7 +57,9 @@
         android:layout_marginEnd="48dp"
         android:layout_marginRight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider1" />
+        app:layout_constraintTop_toBottomOf="@+id/divider1"
+        android:popupBackground="?attr/spinnerColor"
+        android:background="?attr/spinnerColor"/>
 
     <Button
         android:id="@+id/unit_conversion_popup_okay_button"
@@ -65,7 +71,8 @@
         android:onClick="onUnitConversionPopupOkayButtonPressed"
         android:background="@drawable/button_style"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/unit_conversion_popup_new_unit_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/unit_conversion_popup_new_unit_spinner"
+        android:textColor="?attr/buttonTextColor"/>
 
     <Button
         android:id="@+id/edit_ingredient_popup_remove_button"
@@ -77,6 +84,7 @@
         android:background="@drawable/button_style"
         android:onClick="onUnitConversionPopupCancelButtonPressed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/unit_conversion_popup_new_unit_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/unit_conversion_popup_new_unit_spinner"
+        android:textColor="?attr/buttonTextColor"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

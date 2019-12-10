@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:background="@color/colorAccent"
+    android:background="?attr/popupBackground"
     android:outlineSpotShadowColor="@color/colorPrimary">
 
     <EditText
@@ -26,7 +26,11 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.097" />
+        app:layout_constraintVertical_bias="0.097"
+        app:backgroundTint="?attr/editTextColor"
+        android:textColor="?attr/editTextColor"
+        android:textColorHint="?attr/editTextColor"
+        />
 
 
     <View
@@ -34,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:layout_marginTop="5dp"
-        android:background="@color/light_slate_gray"
+        android:background="?attr/dividerColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_ingredient_edit_text" />
@@ -47,6 +51,7 @@
         android:text="@string/okay"
         android:background="@drawable/button_style"
         android:layout_marginRight="20dp"
+        android:textColor="?attr/buttonTextColor"
         android:onClick="onEditIngredientPopupOkayButtonPressed"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_ingredient_edit_text" />
@@ -59,6 +64,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginLeft="20dp"
         android:text="@string/remove"
+        android:textColor="?attr/buttonTextColor"
         android:onClick="onEditIngredientPopupRemoveButtonPressed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_ingredient_edit_text" />

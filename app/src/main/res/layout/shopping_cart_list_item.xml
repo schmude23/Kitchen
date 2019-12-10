@@ -13,7 +13,8 @@
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:buttonTint="@color/orange"/>
+        app:buttonTint="@color/orange"
+        android:textColor="?attr/secondaryTextColor"/>
 
     <TextView
         android:id="@+id/ingredient_quantity_text"
@@ -23,7 +24,8 @@
         android:text="quantity"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/ingredient_check_box"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="?attr/primaryTextColor"/>
 
     <TextView
         android:id="@+id/ingredient_unit_text"
@@ -35,14 +37,16 @@
         android:text="unit"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/ingredient_quantity_text"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="?attr/primaryTextColor"/>
 
     <View
         android:id="@+id/divider"
-        android:layout_width="338dp"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="9dp"
-        android:background="@color/light_slate_gray"
+        android:layout_margin="9dp"
+        android:background="?attr/dividerColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ingredient_quantity_text" />

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="primaryTextColor" format="reference"/>
+    <attr name="secondaryTextColor" format="reference"/>
+    <attr name="editTextColor1" format="reference"/>
+    <attr name="toolbarColor" format="reference"/>
+    <attr name="toolbarTextColor" format="reference"/>
+    <attr name="buttonColor" format="reference" />
+    <attr name="buttonTextColor" format="reference" />
+    <attr name="popupBackground" format="reference" />
+    <attr name="headerPrimaryColor" format="reference" />
+    <attr name="headerSecondaryColor" format="reference" />
+    <attr name="headerTextColor" format="reference" />
+    <attr name="checkBoxColor" format="reference" />
+    <attr name="dividerColor" format="reference" />
+    <attr name="radioColor" format="reference" />
+    <attr name="floatingActionButtonColor" format="reference"/>
+    <attr name="spinnerColor" format="reference"/>
+    <attr name="autoCompleteBackground" format="reference"/>
+</resources>

@@ -22,7 +22,10 @@
             android:hint="@string/enter_direction"
             android:textCursorDrawable="@null"
             android:textSize="24sp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            app:backgroundTint="?attr/editTextColor"
+            android:textColor="?attr/editTextColor"
+            android:textColorHint="?attr/editTextColor"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit_direction_add_direction_button"
@@ -42,9 +45,9 @@
         android:id="@+id/edit_direction_direction_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/light_slate_gray"
+        android:background="?attr/headerSecondaryColor"
         android:text="@string/directions"
-        android:textColor="#FFFFFF"
+        android:textColor="?attr/headerTextColor"
         android:textSize="14sp" />
 
     <FrameLayout

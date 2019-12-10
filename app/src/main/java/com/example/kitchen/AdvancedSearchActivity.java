@@ -2,6 +2,8 @@ package com.example.kitchen;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 
 public class AdvancedSearchActivity extends AppCompatActivity implements View.OnClickListener {
@@ -45,10 +48,16 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
     public final int SEARCH_BY_TOTAL_TIME = 2;
     private int recipeRadioSelected = 0;
     private boolean ascending = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advanced_search);
+
+        // Display Toolbar
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         initRadioGroups();
         limitToIngredientList();
@@ -56,7 +65,6 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
         searchEditText = findViewById(R.id.search_edit_text);
         searchButton = findViewById(R.id.advanced_search_search_button);
         searchButton.setOnClickListener(this);
-
 
 
     }
@@ -70,7 +78,7 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
         for (int i = 0; i < ingredientList.size(); i++)
             ingredientId[i] = database.getIngredient(ingredientList.get(i).toLowerCase());
         intent.putExtra("ingredientArray", ingredientId);
-        if(categoryList.size() >0)
+        if (categoryList.size() > 0)
             intent.putExtra("categoryId", database.getCategory(categoryList.get(0).toLowerCase()));
         intent.putExtra("advancedSearch", true);
         intent.putExtra("ascending", ascending);
@@ -86,8 +94,7 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                switch(checkedId)
-                {
+                switch (checkedId) {
                     case R.id.radio_recipe_name:
                         recipeRadioSelected = SEARCH_BY_NAME;
                         break;
@@ -109,14 +116,14 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-              switch(checkedId){
-                  case R.id.radio_ascending:
-                      ascending = true;
-                      break;
-                  case R.id.radio_descending:
-                      ascending = false;
-                      break;
-              }
+                switch (checkedId) {
+                    case R.id.radio_ascending:
+                        ascending = true;
+                        break;
+                    case R.id.radio_descending:
+                        ascending = false;
+                        break;
+                }
 
             }
 
@@ -127,12 +134,12 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
     private void limitToIngredientList() {
         //editIngredient = (EditText) findViewById(R.id.edit_ingredient);
         ArrayList<Ingredient> ingredients = database.getAllIngredients();
-        String [] ingredientStrings = new String [ingredients.size()];
-        for(int i = 0;i < ingredients.size(); i++){
+        String[] ingredientStrings = new String[ingredients.size()];
+        for (int i = 0; i < ingredients.size(); i++) {
             ingredientStrings[i] = ingredients.get(i).getName();
         }
         ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, ingredientStrings);
-        editIngredient =  findViewById(R.id.edit_ingredient);
+        editIngredient = findViewById(R.id.edit_ingredient);
         editIngredient.setAdapter(autoCompleteAdapter);
         btnAddIngredient = (Button) findViewById(R.id.button_add_ingredient);
         btnAddIngredient.setOnClickListener(this);
@@ -143,7 +150,6 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
         ingredientListView = (ListView) findViewById(R.id.ingredient_list);
         ingredientListView.setAdapter(ingredientAdapter);
     }
-
 
 
     private void limitToCategoryList() {
@@ -181,8 +187,7 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
             case R.id.button_add_category:
                 input = editCategory.getText().toString();
                 if (input.length() > 0) {
-                    if(categoryList.size() == 1)
-                    {
+                    if (categoryList.size() == 1) {
                         Toast.makeText(this, "Only one category allowed for Advanced Search", Toast.LENGTH_LONG).show();
                         break;
                     }
@@ -242,6 +247,12 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
             return false;
         }
 
+    }
+
+    public void onToolbarTextClicked(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 
 }

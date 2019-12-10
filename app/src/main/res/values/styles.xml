@@ -5,7 +5,48 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/royal_blue</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="primaryTextColor">@color/light_slate_gray</item>
+        <item name="secondaryTextColor">@color/black</item>
+        <item name="editTextColor">@color/light_slate_gray</item>
+        <item name="toolbarColor">@color/royal_blue</item>
+        <item name="toolbarTextColor">@color/black</item>
+        <item name="buttonColor">@color/royal_blue</item>
+        <item name="buttonTextColor">@color/black</item>
+        <item name="popupBackground">@color/white</item>
+        <item name="headerTextColor">@color/white</item>
+        <item name="headerPrimaryColor">@color/royal_blue</item>
+        <item name="headerSecondaryColor">@color/light_slate_gray</item>
+        <item name="floatingActionButtonColor">@color/royal_blue</item>
+        <item name="dividerColor">@color/light_slate_gray</item>
+        <item name="spinnerColor">@color/white</item>
+        <item name="autoCompleteBackground">@color/white</item>
+
     </style>
+
+    <style name="DarkMode" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:textColor">@color/white</item>
+        <item name="android:windowBackground">@color/black</item>
+        <item name="primaryTextColor">@color/white</item>
+        <item name="secondaryTextColor">@color/light_slate_gray</item>
+        <item name="editTextColor">@color/white</item>
+        <item name="toolbarColor">@color/royal_blue</item>
+        <item name="toolbarTextColor">@color/white</item>
+        <item name="buttonColor">@color/royal_blue</item>
+        <item name="buttonTextColor">@color/white</item>
+        <item name="popupBackground">@color/dark_slate_gray</item>
+        <item name="headerTextColor">@color/white</item>
+        <item name="headerPrimaryColor">@color/royal_blue</item>
+        <item name="headerSecondaryColor">@color/light_blue</item>
+        <item name="floatingActionButtonColor">@color/royal_blue</item>
+        <item name="dividerColor">@color/blue</item>
+        <item name="android:itemBackground">@color/black</item>
+        <item name="spinnerColor">@color/dark_slate_gray</item>
+        <item name="autoCompleteBackground">@color/black</item>
+    </style>
+
+
+
 
 </resources>

@@ -67,4 +67,15 @@
         <item>none</item>
     </string-array>
 
+    <string-array name="convert_units_array">
+        <item>teaspoon(s)</item>
+        <item>tablespoon(s)</item>
+        <item>cup(s)</item>
+        <item>ounce(s)</item>
+        <item>pint(s)</item>
+        <item>quart(s)</item>
+        <item>gallon(s)</item>
+        <item>pound(s)</item>
+    </string-array>
+
 </resources>

@@ -123,14 +123,18 @@ public class ShareRecipeActivity extends AppCompatActivity {
         btnOnOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (wifiManager.isWifiEnabled()) {
-//                    wifiManager.setWifiEnabled(false);
-//                    btnOnOff.setText("ON");
-//                } else {
-//                    wifiManager.setWifiEnabled(true);
-//                    btnOnOff.setText("OFF");
-//                }
                 disconnect();
+                mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+                    @Override
+                    public void onSuccess() {
+                        connectionStatus.setText("Discovery Started");
+                    }
+
+                    @Override
+                    public void onFailure(int i) {
+                        connectionStatus.setText("Discovery Starting Failed");
+                    }
+                });
             }
         });
 
@@ -218,7 +222,17 @@ public class ShareRecipeActivity extends AppCompatActivity {
 
                             @Override
                             public void onSuccess() {
-                                // Log.d(TAG, "removeGroup onSuccess -");
+                                mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                        connectionStatus.setText("Discovery Started");
+                                    }
+
+                                    @Override
+                                    public void onFailure(int i) {
+                                        connectionStatus.setText("Discovery Starting Failed");
+                                    }
+                                });
                             }
 
                             @Override

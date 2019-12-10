@@ -64,9 +64,8 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
         setContentView(R.layout.activity_display_selected_recipe);
         // Display Toolbar
         Toolbar toolbar = findViewById(R.id.recipe_toolbar);
-        //TextView toolbarText = (TextView) findViewById(R.id.toolbar_text);
         setSupportActionBar(toolbar);
-        //toolbarText.setText(getTitle());
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         //retrieving the extra infromation from intent
@@ -260,7 +259,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> oldUnitAdapter = ArrayAdapter.createFromResource(this,
-                R.array.units_array, android.R.layout.simple_spinner_item);
+                R.array.convert_units_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         oldUnitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the dAdapter to the spinner
@@ -269,7 +268,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> newUnitAdapter = ArrayAdapter.createFromResource(this,
-                R.array.units_array, android.R.layout.simple_spinner_item);
+                R.array.convert_units_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         newUnitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the dAdapter to the spinner
@@ -394,5 +393,15 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
         this.finish();
     }
 
+    /**
+     * Go to Recipe List when "Kitchen+" on toolbar is clicked
+     *
+     * @param view
+     */
+    public void onToolbarTextClicked(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
+    }
 
 }

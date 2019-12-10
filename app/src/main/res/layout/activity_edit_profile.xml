@@ -7,42 +7,46 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:background="@color/white">
-    tools:context=".RegisterActivity">
 
     <EditText
         android:id="@+id/edit_username"
         android:layout_width="190dp"
         android:layout_height="40dp"
         android:layout_marginTop="100dp"
-        android:hint="Username"/>
+        android:hint="Username"
+        app:backgroundTint="?attr/editTextColor"/>
 
     <EditText
         android:id="@+id/edit_password"
         android:layout_width="190dp"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
-        android:hint="Password"/>
+        android:hint="Password"
+        app:backgroundTint="?attr/editTextColor"/>
 
     <EditText
         android:id="@+id/new_username"
         android:layout_width="190dp"
         android:layout_height="40dp"
         android:layout_marginTop="80dp"
-        android:hint="New Username"/>
+        android:hint="New Username"
+        app:backgroundTint="?attr/editTextColor"/>
 
     <EditText
         android:id="@+id/new_password"
         android:layout_width="190dp"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
-        android:hint="New Password"/>
+        android:hint="New Password"
+        app:backgroundTint="?attr/editTextColor"/>
 
     <EditText
         android:id="@+id/cnf_new_password"
         android:layout_width="190dp"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
-        android:hint="Confirm Password"/>
+        android:hint="Confirm Password"
+        app:backgroundTint="?attr/editTextColor"/>
 
     <Button
         android:id="@+id/cnf_edit_profile"
@@ -50,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:background="@drawable/button_style"
-        android:text="Confirm" />
+        android:text="Confirm"
+        android:textColor="?attr/buttonTextColor"/>
 
 </LinearLayout>

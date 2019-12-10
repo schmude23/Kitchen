@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:background="@color/colorAccent"
-    android:outlineSpotShadowColor="@color/colorPrimary">
+    android:outlineSpotShadowColor="@color/colorPrimary"
+    android:background="?attr/popupBackground">
 
     <EditText
         android:id="@+id/edit_ingredient_popup_ingredient_edit_text"
@@ -24,7 +25,11 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.097" />
+        app:layout_constraintVertical_bias="0.097"
+        app:backgroundTint="?attr/editTextColor"
+        android:textColor="?attr/editTextColor"
+        android:textColorHint="?attr/editTextColor"/>
+
     <EditText
         android:id="@+id/edit_ingredient_popup_ingredient_details_edit_text"
         android:layout_width="match_parent"
@@ -39,7 +44,10 @@
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_ingredient_popup_ingredient_edit_text" />
+        app:layout_constraintTop_toBottomOf="@id/edit_ingredient_popup_ingredient_edit_text"
+        app:backgroundTint="?attr/editTextColor"
+        android:textColor="?attr/editTextColor"
+        android:textColorHint="?attr/editTextColor"/>
 
 
     <View
@@ -48,7 +56,7 @@
         android:layout_height="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="19dp"
-        android:background="@color/light_slate_gray"
+        android:background="?attr/dividerColor"
         app:layout_constraintBottom_toTopOf="@+id/edit_ingredient_popup_spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -66,7 +74,11 @@
         android:inputType="numberDecimal"
         android:textCursorDrawable="@null"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider1" />
+        app:layout_constraintTop_toBottomOf="@+id/divider1"
+        app:backgroundTint="?attr/editTextColor"
+        android:textColor="?attr/editTextColor"
+        android:textColorHint="?attr/editTextColor"
+        />
 
     <Spinner
         android:id="@+id/edit_ingredient_popup_spinner"
@@ -76,19 +88,22 @@
         android:layout_marginEnd="48dp"
         android:layout_marginRight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider1" />
+        app:layout_constraintTop_toBottomOf="@+id/divider1"
+        android:background="?attr/spinnerColor"
+        android:popupBackground="?attr/spinnerColor"/>
 
     <Button
         android:id="@+id/edit_ingredient_popup_okay_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginRight="20dp"
-        android:text="@string/okay"
         android:onClick="onEditIngredientPopupOkayButtonPressed"
-        android:background="@drawable/button_style"
+        android:text="✓"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_ingredient_popup_ingredient_quantity_edit_text" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_ingredient_popup_ingredient_quantity_edit_text"
+        android:textColor="?attr/buttonTextColor"/>
 
     <Button
         android:id="@+id/edit_ingredient_popup_remove_button"
@@ -101,6 +116,16 @@
         android:background="@drawable/button_style"
         android:onClick="onEditIngredientPopupRemoveButtonPressed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_ingredient_popup_ingredient_quantity_edit_text" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_ingredient_popup_ingredient_quantity_edit_text"
+        android:textColor="?attr/buttonTextColor"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/edit_ingredient_popup_remove_button"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

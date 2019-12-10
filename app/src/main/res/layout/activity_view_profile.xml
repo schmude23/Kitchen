@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
     tools:context=".ViewProfileActivity">
 
     <include android:id="@+id/main_toolbar"
@@ -23,7 +22,8 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="?attr/primaryTextColor"/>
 
     <Button
         android:id="@+id/button_edit_profile"
@@ -35,7 +35,8 @@
         android:background="@drawable/button_style"
         android:text="Edit"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="?attr/buttonTextColor"/>
 
     <Button
         android:id="@+id/button_delete_profile"
@@ -47,6 +48,7 @@
         android:background="@drawable/button_style"
         android:text="Delete"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="?attr/buttonTextColor"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
