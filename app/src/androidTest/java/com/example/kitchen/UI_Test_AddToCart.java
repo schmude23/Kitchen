@@ -92,7 +92,7 @@ public class UI_Test_AddToCart {
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.shopping_cart_recycler),
-                                        1),
+                                        0),
                                 0)));
         checkBox.check(matches(isDisplayed()));
 
