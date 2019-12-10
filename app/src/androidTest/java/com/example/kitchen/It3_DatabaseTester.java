@@ -26,6 +26,13 @@ public class It3_DatabaseTester {
     RecipeIngredient recipeIngredient;
 
     public void setUp(){
+        ArrayList<Recipe> allRecipes = testDatabase.getAllRecipes();
+        if(allRecipes != null) {
+            for (int i = 0; i < allRecipes.size(); i++) {
+                testDatabase.deleteRecipe(allRecipes.get(i).getKeyID());
+            }
+        }
+
         // Create recipe to test with
         recipeTitle = "TestRecipe";
         category = new Category(-1, "Lunch");
@@ -67,6 +74,12 @@ public class It3_DatabaseTester {
         if(allIngredients != null){
             for(int i = 0; i < allIngredients.size(); i++){
                 testDatabase.deleteIngredient(allIngredients.get(i).getKeyID());
+            }
+        }
+        ArrayList<Category> allCategories = testDatabase.getAllCategories();
+        if(allCategories != null) {
+            for (int i = 0; i < allCategories.size(); i++) {
+                testDatabase.deleteCategory(allCategories.get(i).getKeyID());
             }
         }
     }
@@ -635,6 +648,28 @@ public class It3_DatabaseTester {
         setUp();
         Ingredient editedIngredient = new Ingredient(-1, "Flour");
         assertEquals("editIngredient - Returns False", false, testDatabase.editIngredient(editedIngredient));
+        tearDown();
+    }
+
+    /**
+     * This method checks that checkRecipeIngredient returns -1 (meaning false) when no Recipe Ingredient exists
+     * with that ingredientID
+     */
+    @Test
+    public void checkRecipeIngredient_ReturnsFalse(){
+        setUp();
+        assertEquals("checkRecipeIngredient - Returns False", -1, testDatabase.checkRecipeIngredient(Integer.MAX_VALUE));
+        tearDown();
+    }
+
+    /**
+     * This method checks that checkRecipeIngredient returns the recipeID of the Recipe that contains the
+     * recipe ingredient
+     */
+    @Test
+    public void checkRecipeIngredient_ReturnsTrue(){
+        setUp();
+        assertEquals("checkRecipeIngredient - Returns True", recipeID, testDatabase.checkRecipeIngredient(ingredientID));
         tearDown();
     }
 

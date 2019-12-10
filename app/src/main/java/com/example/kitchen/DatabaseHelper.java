@@ -970,7 +970,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return The id of the first found recipe in use
      */
     public int checkRecipeIngredient(int ingredientID){
-        //TODO: Test/Correct
         RecipeIngredient recipeIngredient;
         SQLiteDatabase db = this.getReadableDatabase();
 
