@@ -75,26 +75,12 @@ public class UI_Test_ViewIngredients {
         appCompatTextView.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(android.R.id.text1), withText("macaroni"),
-                        childAtPosition(
-                                allOf(withId(R.id.activity_ingredient_list_ingredient_list),
-                                        childAtPosition(
-                                                IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                                2)),
-                                0),
-                        isDisplayed()));
-        textView.check(matches(withText("macaroni")));
+                allOf(withId(android.R.id.text1), withText("bacon")));
+        textView.check(matches(isDisplayed()));
 
         ViewInteraction textView2 = onView(
-                allOf(withId(android.R.id.text1), withText("wild rice"),
-                        childAtPosition(
-                                allOf(withId(R.id.activity_ingredient_list_ingredient_list),
-                                        childAtPosition(
-                                                IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                                2)),
-                                8),
-                        isDisplayed()));
-        textView2.check(matches(withText("wild rice")));
+                allOf(withId(android.R.id.text1), withText("basil")));
+        textView2.check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(

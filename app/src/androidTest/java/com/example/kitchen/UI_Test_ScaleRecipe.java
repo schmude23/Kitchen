@@ -57,12 +57,7 @@ public class UI_Test_ScaleRecipe {
         }
 
         ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.recipe_toolbar),
-                                        1),
-                                2)));
+                allOf(withContentDescription("More options")));
         overflowMenuButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -95,60 +90,18 @@ public class UI_Test_ScaleRecipe {
                         isDisplayed()));
         floatingActionButton.perform(click());
 
-        ViewInteraction floatingActionButton2 = onView(
-                allOf(withId(R.id.scale_recipe_popup_add_button),
-                        childAtPosition(
-                                allOf(withId(R.id.linearLayout),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                3),
-                        isDisplayed()));
-        floatingActionButton2.perform(click());
-
-        ViewInteraction floatingActionButton3 = onView(
-                allOf(withId(R.id.scale_recipe_popup_add_button),
-                        childAtPosition(
-                                allOf(withId(R.id.linearLayout),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                3),
-                        isDisplayed()));
-        floatingActionButton3.perform(click());
-
-        ViewInteraction floatingActionButton4 = onView(
-                allOf(withId(R.id.scale_recipe_popup_add_button),
-                        childAtPosition(
-                                allOf(withId(R.id.linearLayout),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                3),
-                        isDisplayed()));
-        floatingActionButton4.perform(click());
-
-        ViewInteraction floatingActionButton5 = onView(
-                allOf(withId(R.id.scale_recipe_popup_add_button),
-                        childAtPosition(
-                                allOf(withId(R.id.linearLayout),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                3),
-                        isDisplayed()));
-        floatingActionButton5.perform(click());
-
-        ViewInteraction floatingActionButton6 = onView(
-                allOf(withId(R.id.scale_recipe_popup_add_button),
-                        childAtPosition(
-                                allOf(withId(R.id.linearLayout),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                3),
-                        isDisplayed()));
-        floatingActionButton6.perform(click());
+        for (int i = 0; i < 20; i++) {
+            ViewInteraction floatingActionButton2 = onView(
+                    allOf(withId(R.id.scale_recipe_popup_add_button),
+                            childAtPosition(
+                                    allOf(withId(R.id.linearLayout),
+                                            childAtPosition(
+                                                    withId(android.R.id.content),
+                                                    0)),
+                                    3),
+                            isDisplayed()));
+            floatingActionButton2.perform(click());
+        }
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.scale_recipe_popup_okay_button), withText("Okay"),
@@ -163,7 +116,7 @@ public class UI_Test_ScaleRecipe {
 
         ViewInteraction textView3 = onView(
                 allOf(withId(R.id.recipe_servings)));
-        textView3.check(matches(withText("8.0")));
+        textView3.check(matches(withText("39.0")));
     }
 
     private static Matcher<View> childAtPosition(

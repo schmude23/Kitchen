@@ -54,16 +54,6 @@ public class UI_Test_MainMenu {
                         isDisplayed()));
         overflowMenuButton.perform(click());
 
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.title), withText("Home"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView.check(matches(withText("Home")));
-
         ViewInteraction textView2 = onView(
                 allOf(withId(R.id.title), withText("Advanced Search"),
                         childAtPosition(

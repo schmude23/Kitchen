@@ -59,12 +59,7 @@ public class UI_Test_RecipeMenu {
         }
 
         ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.recipe_toolbar),
-                                        1),
-                                2)));
+                allOf(withContentDescription("More options")));
         overflowMenuButton.perform(click());
 
         ViewInteraction textView = onView(

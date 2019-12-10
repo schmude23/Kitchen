@@ -58,12 +58,7 @@ public class UI_Test_RemoveCartItems {
         }
 
         ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.recipe_toolbar),
-                                        1),
-                                2)));
+                allOf(withContentDescription("More options")));
         overflowMenuButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -145,13 +140,7 @@ public class UI_Test_RemoveCartItems {
         }
 
         ViewInteraction overflowMenuButton2 = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.shopping_cart_toolbar),
-                                        1),
-                                1),
-                        isDisplayed()));
+                allOf(withContentDescription("More options")));
         overflowMenuButton2.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -182,14 +171,6 @@ public class UI_Test_RemoveCartItems {
                                 0),
                         isDisplayed()));
         checkBox.check(matches(isDisplayed()));
-
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.ingredient_quantity_text), withText("1.0")));
-        textView.check(matches(isDisplayed()));
-
-        ViewInteraction textView2 = onView(
-                allOf(withId(R.id.ingredient_unit_text), withText("pinch(es)")));
-        textView2.check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(
