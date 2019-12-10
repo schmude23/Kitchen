@@ -26,12 +26,30 @@ public class It3_DatabaseTester {
     RecipeIngredient recipeIngredient;
 
     public void setUp(){
+        // Delete all database parts
+        testDatabase.deleteCategory(categoryID);
+        testDatabase.deleteIngredient(ingredientID);
         ArrayList<Recipe> allRecipes = testDatabase.getAllRecipes();
         if(allRecipes != null) {
             for (int i = 0; i < allRecipes.size(); i++) {
                 testDatabase.deleteRecipe(allRecipes.get(i).getKeyID());
             }
         }
+        testDatabase.deleteAllShoppingCartIngredients();
+        ArrayList<Ingredient> allIngredients = testDatabase.getAllIngredients();
+        if(allIngredients != null){
+            for(int i = 0; i < allIngredients.size(); i++){
+                testDatabase.deleteIngredient(allIngredients.get(i).getKeyID());
+            }
+        }
+        ArrayList<Category> allCategories = testDatabase.getAllCategories();
+        if(allCategories != null) {
+            for (int i = 0; i < allCategories.size(); i++) {
+                testDatabase.deleteCategory(allCategories.get(i).getKeyID());
+            }
+        }
+        testDatabase.deleteUser(testDatabase.getUser("username"));
+
 
         // Create recipe to test with
         recipeTitle = "TestRecipe";
