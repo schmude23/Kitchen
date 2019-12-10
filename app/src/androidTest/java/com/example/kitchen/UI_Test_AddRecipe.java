@@ -105,7 +105,7 @@ public class UI_Test_AddRecipe {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+/*
         ViewInteraction appCompatSpinner = onView(
                 allOf(withId(R.id.edit_ingredient_popup_spinner),
                         childAtPosition(
@@ -159,13 +159,14 @@ public class UI_Test_AddRecipe {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         DataInteraction appCompatCheckedTextView2 = onData(anything())
                 .inAdapterView(childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
                 .atPosition(7);
         appCompatCheckedTextView2.perform(click());
+
+ */
 
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.edit_ingredient_popup_okay_button), withText("Okay"),
