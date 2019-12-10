@@ -8,6 +8,7 @@ import android.view.ViewParent;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
@@ -15,6 +16,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsInstanceOf;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +42,12 @@ public class UI_Test_AddRecipe {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+
+    @After
+    public void resetDatabase() {
+        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase(DatabaseHelper.DATABASE_NAME);
+
+    }
 
     @Test
     public void uI_Test_AddRecipe() {
@@ -97,8 +105,7 @@ public class UI_Test_AddRecipe {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        //TODO: below code isn't working because of changes to scroll wheel thingy...
-/*
+
         ViewInteraction appCompatSpinner = onView(
                 allOf(withId(R.id.edit_ingredient_popup_spinner),
                         childAtPosition(
@@ -159,7 +166,7 @@ public class UI_Test_AddRecipe {
                         0))
                 .atPosition(7);
         appCompatCheckedTextView2.perform(click());
-*/
+
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.edit_ingredient_popup_okay_button), withText("Okay"),
                         childAtPosition(

@@ -41,6 +41,12 @@ public class UI_Test_EditRecipe {
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
+    @After
+    public void resetDatabase() {
+        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase(DatabaseHelper.DATABASE_NAME);
+
+    }
+
     @Test
     public void uI_Test_EditRecipe() {
 

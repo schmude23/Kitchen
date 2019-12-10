@@ -7,19 +7,20 @@ import android.view.ViewParent;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
@@ -35,6 +36,12 @@ public class UI_Test_EditCartIngredient {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+
+    @After
+    public void resetDatabase() {
+        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase(DatabaseHelper.DATABASE_NAME);
+
+    }
 
     @Test
     public void uI_Test_EditCartIngredient() {
@@ -52,13 +59,19 @@ public class UI_Test_EditCartIngredient {
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(250);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options")));
+                allOf(withContentDescription("More options"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.recipe_toolbar),
+                                        1),
+                                1),
+                        isDisplayed()));
         overflowMenuButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -80,31 +93,69 @@ public class UI_Test_EditCartIngredient {
                         isDisplayed()));
         appCompatTextView.perform(click());
 
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.ingredient_quantity_text), withText("4.0"),
+        ViewInteraction actionMenuItemView = onView(
+                allOf(withId(R.id.action_home), withContentDescription("home"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.shopping_cart_recycler),
-                                        1),
-                                1),
+                                        withId(R.id.shopping_cart_toolbar),
+                                        0),
+                                0),
                         isDisplayed()));
-        textView.check(matches(withText("4.0")));
-
-        ViewInteraction textView2 = onView(
-                allOf(withId(R.id.ingredient_unit_text), withText("tablespoon(s)"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.shopping_cart_recycler),
-                                        1),
-                                2),
-                        isDisplayed()));
-        textView2.check(matches(withText("tablespoon(s)")));
+        actionMenuItemView.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(250);
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction actionMenuItemView2 = onView(
+                allOf(withId(R.id.action_view_cart), withContentDescription("Cart"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.main_toolbar),
+                                        1),
+                                1),
+                        isDisplayed()));
+        actionMenuItemView2.perform(click());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction textView = onView(
+                allOf(withId(R.id.ingredient_quantity_text), withText("5.0"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.shopping_cart_recycler),
+                                        4),
+                                1),
+                        isDisplayed()));
+        textView.check(matches(withText("5.0")));
+
+        ViewInteraction textView2 = onView(
+                allOf(withId(R.id.ingredient_unit_text), withText("teaspoon(s)"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.shopping_cart_recycler),
+                                        6),
+                                2),
+                        isDisplayed()));
+        textView2.check(matches(withText("teaspoon(s)")));
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(300);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -114,7 +165,7 @@ public class UI_Test_EditCartIngredient {
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.shopping_cart_toolbar),
-                                        1),
+                                        0),
                                 1),
                         isDisplayed()));
         overflowMenuButton2.perform(click());
@@ -144,19 +195,59 @@ public class UI_Test_EditCartIngredient {
                                 childAtPosition(
                                         withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
                                         1)),
-                        1),
+                        4),
                         isDisplayed()));
         constraintLayout.perform(click());
 
         ViewInteraction floatingActionButton = onView(
-                allOf(withId(R.id.shopping_cart_edit_ingredient_popup_remove_button),
+                allOf(withId(R.id.shopping_cart_edit_ingredient_popup_add_button),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
-                                1),
+                                3),
                         isDisplayed()));
         floatingActionButton.perform(click());
+
+        ViewInteraction floatingActionButton2 = onView(
+                allOf(withId(R.id.shopping_cart_edit_ingredient_popup_add_button),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                3),
+                        isDisplayed()));
+        floatingActionButton2.perform(click());
+
+        ViewInteraction floatingActionButton3 = onView(
+                allOf(withId(R.id.shopping_cart_edit_ingredient_popup_add_button),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                3),
+                        isDisplayed()));
+        floatingActionButton3.perform(click());
+
+        ViewInteraction floatingActionButton4 = onView(
+                allOf(withId(R.id.shopping_cart_edit_ingredient_popup_add_button),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                3),
+                        isDisplayed()));
+        floatingActionButton4.perform(click());
+
+        ViewInteraction floatingActionButton5 = onView(
+                allOf(withId(R.id.shopping_cart_edit_ingredient_popup_add_button),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                3),
+                        isDisplayed()));
+        floatingActionButton5.perform(click());
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.shopping_cart_edit_ingredient_popup_okay_button), withText("Okay"),
@@ -169,24 +260,14 @@ public class UI_Test_EditCartIngredient {
         appCompatButton.perform(click());
 
         ViewInteraction textView3 = onView(
-                allOf(withId(R.id.ingredient_quantity_text), withText("3.0"),
+                allOf(withId(R.id.ingredient_quantity_text), withText("10.0"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.shopping_cart_recycler),
-                                        1),
+                                        4),
                                 1),
                         isDisplayed()));
-        textView3.check(matches(withText("3.0")));
-
-        ViewInteraction textView4 = onView(
-                allOf(withId(R.id.ingredient_unit_text), withText("tablespoon(s)"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.shopping_cart_recycler),
-                                        1),
-                                2),
-                        isDisplayed()));
-        textView4.check(matches(withText("tablespoon(s)")));
+        textView3.check(matches(withText("10.0")));
     }
 
     private static Matcher<View> childAtPosition(
