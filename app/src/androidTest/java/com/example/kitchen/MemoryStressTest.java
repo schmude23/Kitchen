@@ -22,6 +22,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
@@ -45,15 +46,10 @@ public class MemoryStressTest {
                             isDisplayed()));
             linearLayout.perform(click());
 
-            ViewInteraction actionMenuItemView = onView(
-                    allOf(withId(R.id.action_home), withContentDescription("home"),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withId(R.id.recipe_toolbar),
-                                            1),
-                                    1),
-                            isDisplayed()));
-            actionMenuItemView.perform(click());
+
+            ViewInteraction appCompatTextView = onView(
+                    allOf(withId(R.id.toolbarTextView), withText("Kitchen+")));
+            appCompatTextView.perform(click());
         }
     }
 

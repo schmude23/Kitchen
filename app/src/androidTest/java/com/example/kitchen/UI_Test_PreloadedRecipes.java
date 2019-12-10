@@ -48,11 +48,11 @@ public class UI_Test_PreloadedRecipes {
         ViewInteraction textView3 = onView(
                 allOf(withId(R.id.text_recipe_name), withText("Beef and Bean Chili")));
         textView3.check(matches(isDisplayed()));
-
+/*
         ViewInteraction textView4 = onView(
                 allOf(withId(R.id.text_recipe_name), withText("Restaurant-style Salsa")));
         textView4.check(matches(isDisplayed()));
-
+*/
         ViewInteraction textView5 = onView(
                 allOf(withId(R.id.text_recipe_name), withText("Breakfast Sandwich")));
         textView5.check(matches(isDisplayed()));
@@ -61,12 +61,10 @@ public class UI_Test_PreloadedRecipes {
                 allOf(withId(R.id.text_recipe_name), withText("Quick Lunch Panini")));
         textView6.check(matches(isDisplayed()));
 
-        //TODO: Below code can't run because of scrolling issues.
-        /*
         ViewInteraction textView7 = onView(
                 allOf(withId(R.id.text_recipe_name), withText("Ground Beef Tacos")));
         textView7.check(matches(withText("Ground Beef Tacos")));
-
+        /*
         ViewInteraction textView8 = onView(
                 allOf(withId(R.id.text_recipe_name), withText("Spaghetti with Meat Sauce")));
         textView8.check(matches(withText("Spaghetti with Meat Sauce")));

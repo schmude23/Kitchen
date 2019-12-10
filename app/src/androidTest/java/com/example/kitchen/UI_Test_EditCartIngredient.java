@@ -58,13 +58,8 @@ public class UI_Test_EditCartIngredient {
         }
 
         ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.recipe_toolbar),
-                                        1),
-                                2)));
-        overflowMenuButton.perform(scrollTo(), click());
+                allOf(withContentDescription("More options")));
+        overflowMenuButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:

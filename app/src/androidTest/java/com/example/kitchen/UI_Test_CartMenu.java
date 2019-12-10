@@ -55,44 +55,20 @@ public class UI_Test_CartMenu {
         }
 
         ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.shopping_cart_toolbar),
-                                        1),
-                                1),
-                        isDisplayed()));
+                allOf(withContentDescription("More options")));
         overflowMenuButton.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.title), withText("Remove Selected Items"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView.check(matches(withText("Remove Selected Items")));
+                allOf(withId(R.id.title), withText("Remove Selected Items")));
+        textView.check(matches(isDisplayed()));
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.title), withText("Edit Ingredients"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView2.check(matches(withText("Edit Ingredients")));
+                allOf(withId(R.id.title), withText("Edit Ingredients")));
+        textView2.check(matches(isDisplayed()));
 
         ViewInteraction textView3 = onView(
-                allOf(withId(R.id.title), withText("Convert Units"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView3.check(matches(withText("Convert Units")));
+                allOf(withId(R.id.title), withText("Convert Units")));
+        textView3.check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(

@@ -57,13 +57,8 @@ public class UI_Test_DeleteRecipe {
         }
 
         ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.recipe_toolbar),
-                                        1),
-                                2)));
-        overflowMenuButton.perform(scrollTo(), click());
+                allOf(withContentDescription("More options")));
+        overflowMenuButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -107,14 +102,13 @@ public class UI_Test_DeleteRecipe {
         appCompatButton.perform(click());
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.text_recipe_name), withText("Quick Lunch Panini"),
+                allOf(withId(R.id.text_recipe_name), withText("Beef and Bean Chili"),
                         childAtPosition(
                                 childAtPosition(
                                         IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
                                         0),
-                                1),
-                        isDisplayed()));
-        textView2.check(matches(withText("Quick Lunch Panini")));
+                                0)));
+        textView2.check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(

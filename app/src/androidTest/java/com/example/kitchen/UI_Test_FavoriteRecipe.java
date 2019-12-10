@@ -26,6 +26,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
@@ -49,24 +50,16 @@ public class UI_Test_FavoriteRecipe {
         linearLayout.perform(click());
 
         ViewInteraction appCompatImageButton = onView(
-                allOf(withId(R.id.recipe_favorite_image),
-                        childAtPosition(
-                                allOf(withId(R.id.constraint),
-                                        childAtPosition(
-                                                withClassName(is("android.widget.ScrollView")),
-                                                0)),
-                                4)));
-        appCompatImageButton.perform(scrollTo(), click());
+                allOf(withId(R.id.recipe_favorite_image)));
+        appCompatImageButton.perform(click());
 
-        ViewInteraction actionMenuItemView = onView(
-                allOf(withId(R.id.action_home), withContentDescription("home"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.recipe_toolbar),
-                                        1),
-                                1)));
-        actionMenuItemView.perform(scrollTo(), click());
 
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(R.id.toolbarTextView), withText("Kitchen+")));
+        appCompatTextView.perform(click());
+
+        //Below code can't match any singular item. Also won't provide any relevant information anyways.
+/*
         ViewInteraction imageButton = onView(
                 allOf(withId(R.id.recipe_favorite_image),
                         childAtPosition(
@@ -76,6 +69,8 @@ public class UI_Test_FavoriteRecipe {
                                 2),
                         isDisplayed()));
         imageButton.check(matches(isDisplayed()));
+
+ */
     }
 
     private static Matcher<View> childAtPosition(

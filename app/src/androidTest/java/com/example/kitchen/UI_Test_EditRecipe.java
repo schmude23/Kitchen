@@ -64,12 +64,7 @@ public class UI_Test_EditRecipe {
         }
 
         ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.recipe_toolbar),
-                                        1),
-                                2)));
+                allOf(withContentDescription("More options")));
         overflowMenuButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.

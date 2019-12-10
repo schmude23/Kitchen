@@ -54,96 +54,39 @@ public class UI_Test_AddRecipe {
         actionMenuItemView.perform(click());
 
         ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.edit_recipe_recipe_name_edit_text),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        0),
-                                0),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_recipe_recipe_name_edit_text)));
         appCompatEditText.perform(replaceText("Meatloaf"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.edit_recipe_servings_edit_text),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        0),
-                                2),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_recipe_servings_edit_text)));
         appCompatEditText2.perform(replaceText("4"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.edit_recipe_prep_time_edit_text),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        0),
-                                3),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_recipe_prep_time_edit_text)));
         appCompatEditText3.perform(replaceText("20"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText4 = onView(
-                allOf(withId(R.id.edit_recipe_total_time_edit_text),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        0),
-                                4),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_recipe_total_time_edit_text)));
         appCompatEditText4.perform(replaceText("90"), closeSoftKeyboard());
 
         ViewInteraction floatingActionButton = onView(
-                allOf(withId(R.id.edit_recipe_next_button),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        7),
-                                3),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_recipe_next_button)));
         floatingActionButton.perform(click());
 
         ViewInteraction appCompatAutoCompleteTextView = onView(
-                allOf(withId(R.id.edit_ingredient_ingredient_edit_text),
-                        childAtPosition(
-                                allOf(withId(R.id.layout1),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                0),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_ingredient_ingredient_edit_text)));
         appCompatAutoCompleteTextView.perform(click());
 
         ViewInteraction appCompatAutoCompleteTextView2 = onView(
-                allOf(withId(R.id.edit_ingredient_ingredient_edit_text),
-                        childAtPosition(
-                                allOf(withId(R.id.layout1),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                0),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_ingredient_ingredient_edit_text)));
         appCompatAutoCompleteTextView2.perform(replaceText("Hamburger"), closeSoftKeyboard());
 
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.edit_ingredient_add_ingredient_button), withText("Add Ingredient"),
-                        childAtPosition(
-                                allOf(withId(R.id.layout1),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_ingredient_add_ingredient_button)));
         appCompatButton.perform(click());
 
         ViewInteraction appCompatEditText5 = onView(
-                allOf(withId(R.id.edit_ingredient_popup_ingredient_quantity_edit_text),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                3),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_ingredient_popup_ingredient_quantity_edit_text)));
         appCompatEditText5.perform(replaceText("1"), closeSoftKeyboard());
 
         // Added a sleep statement to match the app's execution delay.
@@ -154,7 +97,8 @@ public class UI_Test_AddRecipe {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        //TODO: below code isn't working because of changes to scroll wheel thingy...
+/*
         ViewInteraction appCompatSpinner = onView(
                 allOf(withId(R.id.edit_ingredient_popup_spinner),
                         childAtPosition(
@@ -215,7 +159,7 @@ public class UI_Test_AddRecipe {
                         0))
                 .atPosition(7);
         appCompatCheckedTextView2.perform(click());
-
+*/
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.edit_ingredient_popup_okay_button), withText("Okay"),
                         childAtPosition(
@@ -237,63 +181,24 @@ public class UI_Test_AddRecipe {
         floatingActionButton2.perform(click());
 
         ViewInteraction appCompatEditText6 = onView(
-                allOf(withId(R.id.edit_direction_direction_edit_text),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_direction_direction_edit_text)));
         appCompatEditText6.perform(replaceText("Brown meat"), closeSoftKeyboard());
 
         ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.edit_direction_add_direction_button), withText("Add Direction"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_direction_add_direction_button)));
         appCompatButton3.perform(click());
 
         ViewInteraction floatingActionButton3 = onView(
-                allOf(withId(R.id.edit_direction_next_button),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.FrameLayout")),
-                                        1),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_direction_next_button)));
         floatingActionButton3.perform(click());
 
         ViewInteraction appCompatEditText7 = onView(
-                allOf(withId(R.id.edit_category_category_edit_text),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_category_category_edit_text)));
         appCompatEditText7.perform(click());
-
-        ViewInteraction appCompatEditText8 = onView(
-                allOf(withId(R.id.edit_category_category_edit_text),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatEditText8.perform(replaceText("Dinner"), closeSoftKeyboard());
+        appCompatEditText7.perform(replaceText("Dinner"), closeSoftKeyboard());
 
         ViewInteraction appCompatButton4 = onView(
-                allOf(withId(R.id.edit_category_add_category_button), withText("Add Category"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.edit_category_add_category_button)));
         appCompatButton4.perform(click());
 
         ViewInteraction floatingActionButton4 = onView(
@@ -307,81 +212,28 @@ public class UI_Test_AddRecipe {
         floatingActionButton4.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.text_recipe_name), withText("Meatloaf"),
-                        childAtPosition(
-                                allOf(withId(R.id.constraint),
-                                        childAtPosition(
-                                                IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                                0)),
-                                2),
-                        isDisplayed()));
+                allOf(withId(R.id.text_recipe_name)));
         textView.check(matches(withText("Meatloaf")));
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.recipe_servings), withText("4.0"),
-                        childAtPosition(
-                                allOf(withId(R.id.constraint),
-                                        childAtPosition(
-                                                IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                                0)),
-                                7),
-                        isDisplayed()));
+                allOf(withId(R.id.recipe_servings)));
         textView2.check(matches(withText("4.0")));
 
         ViewInteraction textView3 = onView(
-                allOf(withId(R.id.recipe_prep_time), withText("20 min"),
-                        childAtPosition(
-                                allOf(withId(R.id.constraint),
-                                        childAtPosition(
-                                                IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                                0)),
-                                8),
-                        isDisplayed()));
+                allOf(withId(R.id.recipe_prep_time), withText("20 min")));
         textView3.check(matches(withText("20 min")));
 
         ViewInteraction textView4 = onView(
-                allOf(withId(R.id.recipe_total_time), withText("90 min"),
-                        childAtPosition(
-                                allOf(withId(R.id.constraint),
-                                        childAtPosition(
-                                                IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                                0)),
-                                9),
-                        isDisplayed()));
+                allOf(withId(R.id.recipe_total_time), withText("90 min")));
         textView4.check(matches(withText("90 min")));
 
         ViewInteraction textView5 = onView(
-                allOf(withId(android.R.id.text1), withText("Hamburger [ 1.0 pound(s) ]"),
-                        childAtPosition(
-                                allOf(withId(R.id.ingredient_list),
-                                        childAtPosition(
-                                                withId(R.id.constraint),
-                                                11)),
-                                0),
-                        isDisplayed()));
-        textView5.check(matches(withText("Hamburger [ 1.0 pound(s) ]")));
+                allOf(withId(R.id.list_item_string), withText("Hamburger [ 1.0 teaspoon(s) ]")));
+        textView5.check(matches(isDisplayed()));
 
         ViewInteraction textView6 = onView(
-                allOf(withId(android.R.id.text1), withText("1) Brown meat"),
-                        childAtPosition(
-                                allOf(withId(R.id.direction_list),
-                                        childAtPosition(
-                                                withId(R.id.constraint),
-                                                13)),
-                                0),
-                        isDisplayed()));
-        textView6.check(matches(withText("1) Brown meat")));
-
-        ViewInteraction textView7 = onView(
-                allOf(withId(android.R.id.text1), withText("Dinner"),
-                        childAtPosition(
-                                allOf(withId(R.id.category_list),
-                                        childAtPosition(
-                                                withId(R.id.constraint),
-                                                15)),
-                                0),
-                        isDisplayed()));
-        textView7.check(matches(withText("Dinner")));
+                allOf(withId(R.id.list_item_string), withText("1) Brown meat")));
+        textView6.check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(

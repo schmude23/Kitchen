@@ -38,7 +38,7 @@ public class UI_Test_ConvertUnits {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
-
+//TODO: Figure out how to get testing of the new spinners to work.
     @Test
     public void uI_Test_ConvertUnits() {
         ViewInteraction linearLayout = onView(
@@ -61,13 +61,8 @@ public class UI_Test_ConvertUnits {
         }
 
         ViewInteraction overflowMenuButton = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.recipe_toolbar),
-                                        1),
-                                2)));
-        overflowMenuButton.perform(scrollTo(), click());
+                allOf(withContentDescription("More options")));
+        overflowMenuButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
