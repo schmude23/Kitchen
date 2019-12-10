@@ -34,7 +34,7 @@ public class MemoryStressTest {
     @Test
     public void memoryStressTest() {
 
-        while (true) {
+        for (int i = 0; i < 20; i++) {
             ViewInteraction linearLayout = onView(
                     allOf(childAtPosition(
                             allOf(withId(R.id.recipe_list_recycler),
