@@ -108,6 +108,7 @@ public class ViewProfileActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         database = new DatabaseHelper(this);
 
@@ -144,6 +145,11 @@ public class ViewProfileActivity extends AppCompatActivity {
 
 
 
+    }
+    public void onToolbarTextClicked(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 
 }
