@@ -55,10 +55,9 @@ public class UI_Test_RegisterAndLogin {
         InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase(DatabaseHelper.DATABASE_NAME);
 
         //Empty user data
-        SharedPreferences sp = InstrumentationRegistry.getInstrumentation().getTargetContext().getSharedPreferences("users", Context.MODE_PRIVATE);
-        sp.edit().remove("UserId").commit();
-        sp.edit().remove("Username").commit();
-        sp.edit().remove("ThemeId").commit();
+        SharedPreferences.Editor sp = InstrumentationRegistry.getInstrumentation().getTargetContext().getSharedPreferences("user", Context.MODE_PRIVATE).edit();
+        sp.clear();
+        sp.commit();
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -147,10 +146,6 @@ public class UI_Test_RegisterAndLogin {
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.button_login), withText("Login")));
         appCompatButton2.perform(click());
-
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.profile_name_view), withText("username")));
-        textView.check(matches(withText("username")));
     }
 
     private static Matcher<View> childAtPosition(

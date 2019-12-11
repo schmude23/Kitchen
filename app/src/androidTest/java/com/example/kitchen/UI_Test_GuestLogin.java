@@ -56,10 +56,9 @@ public class UI_Test_GuestLogin {
         }
 
         //Empty user data
-        SharedPreferences sp = InstrumentationRegistry.getInstrumentation().getTargetContext().getSharedPreferences("users", Context.MODE_PRIVATE);
-        sp.edit().remove("UserId").commit();
-        sp.edit().remove("Username").commit();
-        sp.edit().remove("ThemeId").commit();
+        SharedPreferences.Editor sp = InstrumentationRegistry.getInstrumentation().getTargetContext().getSharedPreferences("user", Context.MODE_PRIVATE).edit();
+        sp.clear();
+        sp.commit();
 
 
         ViewInteraction overflowMenuButton = onView(
