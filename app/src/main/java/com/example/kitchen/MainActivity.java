@@ -948,27 +948,26 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         switch (checkedRecipeRadio) {
             case SEARCH_BY_NAME:
                 if (input.compareTo("") != 0)
-                    recipes.addAll(database.getAllRecipesByTitle(input));
+                    if (database.getAllRecipesByTitle(input) != null)
+                        recipes.addAll(database.getAllRecipesByTitle(input));
                 recipes = quickSortByTitle(recipes, ascending);
 
                 break;
             case SEARCH_BY_PREP_TIME:
-                if (input.compareTo("") != 0) {
-                    recipes.addAll(database.getRecipeByPrepTime(Integer.valueOf(input)));
-                } else
-                    recipes = database.getRandomRecipes();
+                if (input.compareTo("") != 0)
+                    if (database.getRecipeByPrepTime(Integer.valueOf(input)) != null)
+                        recipes.addAll(database.getRecipeByPrepTime(Integer.valueOf(input)));
                 recipes = quickSortByPrepTime(recipes, ascending);
 
                 break;
             case SEARCH_BY_TOTAL_TIME:
                 if (input.compareTo("") != 0)
-                    recipes.addAll(database.getRecipeByTotalTime(Integer.valueOf(input)));
-                else
-                    recipes = database.getRandomRecipes();
+                    if (database.getRecipeByTotalTime(Integer.valueOf(input)) != null)
+                        recipes.addAll(database.getRecipeByTotalTime(Integer.valueOf(input)));
                 recipes = quickSortByTotalTime(recipes, ascending);
                 break;
         }
-        if(recipes.size() == 0) {
+        if (recipes.size() == 0) {
             Toast.makeText(this, "No recipes found. Displaying random recipes", Toast.LENGTH_SHORT).show();
             recipes = database.getRandomRecipes();
         }

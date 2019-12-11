@@ -211,6 +211,22 @@ public class AdvancedSearchActivity extends AppCompatActivity implements View.On
                 editCategory.getText().clear();
                 break;
             case R.id.advanced_search_search_button:
+                if(recipeRadioSelected == SEARCH_BY_PREP_TIME){
+                    try{
+                        Integer.valueOf(searchEditText.getText().toString());
+                    } catch(NumberFormatException e){
+                        Toast.makeText(this, "Prep time must be an integer (with no spaces)", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                if(recipeRadioSelected == SEARCH_BY_PREP_TIME){
+                    try{
+                        Integer.valueOf(searchEditText.getText().toString());
+                    } catch(NumberFormatException e){
+                        Toast.makeText(this, "Total time must be an integer (with no spaces)", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
                 search();
                 break;
 
