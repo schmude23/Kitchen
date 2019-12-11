@@ -93,15 +93,9 @@ public class UI_Test_EditCartIngredient {
                         isDisplayed()));
         appCompatTextView.perform(click());
 
-        ViewInteraction actionMenuItemView = onView(
-                allOf(withId(R.id.action_home), withContentDescription("home"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.shopping_cart_toolbar),
-                                        0),
-                                0),
-                        isDisplayed()));
-        actionMenuItemView.perform(click());
+        ViewInteraction appCompatTextView1 = onView(
+                allOf(withId(R.id.toolbarTextView), withText("Kitchen+")));
+        appCompatTextView1.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -161,13 +155,7 @@ public class UI_Test_EditCartIngredient {
         }
 
         ViewInteraction overflowMenuButton2 = onView(
-                allOf(withContentDescription("More options"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.shopping_cart_toolbar),
-                                        0),
-                                1),
-                        isDisplayed()));
+                allOf(withContentDescription("More options")));
         overflowMenuButton2.perform(click());
 
         // Added a sleep statement to match the app's execution delay.

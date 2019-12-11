@@ -2,6 +2,7 @@ package com.example.kitchen;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -53,6 +54,12 @@ public class UI_Test_RegisterAndLogin {
         //Setup to clear database
         InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase(DatabaseHelper.DATABASE_NAME);
 
+        //Empty user data
+        SharedPreferences sp = InstrumentationRegistry.getInstrumentation().getTargetContext().getSharedPreferences("users", Context.MODE_PRIVATE);
+        sp.edit().remove("UserId").commit();
+        sp.edit().remove("Username").commit();
+        sp.edit().remove("ThemeId").commit();
+
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
@@ -82,13 +89,7 @@ public class UI_Test_RegisterAndLogin {
         }
 
         ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.title), withText("Log in / Register"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
+                allOf(withId(R.id.title), withText("Settings")));
         appCompatTextView.perform(click());
 
         ViewInteraction appCompatTextView2 = onView(

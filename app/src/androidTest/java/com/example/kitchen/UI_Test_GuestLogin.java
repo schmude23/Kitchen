@@ -1,6 +1,8 @@
 package com.example.kitchen;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -53,6 +55,13 @@ public class UI_Test_GuestLogin {
             e.printStackTrace();
         }
 
+        //Empty user data
+        SharedPreferences sp = InstrumentationRegistry.getInstrumentation().getTargetContext().getSharedPreferences("users", Context.MODE_PRIVATE);
+        sp.edit().remove("UserId").commit();
+        sp.edit().remove("Username").commit();
+        sp.edit().remove("ThemeId").commit();
+
+
         ViewInteraction overflowMenuButton = onView(
                 allOf(withContentDescription("More options"),
                         childAtPosition(
@@ -73,7 +82,7 @@ public class UI_Test_GuestLogin {
         }
 
         ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.title), withText("Log in / Register"),
+                allOf(withId(R.id.title), withText("Settings"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.content),

@@ -63,64 +63,24 @@ public class UI_Test_MainMenu {
         overflowMenuButton.perform(click());
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.title), withText("Advanced Search"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView2.check(matches(withText("Advanced Search")));
+                allOf(withId(R.id.title), withText("Advanced Search")));
+        textView2.check(matches(isDisplayed()));
 
         ViewInteraction textView3 = onView(
-                allOf(withId(R.id.title), withText("Settings"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView3.check(matches(withText("Settings")));
+                allOf(withId(R.id.title), withText("Settings")));
+        textView3.check(matches(isDisplayed()));
 
         ViewInteraction textView4 = onView(
-                allOf(withId(R.id.title), withText("View All Ingredients"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView4.check(matches(withText("View All Ingredients")));
-
-        ViewInteraction textView5 = onView(
-                allOf(withId(R.id.title), withText("Log in / Register"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView5.check(matches(withText("Log in / Register")));
+                allOf(withId(R.id.title), withText("View All Ingredients")));
+        textView4.check(matches(isDisplayed()));
 
         ViewInteraction textView6 = onView(
-                allOf(withId(R.id.title), withText("Retrieve Recipe"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView6.check(matches(withText("Retrieve Recipe")));
+                allOf(withId(R.id.title), withText("Retrieve Recipe")));
+        textView6.check(matches(isDisplayed()));
 
         ViewInteraction textView7 = onView(
-                allOf(withId(R.id.title), withText("Paste Recipe"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView7.check(matches(withText("Paste Recipe")));
+                allOf(withId(R.id.title), withText("Paste Recipe")));
+        textView7.check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(
