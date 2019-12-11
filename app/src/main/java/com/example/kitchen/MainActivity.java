@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     public final int SEARCH_BY_NAME = 0;
     public final int SEARCH_BY_PREP_TIME = 1;
     public final int SEARCH_BY_TOTAL_TIME = 2;
-    SharedPreferences sharedPreferences;
 
     /**
      * This method is run when the activity is created and sets up the activity
@@ -47,7 +46,13 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.AppTheme);
+        // get theme
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        int themeId = sharedPreferences.getInt("ThemeId", 0);
+        if (themeId == 0)
+            setTheme(R.style.AppTheme);
+        else
+            setTheme(R.style.DarkMode);
         setContentView(R.layout.activity_recipe_list);
 
         // Display Toolbar
@@ -145,11 +150,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                 Intent viewCart = new Intent(this, ShoppingCartActivity.class);
                 viewCart.putExtra("recipeId", -1);
                 startActivity(viewCart);
-                this.finish();
-                return true;
-            case R.id.action_home:
-                Intent home = new Intent(this, MainActivity.class);
-                startActivity(home);
                 this.finish();
                 return true;
             case R.id.action_ingredient_list:

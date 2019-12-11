@@ -2,6 +2,7 @@ package com.example.kitchen;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,6 +23,13 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // get theme
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        int themeId = sharedPreferences.getInt("ThemeId", 0);
+        if (themeId == 0)
+            setTheme(R.style.AppTheme);
+        else
+            setTheme(R.style.DarkMode);
         setContentView(R.layout.activity_edit_profile);
 
         database = new DatabaseHelper(this);

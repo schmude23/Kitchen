@@ -4,6 +4,7 @@ package com.example.kitchen;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -51,6 +52,13 @@ public class IngredientListActivity extends AppCompatActivity implements Adapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // get theme
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        int themeId = sharedPreferences.getInt("ThemeId", 0);
+        if (themeId == 0)
+            setTheme(R.style.AppTheme);
+        else
+            setTheme(R.style.DarkMode);
         setContentView(R.layout.activity_ingredient_list);
         // Display Toolbar
         Toolbar toolbar = findViewById(R.id.main_toolbar);

@@ -21,6 +21,8 @@
         <item name="dividerColor">@color/light_slate_gray</item>
         <item name="spinnerColor">@color/white</item>
         <item name="autoCompleteBackground">@color/white</item>
+        <item name="android:itemBackground">@color/white</item>
+        <item name="android:textColor">@color/black</item>
 
     </style>
 

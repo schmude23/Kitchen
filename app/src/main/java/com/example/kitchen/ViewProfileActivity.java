@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -33,6 +34,13 @@ public class ViewProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // get theme
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        int themeId = sharedPreferences.getInt("ThemeId", 0);
+        if (themeId == 0)
+            setTheme(R.style.AppTheme);
+        else
+            setTheme(R.style.DarkMode);
         mainActivity();
 
 
@@ -59,8 +67,8 @@ public class ViewProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.action_login:
-                Intent login = new Intent(this, LoginActivity.class);
+            case R.id.action_settings:
+                Intent login = new Intent(this, SettingsActivity.class);
                 startActivity(login);
                 this.finish();
                 return true;
@@ -80,11 +88,6 @@ public class ViewProfileActivity extends AppCompatActivity {
                 Intent viewCart = new Intent(this, ShoppingCartActivity.class);
                 viewCart.putExtra("recipeId", -1);
                 startActivity(viewCart);
-                this.finish();
-                return true;
-            case R.id.action_home:
-                Intent home = new Intent(this, MainActivity.class);
-                startActivity(home);
                 this.finish();
                 return true;
             case R.id.action_ingredient_list:

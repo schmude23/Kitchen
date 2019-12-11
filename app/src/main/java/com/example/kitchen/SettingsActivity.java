@@ -17,15 +17,14 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         // get theme
         sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
-        themeId = sharedPreferences.getInt("themeId", 0);
+        themeId = sharedPreferences.getInt("ThemeId", 0);
         if (themeId == 0)
             setTheme(R.style.AppTheme);
         else
             setTheme(R.style.DarkMode);
-        super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_settings);
 
         initRadioGroup();
@@ -35,7 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void initRadioGroup() {
         themeRadioGroup = (RadioGroup) findViewById(R.id.theme_radio_group);
-        if(themeId == 1)
+        if (themeId == 1)
             themeRadioGroup.check(R.id.dark_mode_radio);
         themeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
@@ -44,16 +43,16 @@ public class SettingsActivity extends AppCompatActivity {
 
                 switch (checkedId) {
                     case R.id.default_theme_radio:
-                        sharedPreferences.edit().putInt("themeId", 0);
-                        if(themeId == 1){
+                        sharedPreferences.edit().putInt("ThemeId", 0).apply();
+                        if (themeId == 1) {
                             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                             startActivity(intent);
                             finish();
                         }
                         break;
                     case R.id.dark_mode_radio:
-                        sharedPreferences.edit().putInt("themeId", 1);
-                        if(themeId == 0){
+                        sharedPreferences.edit().putInt("ThemeId", 1).apply();
+                        if (themeId == 0) {
                             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                             startActivity(intent);
                             finish();
@@ -75,9 +74,18 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void onSettingsActivityViewProfileClicked(View view) {
-
+        Intent i = new Intent(this,ViewProfileActivity.class);
+        i.putExtra("username", sharedPreferences.getString("Username", ""));
+        i.putExtra("userID", sharedPreferences.getInt("UserId", -1 ));
+        startActivity(i);
+        finish();
     }
 
+    public void onToolbarTextClicked(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
+    }
 
 }
 

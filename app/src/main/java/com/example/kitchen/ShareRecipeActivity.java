@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -68,6 +69,13 @@ public class ShareRecipeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // get theme
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        int themeId = sharedPreferences.getInt("ThemeId", 0);
+        if (themeId == 0)
+            setTheme(R.style.AppTheme);
+        else
+            setTheme(R.style.DarkMode);
         setContentView(R.layout.activity_share_recipe);
 
         recipeId = getIntent().getIntExtra("recipeId", -1);

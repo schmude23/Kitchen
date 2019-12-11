@@ -31,9 +31,6 @@
         android:id="@+id/action_ingredient_list"
         android:title="View All Ingredients"/>
     <item
-        android:id="@+id/action_login"
-        android:title="Log in / Register"/>
-    <item
         android:id="@+id/action_retrieve_recipe"
         android:title="Retrieve Recipe"/>
     <item

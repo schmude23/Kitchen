@@ -3,6 +3,7 @@ package com.example.kitchen;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -52,6 +53,13 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // get theme
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        int themeId = sharedPreferences.getInt("ThemeId", 0);
+        if (themeId == 0)
+            setTheme(R.style.AppTheme);
+        else
+            setTheme(R.style.DarkMode);
         setContentView(R.layout.activity_shopping_cart);
 
         // Display Toolbar
@@ -152,19 +160,6 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_home:
-                Intent home = new Intent(this, MainActivity.class);
-                startActivity(home);
-                this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     public void onRemoveSelectedItemsSelected(MenuItem menuItem) {
         if (checkedItems.size() > 0) {

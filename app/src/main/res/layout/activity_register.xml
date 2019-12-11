@@ -17,6 +17,7 @@
         android:textColorHint="@color/white"
         android:textCursorDrawable="@color/white"
         android:textColor="@color/white"
+        app:backgroundTint="@color/white"
         android:hint="Username"/>
 
     <EditText
@@ -27,7 +28,7 @@
         android:hint="Password"
         android:textColorHint="@color/white"
         android:textCursorDrawable="@color/white"
-        android:backgroundTint="@color/white"
+        app:backgroundTint="@color/white"
         android:textColor="@color/white"
         android:inputType="textPassword" />
 
@@ -38,7 +39,7 @@
         android:layout_marginTop="20dp"
         android:textColorHint="@color/white"
         android:textCursorDrawable="@color/white"
-        android:backgroundTint="@color/white"
+        app:backgroundTint="@color/white"
         android:textColor="@color/white"
         android:hint="Confirm Password"
         android:inputType="textPassword" />

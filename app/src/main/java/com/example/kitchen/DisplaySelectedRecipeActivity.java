@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -60,7 +61,13 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // get theme
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        int themeId = sharedPreferences.getInt("ThemeId", 0);
+        if (themeId == 0)
+            setTheme(R.style.AppTheme);
+        else
+            setTheme(R.style.DarkMode);
         setContentView(R.layout.activity_display_selected_recipe);
         // Display Toolbar
         Toolbar toolbar = findViewById(R.id.recipe_toolbar);
@@ -169,11 +176,6 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
                 editRecipe.putExtra("recipeId", recipeId);
                 editRecipe.putExtra("newRecipe", false);
                 startActivity(editRecipe);
-                this.finish();
-                return true;
-            case R.id.action_home:
-                Intent home = new Intent(this, MainActivity.class);
-                startActivity(home);
                 this.finish();
                 return true;
             case R.id.action_share_recipe:
