@@ -9,6 +9,7 @@ public class RecipeCopyPasteCreator {
     private Scanner recipeScanner;
     private ArrayList<RecipeIngredient> recipeIngredientList;
     private ArrayList<RecipeDirection> recipeDirectionList;
+    private ArrayList<RecipeCategory> recipeCategoryList;
     private Recipe recipe;
     Context appContext;
     DatabaseHelper database;
@@ -32,7 +33,6 @@ public class RecipeCopyPasteCreator {
      * @return true if the operation was successful, false otherwise
      */
     public int main(String recipeTxt) {
-        //TODO: implement
         recipeScanner = new Scanner(recipeTxt);
         List<String> tokens;
         String recipeTitle = "";
@@ -41,6 +41,7 @@ public class RecipeCopyPasteCreator {
         recipe = new Recipe();
         recipeIngredientList = new ArrayList<RecipeIngredient>();
         recipeDirectionList = new ArrayList<RecipeDirection>();
+        recipeCategoryList = new ArrayList<RecipeCategory>();
 
         while (recipeScanner.hasNextLine()) {
             tokens = new ArrayList<>();
@@ -58,6 +59,7 @@ public class RecipeCopyPasteCreator {
                 tokens.add(lineScanner.next());
             }
             if(tokens.size() > 0) {
+                //should return a double that explains the situation int being method and dec bing part
                passed = tokenChecker(tokens);
             }
 
@@ -66,10 +68,14 @@ public class RecipeCopyPasteCreator {
         recipeScanner.close();
 
         //make sure ingredient and directions actually have something in them.
-        if(recipeIngredientList != null && recipeDirectionList != null){
+        if(recipeIngredientList.size() > 0 && recipeDirectionList.size() > 0){
+            recipeTitle = capitalize(recipeTitle);
             recipe.setTitle(recipeTitle);
             recipe.setIngredientList(recipeIngredientList);
             recipe.setDirectionsList(recipeDirectionList);
+            if(recipeCategoryList.size() > 0){
+                recipe.setCategoryList(recipeCategoryList);
+            }
             return database.addRecipe(recipe);
         }
             return -1;
@@ -89,13 +95,19 @@ public class RecipeCopyPasteCreator {
         if(tokens.size() == 0){
             return false;
         }
-        //TODO: implement
         tokens.set(0, tokens.get(0).replaceAll(":",""));
         if(tokens.get(0).equalsIgnoreCase("servings") ||
                 tokens.get(0).equalsIgnoreCase("serving") ||
                 tokens.get(0).equalsIgnoreCase("yields") ||
                 tokens.get(0).equalsIgnoreCase("yield")){
             passed = servingMapper(tokens);
+        }
+        if(!passed && (tokens.get(0).equalsIgnoreCase("Course")||
+                tokens.get(0).equalsIgnoreCase("Courses"))){
+            passed = categoriesMapper(tokens);
+        }
+        if(!passed && (tokens.get(0).equalsIgnoreCase("Cuisine"))){
+            passed = categoriesMapper(tokens);
         }
         if(!passed && (tokens.get(0).equalsIgnoreCase("prep") ||
                 tokens.get(0).equalsIgnoreCase("preparation") ||
@@ -110,7 +122,8 @@ public class RecipeCopyPasteCreator {
                 tokens.get(0).equalsIgnoreCase("Ingredients"))){
             passed = ingredientsMapper();
         }
-        if(!passed && (tokens.get(0).equalsIgnoreCase("Directions")||tokens.get(0).equalsIgnoreCase("Instructions"))){
+        if(!passed && (tokens.get(0).equalsIgnoreCase("Directions")||
+                tokens.get(0).equalsIgnoreCase("Instructions"))){
             passed = directionsMapper();
         }
 
@@ -124,9 +137,6 @@ public class RecipeCopyPasteCreator {
      * @return true if the operation was successful, false otherwise
      */
     private boolean servingMapper(List<String> tokens) {
-        //TODO: Test/Correct
-        //TODO: Test/Correct
-
         int servings = 0;
 
         //checks to see if the original tokens have the number
@@ -167,8 +177,6 @@ public class RecipeCopyPasteCreator {
      * @return true if the operation was successful, false otherwise
      */
     private boolean prepMapper(List<String> tokens) {
-        //TODO: Test/Correct
-
         int prepTime = 0;
 
         //checks to see if the original tokens have the number
@@ -210,7 +218,6 @@ public class RecipeCopyPasteCreator {
      * @return true if the operation was successful, false otherwise
      */
     private boolean totalMapper(List<String> tokens) {
-        //TODO: Test/Correct
         int totalTime = 0;
 
         //checks to see if the original tokens have the number
@@ -246,12 +253,50 @@ public class RecipeCopyPasteCreator {
     }
 
     /**
+     * This method finds and builds a list of categories for the created recipe.
+     *
+     * @return RecipeCategory if the operation was successful, null otherwise
+     */
+    private boolean categoriesMapper(List<String> tokens) {
+        ArrayList<RecipeCategory> categoryList = recipeCategoryList;
+        Category temp = new Category();
+        RecipeCategory category;
+        boolean passed = false;
+        String temptxt;
+        category = new RecipeCategory();
+        String categoryText = "";
+
+        for(int i = 1; i < tokens.size(); i++) {
+            temptxt = tokens.get(i);
+            if(temptxt.equalsIgnoreCase("cuisine") || temptxt.equalsIgnoreCase("course")){
+                //do nothing
+            }else{
+                categoryText += temptxt + " ";
+            }
+        }
+
+        String[] categories = categoryText.split( "," );
+        for(String cat : categories) {
+            temp.setName(cat.trim());
+            category.setCategoryID(database.addCategory(temp));
+            categoryList.add(category);
+        }
+
+        if(categoryList.size() > 0){
+            passed = true;
+            recipeCategoryList = categoryList;
+        }else{
+            passed = false;
+        }
+        return passed;
+    }
+
+    /**
      * This method finds and builds a list of ingredients for the created recipe.
      *
      * @return RecipeIngredientList if the operation was successful, null otherwise
      */
     private boolean ingredientsMapper(){
-        //TODO: TEST/CORRECT
         ArrayList<RecipeIngredient> ingredientList = new ArrayList<>();
         RecipeIngredient ingredient;
         boolean passed = false;
@@ -270,7 +315,8 @@ public class RecipeCopyPasteCreator {
             }
             //check once for title "Directions"
             tokens.add(lineScanner.next());
-            if(tokens.get(0).equalsIgnoreCase("directions")){
+            if(tokens.get(0).equalsIgnoreCase("directions")||
+                    tokens.get(0).equalsIgnoreCase("Instructions")){
                 recipeIngredientList = ingredientList;
                 return (directionsMapper() && passed);
             }
@@ -279,6 +325,7 @@ public class RecipeCopyPasteCreator {
             }
             //check to see if no number found and next instance begins
             if(tokenChecker(tokens)){
+                recipeIngredientList = ingredientList;
                 return false;
             }
             //Check to see if quantity is found
@@ -342,7 +389,6 @@ public class RecipeCopyPasteCreator {
      * @return RecipeDirectiontList if the operation was successful, null otherwise
      */
     private boolean directionsMapper() {
-        //TODO: TEST/CORRECT
         ArrayList<RecipeDirection> directionList = new ArrayList<>();
         RecipeDirection direction = new RecipeDirection();
         boolean passed = false;
@@ -386,10 +432,8 @@ public class RecipeCopyPasteCreator {
         Double tempNum = 0.0;
         boolean found = false;
 
+        //This if statement is used for servings specified syntax
         if(type.equalsIgnoreCase("servings")){
-
-            //TODO: think about situation "serves 6-8"
-            //TODO: think about situations of "serves 6 - 8"
             for(int i = 0; i < tokens.size(); i++) {
                 try {//if just a number
                     if(!tokens.get(i).contains("-")){
@@ -402,7 +446,6 @@ public class RecipeCopyPasteCreator {
                             found = true;
                             tempNum = Double.parseDouble(String.valueOf(letters[1]));
                             tempNum = (tempNum + Double.parseDouble(String.valueOf(letters[3])))/2;
-                            tempNum = tempNum;
                         }
                     }
                 } catch (NumberFormatException e) { /*do nothing*/}
@@ -413,9 +456,8 @@ public class RecipeCopyPasteCreator {
 
         }
 
-
+        //This if statement is used for prep or total specified syntax
         if(type.equalsIgnoreCase("prep") || type.equalsIgnoreCase("total")) {
-            //TODO: think about 1 h / 1 hour / 30 m / 30 minutes
             for(int i = 0; i < tokens.size(); i++) {
                 try {
                     tempNum += Double.parseDouble(tokens.get(i));
@@ -432,21 +474,17 @@ public class RecipeCopyPasteCreator {
                                 tokens.get(i+1).equalsIgnoreCase("mins") ||
                                 tokens.get(i+1).equalsIgnoreCase("minute") ||
                                 tokens.get(i+1).equalsIgnoreCase("minutes")) {
-
                             number += tempNum;
                             found = true;
                         }
                     }
-
                 } catch (NumberFormatException e) { /*do nothing*/}
                 if(found){ break; }
             }
         }
 
+        //This if statement is used for Ingredient specified syntax
         if(type.equalsIgnoreCase("ingredient")){
-            //TODO: think about "1/2 cup" what about 1.5?
-
-            //checks for "1/2" numbers or for normal numbers
             try{
                 number = Double.parseDouble(tokens.get(0));
                 found = true;
@@ -464,14 +502,46 @@ public class RecipeCopyPasteCreator {
                         number = Double.parseDouble(arr[0]) / Double.parseDouble(arr[2]);
                         found = true;
                     }
+                    if (temp.contains("½")){
+                        number = 0.5;
+                        found = true;
+                    }
+                    if (temp.contains("⅓")){
+                        number = (double) (1/3);
+                        found = true;
+                    }
+                    if (temp.contains("⅔")){
+                        number = (double) (2/3);
+                        found = true;
+                    }
+                    if (temp.contains("¼")){
+                        number = (double) (1/4);
+                        found = true;
+                    }
                 }catch(NumberFormatException nfe2){/*do nothing*/}
             }
             //checks for 1/2 values
             try {if(tokens.size() > 1) {
                 String temp = tokens.get(1);
                 String[] arr = temp.split("");
-                if (temp.contains("/") || temp.contains("\\")) {
+                if ((temp.contains("/") || temp.contains("\\")) && arr != null) {
                     number += Double.parseDouble(arr[0]) / Double.parseDouble(arr[2]);
+                    found = true;
+                }
+                if (temp.contains("½")){
+                    number = 0.5;
+                    found = true;
+                }
+                if (temp.contains("⅓")){
+                    number = (double) (1/3);
+                    found = true;
+                }
+                if (temp.contains("⅔")){
+                    number = (double) (2/3);
+                    found = true;
+                }
+                if (temp.contains("¼")){
+                    number = (double) (1/4);
                     found = true;
                 }
             }
@@ -544,5 +614,16 @@ public class RecipeCopyPasteCreator {
         }
 
         return "none";
+    }
+
+    public static String capitalize(String temp){
+        String wordArr[]=temp.split("\\s");
+        String capWords="";
+        for(String word:wordArr){
+            String first=word.substring(0,1);
+            String afterfirst=word.substring(1);
+            capWords+=first.toUpperCase()+afterfirst+" ";
+        }
+        return capWords.trim();
     }
 }
