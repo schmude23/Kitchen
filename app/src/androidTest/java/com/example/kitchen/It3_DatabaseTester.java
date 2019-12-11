@@ -78,7 +78,7 @@ public class It3_DatabaseTester {
     }
 
     public void tearDown(){
-        // Delete all database parts
+    // Delete all database parts
         testDatabase.deleteCategory(categoryID);
         testDatabase.deleteIngredient(ingredientID);
         ArrayList<Recipe> allRecipes = testDatabase.getAllRecipes();
@@ -233,12 +233,11 @@ public class It3_DatabaseTester {
      */
     @Test
     public void editUser_Updates(){
-        tearDown();
         setUp();
         int userId = testDatabase.addUser("testUser", "testPass");
-        testDatabase.editUser("testUser", "testPass", "test", "test", 0);
+        testDatabase.editUser("testUser", "testPass", "test1", "test1", 0);
         assertEquals("editUser - Deleted Old User/Pass", -1, testDatabase.loginCheck("testUser", "testPass"));
-        assertNotEquals("editUser - Changed to New User/Pass", -1, testDatabase.loginCheck("test", "test"));
+        assertNotEquals("editUser - Changed to New User/Pass", -1, testDatabase.loginCheck("test1", "test1"));
         testDatabase.deleteUser(userId);
         tearDown();
     }
