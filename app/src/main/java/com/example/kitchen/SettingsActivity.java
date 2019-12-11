@@ -74,9 +74,12 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-    public void onSettingsActivityLoginClicked(View view) {
-        Intent login = new Intent(this, LoginActivity.class);
-        startActivity(login);
+    public void onSettingsActivitySignOutClicked(View view) {
+        sharedPreferences.edit().putString("Username", "").apply();
+        sharedPreferences.edit().putInt("UserId", -1).apply();
+        sharedPreferences.edit().putInt("ThemeId", 0).apply();
+        Intent logout = new Intent(this, MainActivity.class);
+        startActivity(logout);
         this.finish();
     }
 
