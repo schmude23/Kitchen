@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     public final int SEARCH_BY_NAME = 0;
     public final int SEARCH_BY_PREP_TIME = 1;
     public final int SEARCH_BY_TOTAL_TIME = 2;
+    SharedPreferences sharedPreferences;
 
     /**
      * This method is run when the activity is created and sets up the activity
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_recipe_list);
 
         // Display Toolbar
@@ -57,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(20);
-        recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setLayoutManager(layoutManager);
 
 
@@ -122,9 +124,9 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.action_login:
-                Intent login = new Intent(this, LoginActivity.class);
-                startActivity(login);
+            case R.id.action_settings:
+                Intent settings = new Intent(this, SettingsActivity.class);
+                startActivity(settings);
                 this.finish();
                 return true;
             case R.id.advanced_search_item:

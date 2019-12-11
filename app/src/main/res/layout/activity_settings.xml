@@ -1,9 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".SettingsActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <include
+        android:id="@+id/main_toolbar"
+        layout="@layout/main_toolbar" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/button_style"
+        android:text="Login"
+        android:textColor="?attr/buttonTextColor"
+        android:onClick="onSettingsActivityLoginClicked"/>
+
+    <Button
+        android:id="@+id/view_profile_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/button_style"
+        android:text="View Profile"
+        android:textColor="?attr/buttonTextColor"
+        android:onClick="onSettingsActivityViewProfileClicked"/>
+
+    <TextView
+        android:id="@+id/settings_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Theme"
+        android:layout_gravity="center_horizontal"
+        android:textColor="?attr/primaryTextColor"/>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:checkedButton="@id/default_theme_radio"
+        android:orientation="horizontal"
+        android:id="@+id/theme_radio_group">
+
+        <RadioButton
+            android:id="@+id/default_theme_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/dark_orange"
+            android:text="Default Theme"
+            android:textColor="?attr/secondaryTextColor" />
+
+        <RadioButton
+            android:id="@+id/dark_mode_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/dark_orange"
+            android:text="Dark Mode"
+            android:textColor="?attr/secondaryTextColor" />
+    </RadioGroup>
+
+
+</LinearLayout>
