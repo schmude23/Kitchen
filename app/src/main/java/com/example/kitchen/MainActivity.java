@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
             fillDefaultRecipes();
             recipes = database.getAllRecipes();
             checkRecipes();
+            recipes = quickSortByTitle(recipes, true);
         }
-        recipes = quickSortByTitle(recipes, true);
         getRecipeListItems();
         recipeAdapter = new RecipeAdapter(recipeListItems, this);
         recyclerView.setAdapter(recipeAdapter);
@@ -913,8 +913,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                     recipeListItems.add(new RecipeListItem(recipe_name, servings, prep_time, total_time, image, recipes.get(i).getFavorited(), recipes.get(i).getKeyID()));
                 }
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "No Recipes Found", Toast.LENGTH_SHORT).show();
         }
     }
@@ -956,15 +955,21 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
             case SEARCH_BY_PREP_TIME:
                 if (input.compareTo("") != 0) {
                     recipes.addAll(database.getRecipeByPrepTime(Integer.valueOf(input)));
-                }
+                } else
+                    recipes = database.getRandomRecipes();
                 recipes = quickSortByPrepTime(recipes, ascending);
 
                 break;
             case SEARCH_BY_TOTAL_TIME:
                 if (input.compareTo("") != 0)
                     recipes.addAll(database.getRecipeByTotalTime(Integer.valueOf(input)));
+                else
+                    recipes = database.getRandomRecipes();
                 recipes = quickSortByTotalTime(recipes, ascending);
                 break;
+        }
+        if(recipes.size() == 0) {
+            recipes = database.getRandomRecipes();
         }
 
     }
@@ -1074,11 +1079,12 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
 
 
     }
+
     public <Recipe> List<Recipe> intersection(List<Recipe> list1, List<Recipe> list2) {
         List<Recipe> list = new ArrayList<Recipe>();
 
         for (Recipe t : list1) {
-            if(list2.contains(t)) {
+            if (list2.contains(t)) {
                 list.add(t);
             }
         }
@@ -1086,17 +1092,16 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         return list;
     }
 
-    public void onToolbarTextClicked(View view){
+    public void onToolbarTextClicked(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         this.finish();
     }
 
-    private void viewFavorites(){
+    private void viewFavorites() {
         recipes = database.getRecipesByFavorite();
-        if(recipes == null)
-        {
-            Toast.makeText(this, "You have not favorited any recipes",Toast.LENGTH_SHORT ).show();
+        if (recipes == null) {
+            Toast.makeText(this, "You have not favorited any recipes", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             this.finish();

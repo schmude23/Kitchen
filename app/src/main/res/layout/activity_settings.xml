@@ -11,32 +11,13 @@
         android:id="@+id/main_toolbar"
         layout="@layout/main_toolbar" />
 
-    <Button
-        android:id="@+id/login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/button_style"
-        android:text="Login"
-        android:textColor="?attr/buttonTextColor"
-        android:onClick="onSettingsActivityLoginClicked"/>
-
-    <Button
-        android:id="@+id/view_profile_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/button_style"
-        android:text="View Profile"
-        android:textColor="?attr/buttonTextColor"
-        android:onClick="onSettingsActivityViewProfileClicked"/>
-
     <TextView
         android:id="@+id/settings_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Change Theme"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
         android:textColor="?attr/primaryTextColor"/>
 
     <RadioGroup
@@ -63,6 +44,19 @@
             android:text="Dark Mode"
             android:textColor="?attr/secondaryTextColor" />
     </RadioGroup>
+
+    <Button
+        android:id="@+id/view_profile_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/button_style"
+        android:layout_marginTop="50dp"
+        android:text="View Profile"
+        android:textColor="?attr/buttonTextColor"
+        android:onClick="onSettingsActivityViewProfileClicked"/>
+
+
 
 
 </LinearLayout>
