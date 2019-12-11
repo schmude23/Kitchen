@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class SettingsActivity extends AppCompatActivity {
     RadioGroup themeRadioGroup;
@@ -26,7 +27,13 @@ public class SettingsActivity extends AppCompatActivity {
         else
             setTheme(R.style.DarkMode);
         setContentView(R.layout.activity_settings);
-
+        int userId = sharedPreferences.getInt("UserId", -1);
+        if(userId == -1){
+            Toast.makeText(this, "Login required to change settings", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            this.finish();
+        }
         initRadioGroup();
 
 

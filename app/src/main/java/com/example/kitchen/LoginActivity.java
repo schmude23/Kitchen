@@ -3,6 +3,7 @@ package com.example.kitchen;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,9 +51,9 @@ public class LoginActivity extends AppCompatActivity {
                     Toast toast = Toast.makeText(LoginActivity.this, "Successfully Logged In", Toast.LENGTH_SHORT);
                     toast.setGravity(0, 0, 500);
                     toast.show();
-                    Intent i = new Intent(LoginActivity.this,ViewProfileActivity.class);
-                    i.putExtra("username", user);
-                    i.putExtra("userID", res);
+                    Intent i = new Intent(LoginActivity.this, SettingsActivity.class);
+                  //  i.putExtra("username", user);
+                  //  i.putExtra("userID", res);
                     startActivity(i);
                     finish();
                 } else {
