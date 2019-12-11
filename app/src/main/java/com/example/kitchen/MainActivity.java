@@ -969,6 +969,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                 break;
         }
         if(recipes.size() == 0) {
+            Toast.makeText(this, "No recipes found. Displaying random recipes", Toast.LENGTH_SHORT).show();
             recipes = database.getRandomRecipes();
         }
 
