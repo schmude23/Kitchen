@@ -1892,9 +1892,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (password != null && password.equals(storedPass)) {
 
             SharedPreferences prefs = context.getSharedPreferences("user", Context.MODE_PRIVATE);
-            prefs.edit().putString("Username", username);
-            prefs.edit().putInt("UserId", userId);
-            prefs.edit().putInt("ThemeId", themeId);
+            prefs.edit().putString("Username", username).apply();
+            prefs.edit().putInt("UserId", userId).apply();
+            prefs.edit().putInt("ThemeId", themeId).apply();
 
             return userId;
         }
