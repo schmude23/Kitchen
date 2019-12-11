@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 //TODO: Dealing with long recipe titles
 // TODO: back button pressed go to recipe list
@@ -116,7 +117,9 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
             Ingredient ingredient = dbHandler.getIngredient(ingredientID);
             String name = ingredient.getName();
             name = name.substring(0,1).toUpperCase() + name.substring(1);
-            String quantity = String.valueOf(recipe.getIngredientList().get(i).getQuantity());
+            Double q = recipe.getIngredientList().get(i).getQuantity();
+            DecimalFormat df = new DecimalFormat("#.##");
+            String quantity = String.valueOf(df.format(q));
             String unit = recipe.getIngredientList().get(i).getUnit();
             String details = recipe.getIngredientList().get(i).getDetails();
             // Add to ListView and update height

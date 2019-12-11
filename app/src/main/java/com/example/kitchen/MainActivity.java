@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         if (recipes != null) {
             for (int i = 0; i < recipes.size(); i++) {
                 Recipe recipe = database.getRecipe(recipes.get(i).getKeyID());
-                if (recipe.getIngredientList() == null || recipe.getDirectionsList() == null || recipe.getCategoryList() == null) {
+                if (recipe.getIngredientList() == null || recipe.getDirectionsList() == null) {
                     database.deleteRecipe(recipe.getKeyID());
                     recipes.remove(i);
                 }
