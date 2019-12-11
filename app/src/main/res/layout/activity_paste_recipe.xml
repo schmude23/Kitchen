@@ -21,11 +21,11 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="start|top"
-            android:hint="Paste Recipe Here"
+            android:hint="Title                                                                               Prep Time # minute (# hour)                                                       Total Time # minutes (# hours)                                                                                          Servings # (#-#)                                                                                 Course (type)                                                                          Cuisine South-African                                                                                         Ingredients                                                                               # unit, details                                                                                   1 Avocado, pitted                                                           Directions                                                                  First direction goes on this line                                                                                                                   Second direction starts when enter is pressed and a new line is created "
             android:inputType="textMultiLine"
-            app:backgroundTint="?attr/editTextColor"
             android:textColor="?attr/editTextColor"
-            android:textColorHint="?attr/editTextColor"/>
+            android:textColorHint="?attr/editTextColor"
+            app:backgroundTint="?attr/editTextColor" />
 
         <Button
             android:id="@+id/button"
