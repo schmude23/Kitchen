@@ -236,7 +236,7 @@ public class UI_Test_AddRecipe {
         textView4.check(matches(withText("90 min")));
 
         ViewInteraction textView5 = onView(
-                allOf(withId(R.id.list_item_string), withText("Hamburger [ 1.0 teaspoon(s) ]")));
+                allOf(withId(R.id.list_item_string), withText("[ 1.0 teaspoon(s) ] Hamburger")));
         textView5.check(matches(isDisplayed()));
 
         ViewInteraction textView6 = onView(
