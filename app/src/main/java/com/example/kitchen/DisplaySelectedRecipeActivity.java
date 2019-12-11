@@ -122,14 +122,14 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
             // Add to ListView and update height
             if (unit.compareTo("none") == 0) {
                 if (details.compareTo("") != 0)
-                    ingredientList.add(name + " (" + details + ") " + " [ " + quantity + " ]");
+                    ingredientList.add("[ " + quantity + " ] " + "(" + details + ") "  + name);
                 else
-                    ingredientList.add(name + " [ " + quantity + " ]");
+                    ingredientList.add("[ " + quantity + " ] " + name);
             } else {
                 if (details.compareTo("") != 0)
-                    ingredientList.add(name + " (" + details + ") " + " [ " + quantity + " " + unit + " ]");
+                    ingredientList.add( "[ " + quantity + " " + unit + " ] "  + "(" + details + ") " + name);
                 else
-                    ingredientList.add(name + " [ " + quantity + " " + unit + " ]");
+                    ingredientList.add("[ " + quantity + " " + unit + " ] " + name);
             }
             iAdapter = new DisplayRecipeAdapter(ingredientList);
             ingredientRecyclerView.setAdapter(iAdapter);
