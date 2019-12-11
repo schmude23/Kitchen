@@ -22,6 +22,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,6 +143,27 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
         shoppingEditIngredientCartPopupQuantityEditText = editIngredientDialog.findViewById(R.id.shopping_cart_edit_ingredient_popup_quantity_edit_text);
         editIngredientQuantity = item.getQuantity();
         shoppingEditIngredientCartPopupQuantityEditText.setText(String.valueOf(editIngredientQuantity));
+        FloatingActionButton add, remove;
+        add = editIngredientDialog.findViewById(R.id.shopping_cart_edit_ingredient_popup_add_button);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editIngredientQuantity = Double.valueOf(shoppingEditIngredientCartPopupQuantityEditText.getText().toString());
+                editIngredientQuantity++;
+                shoppingEditIngredientCartPopupQuantityEditText.setText(String.valueOf(editIngredientQuantity));
+            }
+        });
+
+        remove = editIngredientDialog.findViewById(R.id.shopping_cart_edit_ingredient_popup_remove_button);
+        remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editIngredientQuantity = Double.valueOf(shoppingEditIngredientCartPopupQuantityEditText.getText().toString());
+                if (editIngredientQuantity != 0)
+                    editIngredientQuantity--;
+                shoppingEditIngredientCartPopupQuantityEditText.setText(String.valueOf(editIngredientQuantity));
+            }
+        });
         editIngredientDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         editIngredientDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
         editIngredientDialog.show();
@@ -166,7 +189,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
             for (int i = 0; i < checkedItems.size(); i++) {
                 shoppingCart.remove(checkedItems.get(i));
             }
-            for(int i = checkedItems.size() - 1; i >= 0; i--){
+            for (int i = checkedItems.size() - 1; i >= 0; i--) {
                 database.deleteShoppingCartIngredient(checkedItems.get(i).getIngredientID());
                 checkedItems.remove(i);
             }
@@ -220,7 +243,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
 
 
     public void onUnitConversionPopupOkayButtonPressed(View v) {
-        if(oldUnit.compareTo("none") == 0 || newUnit.compareTo("none") == 0|| oldUnit.compareTo(newUnit) == 0) {
+        if (oldUnit.compareTo("none") == 0 || newUnit.compareTo("none") == 0 || oldUnit.compareTo(newUnit) == 0) {
             Toast.makeText(this, "Cannot convert units", Toast.LENGTH_SHORT).show();
             convertUnitDialog.dismiss();
         }
@@ -294,6 +317,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements AdapterVi
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
     public void onToolbarTextClicked(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

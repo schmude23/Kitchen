@@ -25,6 +25,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 //TODO: Dealing with long recipe titles
@@ -116,7 +118,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
             int ingredientID = recipe.getIngredientList().get(i).getIngredientID();
             Ingredient ingredient = dbHandler.getIngredient(ingredientID);
             String name = ingredient.getName();
-            name = name.substring(0,1).toUpperCase() + name.substring(1);
+            name = name.substring(0, 1).toUpperCase() + name.substring(1);
             Double q = recipe.getIngredientList().get(i).getQuantity();
             DecimalFormat df = new DecimalFormat("#.##");
             String quantity = String.valueOf(df.format(q));
@@ -125,12 +127,12 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
             // Add to ListView and update height
             if (unit.compareTo("none") == 0) {
                 if (details.compareTo("") != 0)
-                    ingredientList.add("[ " + quantity + " ] " + "(" + details + ") "  + name);
+                    ingredientList.add("[ " + quantity + " ] " + "(" + details + ") " + name);
                 else
                     ingredientList.add("[ " + quantity + " ] " + name);
             } else {
                 if (details.compareTo("") != 0)
-                    ingredientList.add( "[ " + quantity + " " + unit + " ] "  + "(" + details + ") " + name);
+                    ingredientList.add("[ " + quantity + " " + unit + " ] " + "(" + details + ") " + name);
                 else
                     ingredientList.add("[ " + quantity + " " + unit + " ] " + name);
             }
@@ -147,7 +149,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
         directionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         for (int i = 0; i < recipe.getDirectionsList().size(); i++) {
             String text = recipe.getDirectionsList().get(i).getDirectionText();
-            text = text.substring(0,1).toUpperCase() + text.substring(1);
+            text = text.substring(0, 1).toUpperCase() + text.substring(1);
             int number = recipe.getDirectionsList().get(i).getDirectionNumber();
             // fix incorrect numbers from removed directions
             if (number != (i + 1)) {
@@ -322,6 +324,26 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
         scaleRecipePopupServingsEditText = scaleRecipeDialog.findViewById(R.id.scale_recipe_popup_servings_edit_text);
         scaleRecipeServings = recipe.getServings();
         scaleRecipePopupServingsEditText.setText(String.valueOf(scaleRecipeServings));
+        FloatingActionButton remove, add;
+        remove = scaleRecipeDialog.findViewById(R.id.scale_recipe_popup_remove_button);
+        remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scaleRecipeServings = Double.valueOf(scaleRecipePopupServingsEditText.getText().toString());
+                if (scaleRecipeServings > 1)
+                    scaleRecipeServings--;
+                scaleRecipePopupServingsEditText.setText(String.valueOf(scaleRecipeServings));
+            }
+        });
+        add = scaleRecipeDialog.findViewById(R.id.scale_recipe_popup_add_button);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scaleRecipeServings = Double.valueOf(scaleRecipePopupServingsEditText.getText().toString());
+                scaleRecipeServings++;
+                scaleRecipePopupServingsEditText.setText(String.valueOf(scaleRecipeServings));
+            }
+        });
         scaleRecipeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         scaleRecipeDialog.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
         scaleRecipeDialog.show();
@@ -403,7 +425,7 @@ public class DisplaySelectedRecipeActivity extends AppCompatActivity implements 
      *
      * @param view
      */
-    public void onToolbarTextClicked(View view){
+    public void onToolbarTextClicked(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         this.finish();
