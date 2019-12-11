@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:background="@color/white">
+    android:gravity="center_horizontal">
 
     <EditText
         android:id="@+id/edit_username"
@@ -14,7 +13,9 @@
         android:layout_height="40dp"
         android:layout_marginTop="100dp"
         android:hint="Username"
-        app:backgroundTint="?attr/editTextColor"/>
+        app:backgroundTint="?attr/editTextColor"
+        android:textColor="?attr/editTextColor"
+        android:textColorHint="?attr/editTextColor"/>
 
     <EditText
         android:id="@+id/edit_password"
@@ -22,7 +23,9 @@
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
         android:hint="Password"
-        app:backgroundTint="?attr/editTextColor"/>
+        app:backgroundTint="?attr/editTextColor"
+        android:textColor="?attr/editTextColor"
+        android:textColorHint="?attr/editTextColor"/>
 
     <EditText
         android:id="@+id/new_username"
@@ -30,7 +33,9 @@
         android:layout_height="40dp"
         android:layout_marginTop="80dp"
         android:hint="New Username"
-        app:backgroundTint="?attr/editTextColor"/>
+        app:backgroundTint="?attr/editTextColor"
+        android:textColor="?attr/editTextColor"
+        android:textColorHint="?attr/editTextColor"/>
 
     <EditText
         android:id="@+id/new_password"
@@ -38,7 +43,9 @@
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
         android:hint="New Password"
-        app:backgroundTint="?attr/editTextColor"/>
+        app:backgroundTint="?attr/editTextColor"
+        android:textColor="?attr/editTextColor"
+        android:textColorHint="?attr/editTextColor"/>
 
     <EditText
         android:id="@+id/cnf_new_password"
@@ -46,7 +53,9 @@
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
         android:hint="Confirm Password"
-        app:backgroundTint="?attr/editTextColor"/>
+        app:backgroundTint="?attr/editTextColor"
+        android:textColor="?attr/editTextColor"
+        android:textColorHint="?attr/editTextColor"/>
 
     <Button
         android:id="@+id/cnf_edit_profile"
